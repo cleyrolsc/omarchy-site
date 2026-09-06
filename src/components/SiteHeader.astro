@@ -202,9 +202,17 @@ const links = [
     cursor: pointer;
     list-style: none;
     color: var(--color-text-secondary);
+    transition: background-color 150ms ease-out, transform 150ms ease-out;
   }
   summary::-webkit-details-marker {
     display: none;
+  }
+  .site-header[data-mobile-chip] summary,
+  .mobile-menu summary:hover {
+    background: var(--color-surface-2);
+  }
+  .mobile-menu summary:active {
+    transform: scale(0.96);
   }
   summary path {
     transform-origin: center;

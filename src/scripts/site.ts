@@ -513,6 +513,12 @@ export function initSite() {
         ground = top && top === at(header.offsetHeight) ? top : null;
       const value =
         innerWidth < 640 && !menu?.open ? 0 : ground || !hero ? 1 : 0;
+      header.toggleAttribute(
+        "data-mobile-chip",
+        innerWidth < 640 &&
+          !menu?.open &&
+          !(hero && hero.getBoundingClientRect().bottom > header.offsetHeight),
+      );
       header.style.setProperty("--nav-surface", String(value));
       const blend = Boolean(
         ghost &&

@@ -104,7 +104,9 @@ test("mobile menu, gallery filtering and layouts fit a phone", async ({
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
+  await expect(page.locator("[data-theme-hint]")).toBeVisible();
   await page.getByLabel("Menu", { exact: true }).click();
+  await expect(page.locator("[data-theme-hint]")).toBeHidden();
   await page
     .getByRole("navigation", { name: "Main pages" })
     .getByRole("link", { name: "Themes", exact: true })

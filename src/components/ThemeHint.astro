@@ -18,6 +18,9 @@ const { visible = false } = Astro.props;
     ><SiteIcon name="Cross" size={16} /></button>
 </aside>
 <style>
+  :global(body:has(.mobile-menu[open])) .theme-hint {
+    display: none;
+  }
   .theme-hint {
     position: fixed;
     top: 104px;
