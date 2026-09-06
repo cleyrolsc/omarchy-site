@@ -1,0 +1,41 @@
+/*
+ * Global stylesheet entry point
+ * -----------------------------
+ * Import this once, from the root layout (or an `astro:global` point).
+ *
+ * Architecture:
+ *   tokens.css   — generic scales (spacing, type, radius, motion)   [portable]
+ *   brand.css    — project colors, typeface names, gradients        [PER-PROJECT]
+ *   reset.css    — CSS reset                                        [portable]
+ *   base.css     — bare-element defaults                            [portable]
+ *   layout.css   — container, page-stack, section primitives        [portable]
+ *   components.css — buttons, cards, badges, prose, etc.            [portable]
+ *   utilities.css  — thin single-purpose utility layer              [portable]
+ *
+ * The @layer declaration below establishes cascade priority:
+ *   reset → base → components → utilities
+ * Utilities win over components; components win over base; none of them
+ * beat a property with higher specificity inside a scoped component style.
+ *
+ * Import order inside a layer matters only for same-specificity rules,
+ * but between layers the declaration order is authoritative regardless
+ * of import order.
+ */
+
+@layer reset, base, components, utilities;
+
+/* Tokens + brand are NOT inside a layer — custom properties aren't
+   subject to layer cascade the way rules are, and this makes them
+   resolvable everywhere regardless of load order. Load tokens first
+   (scales), then brand (colors/typefaces that may reference tokens). */
+@import "./tokens.css";
+@import "./brand.css";
+
+/* Layered rules, in cascade order */
+@import "./reset.css"; /* @layer reset */
+@import "./base.css"; /* @layer base */
+@import "./layout.css"; /* @layer components */
+@import "./components.css"; /* @layer components */
+@import "./content.css";
+@import "./site.css";
+@import "./utilities.css"; /* @layer utilities */

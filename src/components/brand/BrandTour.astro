@@ -1,0 +1,58 @@
+---
+/**
+ * BrandTour — the full brand reference page, composed of every
+ * token-family component in source order. Drop this into Storybook
+ * (or any page) and you get a complete, live-updating style guide.
+ *
+ * Every section reads tokens from `:root` at runtime — same tokens
+ * the real site renders against. No hardcoded values.
+ */
+import BrandHeader from "./BrandHeader.astro";
+import Palette from "./Palette.astro";
+import TypeScale from "./TypeScale.astro";
+import SpacingScale from "./SpacingScale.astro";
+import Radii from "./Radii.astro";
+import Shadows from "./Shadows.astro";
+import Gradients from "./Gradients.astro";
+import Breakpoints from "./Breakpoints.astro";
+
+export interface Props {
+  title?: string;
+  subtitle?: string;
+}
+
+const { title, subtitle } = Astro.props;
+---
+
+<div class="brand-tour">
+  <div class="brand-tour__inner">
+    <BrandHeader title={title} subtitle={subtitle} />
+    <Palette />
+    <TypeScale />
+    <SpacingScale />
+    <Radii />
+    <Shadows />
+    <Gradients />
+    <Breakpoints />
+  </div>
+</div>
+
+<style>
+  .brand-tour {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    min-block-size: 100svb;
+  }
+  .brand-tour__inner {
+    max-inline-size: 72rem;
+    margin-inline: auto;
+    padding-inline: var(--space-6);
+    padding-block: var(--space-6) var(--space-16);
+  }
+
+  @media (min-width: 48rem) {
+    .brand-tour__inner {
+      padding-inline: var(--space-10);
+    }
+  }
+</style>

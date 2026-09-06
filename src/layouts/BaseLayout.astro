@@ -1,0 +1,128 @@
+---
+import "../styles/main.css";
+import { ClientRouter } from "astro:transitions";
+import { site, absoluteUrl, markdownAlternatePath } from "../config/site";
+import { themeInitScript } from "../lib/theme";
+export interface Props {
+  title?: string;
+  description?: string;
+  canonicalPath?: string;
+  markdownPath?: string | false;
+  image?: string;
+  type?: "website" | "article";
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  noindex?: boolean;
+  transitions?: boolean;
+  htmlClass?: string;
+}
+const {
+  title = site.defaultTitle,
+  description = site.description,
+  canonicalPath = Astro.url.pathname,
+  markdownPath = markdownAlternatePath(canonicalPath),
+  image = site.defaultOgImage,
+  type = "website",
+  jsonLd = [],
+  noindex = false,
+  transitions = true,
+  htmlClass,
+} = Astro.props;
+const pageTitle = title.includes("Omarchy") ? title : `${title} - Omarchy`;
+const schemas = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: site.name,
+    url: site.url,
+    sameAs: Object.values(site.social),
+  },
+  ...(Array.isArray(jsonLd) ? jsonLd : [jsonLd]),
+];
+const json = (value: unknown) => JSON.stringify(value).replace(/</g, "\u003c");
+---
+
+<!doctype html>
+<html lang="en" class={htmlClass}>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <link rel="canonical" href={absoluteUrl(canonicalPath)} />
+    {
+      markdownPath && (
+        <link
+          rel="alternate"
+          type="text/markdown"
+          href={absoluteUrl(markdownPath)}
+        />
+      )
+    }
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Omarchy News"
+      href="/news/rss.xml"
+    />
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={absoluteUrl(canonicalPath)} />
+    <meta property="og:image" content={absoluteUrl(image)} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={absoluteUrl(image)} />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="/brand/omarchy-logo.svg"
+      data-theme-icon
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/jetbrains-mono-latin-wght-normal.woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/geist-latin-wght-normal.woff2"
+      crossorigin
+    />
+    <script is:inline data-astro-rerun set:html={themeInitScript} />
+    {
+      schemas.map((schema) => (
+        <script type="application/ld+json" is:inline set:html={json(schema)} />
+      ))
+    }
+    {transitions && <ClientRouter />}
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <slot />
+  </body>
+</html>
+<style>
+  .skip-link {
+    position: fixed;
+    inset: var(--space-3) auto auto var(--space-3);
+    z-index: var(--z-tooltip);
+    padding: var(--space-3);
+    background: var(--color-accent);
+    color: var(--color-text-inverse);
+    transform: translateY(-200%);
+  }
+  .skip-link:focus {
+    transform: none;
+  }
+</style>

@@ -1,0 +1,100 @@
+---
+import { Volume2 } from "@lucide/astro";
+import { TRACK } from "../lib/music";
+export interface Props {
+  visible?: boolean;
+}
+const { visible = false } = Astro.props;
+---
+
+<aside
+  class="music-control"
+  data-music-control
+  hidden={!visible}
+  aria-label="Background music"
+>
+  <button
+    type="button"
+    data-music-toggle
+    aria-label="Play background music"
+    aria-pressed="false"
+    ><img
+      src={TRACK.art}
+      alt=""
+      width="88"
+      height="88"
+      loading="lazy"
+    /><Volume2 size={20} /></button
+  >
+  <div class="music-info">
+    <strong title={TRACK.title}>We Can Fix Everything</strong><span
+      >{TRACK.artist} · <span data-music-state>Sound off</span></span
+    ><label class="sr-only" for="music-seek">Music position</label><input
+      id="music-seek"
+      type="range"
+      min="0"
+      max="100"
+      value="0"
+      data-music-seek
+      aria-valuetext="0 seconds"
+    />
+  </div>
+</aside>
+<style>
+  .music-control {
+    position: fixed;
+    bottom: var(--space-4);
+    left: var(--space-4);
+    z-index: var(--z-nav);
+    display: flex;
+    width: min(16rem, calc(100vw - var(--space-8)));
+    padding: var(--space-2);
+    gap: var(--space-3);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-strong);
+    box-shadow: var(--shadow-card);
+  }
+  button {
+    position: relative;
+    width: var(--space-10);
+    height: var(--space-10);
+    flex-shrink: 0;
+    padding: 0;
+    border: 0;
+    background: var(--color-bg);
+  }
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 1;
+  }
+  svg {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--color-text);
+  }
+  .music-info {
+    min-width: 0;
+    flex: 1;
+    display: grid;
+    align-content: center;
+  }
+  strong {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: var(--text-xs);
+  }
+  .music-info > span {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+  input {
+    width: 100%;
+    accent-color: var(--color-brand);
+    height: var(--space-2);
+  }
+</style>

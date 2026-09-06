@@ -1,0 +1,109 @@
+---
+{
+  "title": "Security at Omarchy",
+  "description": "How to report a vulnerability in Omarchy - tell the Security Team privately at security@omarchy.org - and the people credited for doing exactly that.",
+  "path": "/security/",
+  "seoTitle": "Security - Omarchy"
+}
+---
+
+<div class="security">
+
+<section class="security__intro">
+<h2>Report a vulnerability</h2>
+<p>If you believe you&rsquo;ve found a security vulnerability in Omarchy, please tell the <a href="/teams/#security">Omarchy Security Team</a> privately so we have an opportunity to investigate and fix it before it is made public.</p>
+
+<a class="button" href="mailto:security@omarchy.org?subject=Security%20report" aria-label="Email a security report to security@omarchy.org">
+<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2 28 7v8c0 7.6-4.9 12.7-12 15C8.9 27.7 4 22.6 4 15V7l12-5zm0 3.2L7 9v6c0 5.8 3.5 9.8 9 11.9 5.5-2.1 9-6.1 9-11.9V9l-9-3.8zm-1.5 6.3h3v7h-3v-7zm0 9h3v3h-3v-3z" fill="currentColor"/></svg>
+<span>security@omarchy.org</span>
+</a>
+
+<p class="security__warning">Please don&rsquo;t report potential vulnerabilities publicly in GitHub Issues, Discord, or social media before they&rsquo;ve been resolved.</p>
+</section>
+
+<section class="security__section">
+<h2>What is a vulnerability?</h2>
+<p>We consider a bug a security vulnerability when it can be exploited to cross a meaningful security boundary: an untrusted or lower-privileged party gains access, permissions, or control they didn&rsquo;t already have.</p>
+
+<p>Code that could be more robust but does not cross a security boundary is an improvement rather than a security vulnerability. We may still merge a proposed fix and credit the reporter in our release notes.</p>
+
+<p>Eligibility for our <a href="#credits">security credits</a> page depends on whether a report identifies a confirmed security vulnerability, not on its severity.</p>
+</section>
+
+<section class="security__section">
+<h2>What to include</h2>
+<p>Give us enough information to understand and reproduce the issue:</p>
+
+<ul>
+<li>The affected component and Omarchy version.</li>
+<li>An explanation of what an attacker can do before and after exploitation.</li>
+<li>Steps to reproduce the issue and any proof of concept.</li>
+<li>Your preferred contact details for follow-up.</li>
+</ul>
+</section>
+
+<section class="security__section">
+<h2>Responsible disclosure</h2>
+<p>Please act in good faith while investigating and reporting vulnerabilities:</p>
+
+<ul>
+<li>Only test systems and accounts you own or have explicit permission to test.</li>
+<li>Avoid privacy violations, disruption, data destruction, and service degradation.</li>
+<li>Don&rsquo;t exploit a vulnerability beyond what is needed to demonstrate it.</li>
+<li>Give us a reasonable opportunity to investigate and address the issue before publishing details.</li>
+</ul>
+
+<p>We&rsquo;ll review your report and keep you informed as we&rsquo;re able while we work toward a resolution.</p>
+</section>
+
+<section class="security__section">
+<h2>Credits</h2>
+<p>Researchers who privately report a confirmed security vulnerability and give us the chance to ship a fix are thanked on the <a href="#credits">security credits</a> page. Accepted improvements that don&rsquo;t cross a security boundary may still be credited in our release notes.</p>
+<p>Credits link to each reporter&rsquo;s X profile and show their avatar. For duplicate reports, only the first reporter is eligible for credit.</p>
+</section>
+
+<section class="security__section">
+<h2>Regular bugs and support</h2>
+<p>For anything that isn&rsquo;t a security vulnerability, please use the <a href="https://github.com/omacom/omarchy/issues">Omarchy issue tracker</a>.</p>
+</section>
+
+</div>
+<div id="credits"><div class="teams">
+
+<section class="team">
+<header class="team__header">
+<h2 class="team__name">Responsible disclosure</h2>
+<p class="team__description">They found it, told us privately, and waited for the patch</p>
+</header>
+
+<div class="team__members">
+<article class="member">
+<img class="member__avatar" src="/assets/images/credits/roger-pinol.webp" width="240" height="240" alt="Roger Piñol" loading="lazy" decoding="async">
+<h3 class="member__name"><a href="https://x.com/RogerKernel">Roger Piñol</a></h3>
+</article>
+<article class="member">
+<img class="member__avatar" src="/assets/images/credits/ruben-lopes.webp" width="240" height="240" alt="Ruben Lopes" loading="lazy" decoding="async">
+<h3 class="member__name"><a href="https://x.com/LopesR1993">Ruben Lopes</a></h3>
+</article>
+<article class="member">
+<img class="member__avatar" src="/assets/images/credits/afonso-oliveira.webp" width="240" height="240" alt="Afonso Oliveira" loading="lazy" decoding="async">
+<h3 class="member__name"><a href="https://www.linkedin.com/in/afoliveira2/">Afonso Oliveira</a></h3>
+</article>
+<article class="member">
+<img class="member__avatar" src="/assets/images/credits/sick.webp" width="240" height="240" alt="_Sick // afflicted.sh" loading="lazy" decoding="async">
+<h3 class="member__name"><a href="https://x.com/encrypted_past">_SiCk</a></h3>
+</article>
+<article class="member">
+<img class="member__avatar" src="/assets/images/credits/erik-hunstad.webp" width="240" height="240" alt="Erik Hunstad" loading="lazy" decoding="async">
+<h3 class="member__name"><a href="https://x.com/badsectorlabs">Erik Hunstad</a></h3>
+</article>
+<article class="member">
+<img class="member__avatar" src="/assets/images/credits/teles.webp" width="240" height="240" alt="Teles" loading="lazy" decoding="async">
+<h3 class="member__name"><a href="https://x.com/teles_dev">Teles</a></h3>
+</article>
+</div>
+
+<p class="team__note">Found something? <a href="/security/">Report it privately</a>. The first reporter of a confirmed vulnerability is credited here.</p>
+</section>
+
+</div></div>

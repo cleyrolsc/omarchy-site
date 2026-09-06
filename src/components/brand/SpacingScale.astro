@@ -1,0 +1,118 @@
+---
+/**
+ * SpacingScale — every `--space-*` token as a horizontal bar sized to
+ * its real value. Gives an at-a-glance sense of the rhythm the scale
+ * produces.
+ */
+import BrandSection from "./BrandSection.astro";
+---
+
+<BrandSection
+  kicker="03 — Spacing"
+  title="Spacing scale"
+  description="Base 4px. Every <code>--space-*</code> token rendered as a bar at its real width. Use the semantic aliases (<code>--inline-space</code>, <code>--block-space</code>) when the role is clearer than the number."
+>
+  <div class="spacing" data-spacing>
+    <div class="spacing__empty">Loading tokens…</div>
+  </div>
+</BrandSection>
+
+<script is:inline>
+  (function () {
+    function render(root) {
+      var readTokens = window.__brandReadRootTokens;
+      if (!readTokens) return;
+      var tokens = readTokens("--space-");
+      if (tokens.length === 0) {
+        root.innerHTML =
+          '<div class="spacing__empty">No <code>--space-*</code> tokens found.</div>';
+        return;
+      }
+      root.innerHTML = tokens
+        .map(function (t) {
+          return (
+            '<div class="spacing-row">' +
+            '<div class="spacing-row__meta">' +
+            '<div class="spacing-row__name">' +
+            t.shortName +
+            "</div>" +
+            '<div class="spacing-row__value">' +
+            t.resolved +
+            "</div>" +
+            "</div>" +
+            '<div class="spacing-row__rail">' +
+            '<div class="spacing-row__bar" style="inline-size:' +
+            t.resolved +
+            ';"></div>' +
+            "</div>" +
+            "</div>"
+          );
+        })
+        .join("");
+    }
+
+    function runAll() {
+      document.querySelectorAll("[data-spacing]").forEach(render);
+    }
+
+    if (document.readyState === "complete") {
+      runAll();
+    } else {
+      window.addEventListener("load", runAll, { once: true });
+    }
+  })();
+</script>
+
+<style>
+  .spacing {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .spacing__empty {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .spacing :global(.spacing-row) {
+    display: grid;
+    grid-template-columns: 10rem 1fr;
+    gap: var(--space-4);
+    align-items: center;
+    padding-block: var(--space-2);
+    border-block-end: 1px solid var(--color-border-muted);
+  }
+  .spacing :global(.spacing-row:last-child) {
+    border-block-end: 0;
+  }
+
+  .spacing :global(.spacing-row__meta) {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .spacing :global(.spacing-row__name) {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text);
+  }
+  .spacing :global(.spacing-row__value) {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-faint);
+  }
+
+  .spacing :global(.spacing-row__rail) {
+    block-size: 1.5rem;
+    display: flex;
+    align-items: center;
+  }
+  .spacing :global(.spacing-row__bar) {
+    background-image: var(--gradient-primary);
+    block-size: 0.75rem;
+    border-radius: var(--radius-sm);
+    min-inline-size: 1px;
+    max-inline-size: 100%;
+  }
+</style>

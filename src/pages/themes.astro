@@ -1,0 +1,40 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import ThemeCard from "../components/ThemeCard.astro";
+import themes from "../data/themes.json";
+---
+
+<SiteLayout
+  title="Community themes - Omarchy"
+  description="Themes made by the Omarchy community. Find a desktop that feels like yours."
+  ><main id="main" class="page">
+    <h1>Community themes</h1><p>
+      {themes.length} themes made by the community. <a
+        href="https://github.com/omacom/omarchy-site"
+        class="text-link">Add yours</a
+      >.
+    </p><label for="theme-search" class="filter-label">Find a theme</label
+    ><input
+      class="search-field"
+      id="theme-search"
+      type="search"
+      placeholder="Search by theme or author…"
+      data-gallery-search
+    /><p class="muted" data-gallery-count role="status">
+      {themes.length} themes
+    </p><div class="collection-grid">
+      {themes.map((theme) => <ThemeCard theme={theme} />)}
+    </div>
+  </main></SiteLayout
+>
+<style>
+  .filter-label {
+    display: block;
+    margin-top: var(--space-8);
+    margin-bottom: var(--space-2);
+    font-size: var(--text-sm);
+  }
+  [data-gallery-count] {
+    margin-top: var(--space-3);
+  }
+</style>

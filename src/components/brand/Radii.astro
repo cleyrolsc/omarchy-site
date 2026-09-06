@@ -1,0 +1,95 @@
+---
+/**
+ * Radii — every `--radius-*` token rendered as a box so you can see
+ * the roundness (and compare).
+ */
+import BrandSection from "./BrandSection.astro";
+---
+
+<BrandSection
+  kicker="04 — Shapes"
+  title="Border radius"
+  description="Every <code>--radius-*</code> token, applied to a box. Sharp to pill."
+>
+  <div class="radii" data-radii>
+    <div class="radii__empty">Loading tokens…</div>
+  </div>
+</BrandSection>
+
+<script is:inline>
+  (function () {
+    function render(root) {
+      var readTokens = window.__brandReadRootTokens;
+      if (!readTokens) return;
+      var tokens = readTokens("--radius-");
+      if (tokens.length === 0) {
+        root.innerHTML =
+          '<div class="radii__empty">No <code>--radius-*</code> tokens found.</div>';
+        return;
+      }
+      root.innerHTML = tokens
+        .map(function (t) {
+          return (
+            '<div class="radius-tile">' +
+            '<div class="radius-tile__box" style="border-radius:' +
+            t.resolved +
+            ';"></div>' +
+            '<div class="radius-tile__name">' +
+            t.shortName +
+            "</div>" +
+            '<div class="radius-tile__value">' +
+            t.resolved +
+            "</div>" +
+            "</div>"
+          );
+        })
+        .join("");
+    }
+
+    function runAll() {
+      document.querySelectorAll("[data-radii]").forEach(render);
+    }
+
+    if (document.readyState === "complete") {
+      runAll();
+    } else {
+      window.addEventListener("load", runAll, { once: true });
+    }
+  })();
+</script>
+
+<style>
+  .radii {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(7rem, 1fr));
+    gap: var(--space-4);
+  }
+
+  .radii__empty {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .radii :global(.radius-tile) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-1);
+  }
+  .radii :global(.radius-tile__box) {
+    inline-size: 4.5rem;
+    block-size: 4.5rem;
+    background-color: var(--color-bg-raised);
+    border: 1px solid var(--color-border-strong);
+  }
+  .radii :global(.radius-tile__name) {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text);
+  }
+  .radii :global(.radius-tile__value) {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-faint);
+  }
+</style>

@@ -1,0 +1,78 @@
+---
+export interface Props {
+  posts: { title: string; path: string; date: string; excerpt: string }[];
+  compact?: boolean;
+}
+const { posts, compact = false } = Astro.props;
+const date = (v: string) =>
+  new Date(v).toLocaleDateString("en-US", {
+    timeZone: "America/New_York",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+---
+
+<ul class:list={["news-list", { "news-list--compact": compact }]}>
+  {
+    posts.map((post) => (
+      <li>
+        <a href={post.path}>
+          <>
+            <time datetime={post.date}>{date(post.date)}</time>
+            <h2>{post.title}</h2>
+            <p>{post.excerpt}</p>
+          </>
+        </a>
+      </li>
+    ))
+  }
+</ul>
+<style>
+  .news-list {
+    padding: 0;
+    margin: var(--space-8) 0 0;
+    list-style: none;
+    border-top: 1px solid var(--color-border);
+  }
+  li {
+    border-bottom: 1px solid var(--color-border);
+  }
+  a {
+    display: block;
+    height: 100%;
+    padding: var(--space-5) 0;
+    color: inherit;
+    text-decoration: none;
+  }
+  time {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+  h2 {
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    margin: var(--space-1_5) 0;
+  }
+  a:hover h2 {
+    color: var(--color-brand);
+  }
+  p {
+    color: var(--color-text-secondary);
+    font-size: var(--text-caption);
+    margin: 0;
+  }
+  .news-list--compact p {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+  @media (min-width: 40rem) {
+    .news-list--compact {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: var(--space-10);
+    }
+  }
+</style>

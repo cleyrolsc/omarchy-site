@@ -1,0 +1,145 @@
+---
+import teams from "../data/teams.json";
+export interface Props {
+  groups?: {
+    id: string;
+    name: string;
+    description: string;
+    members: {
+      name: string;
+      meta: string;
+      href: string | null;
+      avatar: string | null;
+    }[];
+  }[];
+  maxFaces?: number;
+  basePath?: string;
+}
+const { groups = teams, maxFaces = 8, basePath = "/teams/" } = Astro.props;
+---
+
+<ul class="team-clusters">
+  {
+    groups.map((team) => (
+      <li class="team-cluster" data-team-cluster>
+        <>
+          <button
+            type="button"
+            class="cluster-label"
+            data-cluster-toggle
+            aria-expanded="false"
+          >
+            <>
+              <strong>{team.name}</strong>
+              <span>{team.description}</span>
+            </>
+          </button>
+          <div class="cluster-faces">
+            {team.members.slice(0, maxFaces).map((member) => (
+              <a
+                href={member.href || `${basePath}#${team.id}`}
+                aria-label={`${member.name}, ${member.meta}`}
+                title={`${member.name} · ${member.meta}`}
+              >
+                {member.avatar && (
+                  <img
+                    src={member.avatar}
+                    alt=""
+                    width="80"
+                    height="80"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                )}
+                <span>{member.name}</span>
+              </a>
+            ))}
+            {team.members.length > maxFaces && (
+              <a href={`${basePath}#${team.id}`} class="more-faces">
+                +{team.members.length - maxFaces}
+              </a>
+            )}
+          </div>
+        </>
+      </li>
+    ))
+  }
+</ul>
+<style>
+  .team-clusters {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+    gap: var(--space-8) var(--space-6);
+    margin: var(--space-8) 0 0;
+  }
+  .cluster-label {
+    display: grid;
+    gap: var(--space-1);
+    text-align: left;
+    border: 0;
+    padding: 0;
+    background: none;
+    color: var(--color-text);
+  }
+  .cluster-label strong {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+  }
+  .cluster-label span {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+  .cluster-faces {
+    display: flex;
+    flex-wrap: wrap;
+    padding-block: var(--space-4) var(--space-6);
+    padding-left: var(--space-2);
+  }
+  .cluster-faces a {
+    position: relative;
+    margin-left: calc(-1 * var(--space-2));
+    width: var(--space-12);
+    height: var(--space-12);
+    border: 2px solid var(--color-bg);
+    transition:
+      transform var(--duration-base),
+      margin var(--duration-base);
+  }
+  .cluster-faces a:hover,
+  .cluster-faces a:focus-visible {
+    z-index: var(--z-base);
+    transform: translateY(calc(-1 * var(--space-2)));
+  }
+  .cluster-faces img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .cluster-faces span {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    padding: var(--space-1);
+    background: var(--color-bg);
+    white-space: nowrap;
+    font-size: var(--text-xs);
+  }
+  .cluster-faces a:hover span,
+  .cluster-faces a:focus-visible span {
+    display: block;
+  }
+  [data-open] .cluster-faces a {
+    margin-right: var(--space-2);
+    margin-left: 0;
+  }
+  .more-faces {
+    display: grid;
+    place-items: center;
+    font-size: var(--text-xs);
+    background: var(--color-surface);
+  }
+</style>

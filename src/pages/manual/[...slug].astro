@@ -1,0 +1,101 @@
+---
+import { render } from "astro:content";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import ManualNavigation from "../../components/ManualNavigation.astro";
+import Brand from "../../components/Brand.astro";
+import { manualEntries } from "../../lib/content";
+export async function getStaticPaths() {
+  const chapters = await manualEntries();
+  return chapters.map((chapter, index) => ({
+    params: { slug: chapter.id === "index" ? undefined : chapter.id },
+    props: {
+      chapter,
+      chapters,
+      prev: chapters[index - 1],
+      next: chapters[index + 1],
+    },
+  }));
+}
+const { chapter, chapters, prev, next } = Astro.props;
+const { Content } = await render(chapter);
+---
+
+<SiteLayout
+  title={chapter.data.title}
+  description={chapter.data.description}
+  canonicalPath={chapter.data.path}
+>
+  <main id="main" class="page manual-layout">
+    <ManualNavigation
+      chapters={chapters.map((c) => ({
+        title: c.data.title,
+        path: c.data.path,
+      }))}
+      currentPath={chapter.data.path}
+    /><div class="manual-main">
+      <article>
+        {chapter.id === "index" && <Brand class="manual-wordmark" />}<h1>
+          {chapter.data.title}
+        </h1><div class="prose manual-prose"><Content /></div>
+      </article><nav class="chapter-pagination" aria-label="Chapter pagination">
+        {
+          prev ? (
+            <a rel="prev" href={prev.data.path}>
+              ← {prev.data.title}
+            </a>
+          ) : (
+            <span />
+          )
+        }{
+          next && (
+            <a rel="next" href={next.data.path}>
+              {next.data.title} →
+            </a>
+          )
+        }
+      </nav>
+    </div>
+  </main>
+</SiteLayout>
+<style>
+  .manual-layout {
+    display: grid;
+    gap: var(--space-12);
+  }
+  .manual-main {
+    min-width: 0;
+    max-width: var(--measure);
+    margin-left: auto;
+    width: 100%;
+  }
+  h1 {
+    margin: 0;
+  }
+  .manual-prose {
+    margin-top: var(--space-6);
+  }
+  :global(.manual-wordmark) {
+    margin-bottom: var(--space-10);
+  }
+  .chapter-pagination {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-3);
+    border-top: 1px solid var(--color-border);
+    margin-top: var(--space-14);
+    padding-top: var(--space-6);
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+  }
+  .chapter-pagination a {
+    max-width: 48%;
+    text-decoration: none;
+  }
+  @media (min-width: 64rem) {
+    .manual-layout {
+      grid-template-columns: 16rem minmax(0, 1fr);
+      gap: var(--space-8);
+    }
+  }
+</style>

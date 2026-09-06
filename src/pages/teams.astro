@@ -1,0 +1,139 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import teams from "../data/teams.json";
+---
+
+<SiteLayout
+  title="Teams - Omarchy"
+  description="The people guiding Omarchy: Core, Security, Design, and the Rangers."
+  ><main id="main" class="page">
+    <h1>Teams</h1><p>
+      The people guiding Omarchy: Core sets the direction, Security keeps the
+      system safe, and the Rangers help everyone else find their way.
+    </p><nav class="team-jumps" aria-label="Teams on this page">
+      {
+        teams.map((team) => (
+          <a href={`#${team.id}`}>
+            {team.name.replace(/^Omarchy /, "")}{" "}
+            <span>{team.members.length}</span>
+          </a>
+        ))
+      }
+    </nav>{
+      teams.map((team) => (
+        <section class="team-section" id={team.id}>
+          <ul class="members">
+            {team.members.map((member) => (
+              <li>
+                <a href={member.href || `#${team.id}`}>
+                  <img
+                    src={member.avatar}
+                    alt=""
+                    width="240"
+                    height="240"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <h3>{member.name}</h3>
+                  <p>{member.meta}</p>
+                </a>
+              </li>
+            ))}
+          </ul>
+          {team.note && (
+            <p class="muted">
+              {team.note.text}{" "}
+              {team.note.href && (
+                <a class="text-link" href={team.note.href}>
+                  {team.note.linkText}
+                </a>
+              )}
+            </p>
+          )}
+        </section>
+      ))
+    }<section class="join">
+      <div>
+        <h2>Not on a team? Neither is almost everyone.</h2><p>
+          Most of Omarchy happens in the Discord and on GitHub: Questions,
+          themes, plugins, pull requests.
+        </p>
+      </div><div class="actions">
+        <a class="btn btn--primary" href="https://discord.gg/tXFUdasqhY"
+          >Join the Discord</a
+        ><a class="btn" href="https://github.com/omacom/omarchy">Open GitHub</a>
+      </div>
+    </section>
+  </main></SiteLayout
+>
+<style>
+  .team-jumps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-6);
+    margin: var(--space-8) 0;
+  }
+  .team-jumps a {
+    text-decoration: none;
+    font-size: var(--text-sm);
+  }
+  .team-jumps span {
+    color: var(--color-text-muted);
+  }
+  .team-section {
+    border-top: 1px solid var(--color-border);
+    padding-block: var(--space-10);
+    scroll-margin-top: calc(var(--nav-h) + var(--space-8));
+  }
+  .team-section header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-2);
+  }
+  h2 {
+    margin: 0;
+    font-size: var(--text-lg);
+  }
+  .members {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+    gap: var(--space-7) var(--space-6);
+    list-style: none;
+    padding: 0;
+    margin: var(--space-7) 0;
+  }
+  .members a {
+    text-decoration: none;
+  }
+  .members img {
+    display: block;
+    width: 8.75rem;
+    max-width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border: 1px solid var(--color-border);
+  }
+  h3 {
+    margin: var(--space-3) 0 0;
+    font-size: var(--text-sm);
+  }
+  .members p {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+  .join {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-6);
+    border-top: 1px solid var(--color-border);
+    padding-block: var(--space-10);
+  }
+  .join p {
+    color: var(--color-text-secondary);
+    max-width: 36rem;
+  }
+</style>

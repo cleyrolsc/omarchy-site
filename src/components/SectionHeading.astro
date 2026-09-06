@@ -1,0 +1,54 @@
+---
+import { ArrowRight } from "@lucide/astro";
+export interface Props {
+  title: string;
+  description?: string;
+  href?: string;
+  link?: string;
+  level?: 2 | 3;
+}
+const { title, description, href, link, level = 2 } = Astro.props;
+const Heading = level === 3 ? "h3" : "h2";
+---
+
+<header class="section-heading">
+  <div>
+    <Heading>{title}</Heading>{description && <p>{description}</p>}<slot />
+  </div>{
+    href && (
+      <a class="section-link" href={href}>
+        {link}
+        <ArrowRight size={18} />
+      </a>
+    )
+  }
+</header>
+<style>
+  .section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-8);
+    flex-wrap: wrap;
+  }
+  .section-heading > div {
+    max-width: 46rem;
+  }
+  h2,
+  h3 {
+    margin: 0;
+    font-size: var(--text-2xl);
+    font-weight: var(--font-semibold);
+  }
+  p {
+    margin: var(--space-3) 0 0;
+    color: var(--color-text-secondary);
+    text-wrap: pretty;
+  }
+  @media (min-width: 40rem) {
+    h2,
+    h3 {
+      font-size: var(--text-section-title);
+    }
+  }
+</style>

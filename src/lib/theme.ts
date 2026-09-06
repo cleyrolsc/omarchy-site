@@ -2,53 +2,53 @@
  * Site themes: the stock Omarchy themes, applied the way Omarchy applies
  * them. There is no light/dark switch; there are themes, opened with T
  * (Omarchy's own chord still works, but Hyprland eats it before the browser
- * sees it), and every token in styles.css resolves per theme.
+ * sees it), and every token in styles/brand.css resolves per theme.
  */
 
-import { OMARCHY_MARK_PATH } from '@/components/Brand'
+import { OMARCHY_MARK_PATH } from "./brand";
 
 export type SiteTheme = {
-  id: string
-  name: string
+  id: string;
+  name: string;
   /** A light page: the theme's background is the lighter of its two inks. */
-  light?: true
-}
+  light?: true;
+};
 
 export const SITE_THEMES: SiteTheme[] = [
-  { id: 'catppuccin', name: 'Catppuccin' },
-  { id: 'catppuccin-latte', name: 'Catppuccin Latte', light: true },
-  { id: 'ethereal', name: 'Ethereal' },
-  { id: 'everforest', name: 'Everforest' },
-  { id: 'flexoki-light', name: 'Flexoki Light', light: true },
-  { id: 'gruvbox', name: 'Gruvbox' },
-  { id: 'hackerman', name: 'Hackerman' },
-  { id: 'kanagawa', name: 'Kanagawa' },
-  { id: 'last-horizon', name: 'Last Horizon' },
-  { id: 'lumon', name: 'Lumon' },
-  { id: 'lupine', name: 'Lupine', light: true },
-  { id: 'matte-black', name: 'Matte Black' },
-  { id: 'miasma', name: 'Miasma' },
-  { id: 'nord', name: 'Nord' },
-  { id: 'osaka-jade', name: 'Osaka Jade' },
-  { id: 'retro-82', name: 'Retro 82' },
-  { id: 'ristretto', name: 'Ristretto' },
-  { id: 'rose-pine', name: 'Rosé Pine', light: true },
-  { id: 'solitude', name: 'Solitude' },
-  { id: 'tokyo-night', name: 'Tokyo Night' },
-  { id: 'vantablack', name: 'Vantablack' },
-  { id: 'white', name: 'White', light: true },
-]
+  { id: "catppuccin", name: "Catppuccin" },
+  { id: "catppuccin-latte", name: "Catppuccin Latte", light: true },
+  { id: "ethereal", name: "Ethereal" },
+  { id: "everforest", name: "Everforest" },
+  { id: "flexoki-light", name: "Flexoki Light", light: true },
+  { id: "gruvbox", name: "Gruvbox" },
+  { id: "hackerman", name: "Hackerman" },
+  { id: "kanagawa", name: "Kanagawa" },
+  { id: "last-horizon", name: "Last Horizon" },
+  { id: "lumon", name: "Lumon" },
+  { id: "lupine", name: "Lupine", light: true },
+  { id: "matte-black", name: "Matte Black" },
+  { id: "miasma", name: "Miasma" },
+  { id: "nord", name: "Nord" },
+  { id: "osaka-jade", name: "Osaka Jade" },
+  { id: "retro-82", name: "Retro 82" },
+  { id: "ristretto", name: "Ristretto" },
+  { id: "rose-pine", name: "Rosé Pine", light: true },
+  { id: "solitude", name: "Solitude" },
+  { id: "tokyo-night", name: "Tokyo Night" },
+  { id: "vantablack", name: "Vantablack" },
+  { id: "white", name: "White", light: true },
+];
 
-export const DEFAULT_THEME = 'tokyo-night'
-export const THEME_KEY = 'omarchy-site-theme'
+export const DEFAULT_THEME = "tokyo-night";
+export const THEME_KEY = "omarchy-site-theme";
 /** Fired on <window> after a theme lands, for canvas renderers to re-read. */
-export const THEME_EVENT = 'omarchy-theme'
+export const THEME_EVENT = "omarchy-theme";
 /** Ask the mounted ThemePicker to open (footer link, welcome notice). */
-export const OPEN_PICKER_EVENT = 'omarchy-open-picker'
+export const OPEN_PICKER_EVENT = "omarchy-open-picker";
 /** Fired with detail { open } whenever the picker opens or closes. */
-export const PICKER_STATE_EVENT = 'omarchy-picker-state'
+export const PICKER_STATE_EVENT = "omarchy-picker-state";
 /** Set once the user has seen the picker or dismissed the welcome notice. */
-export const HINT_KEY = 'omarchy-theme-hint-seen'
+export const HINT_KEY = "omarchy-theme-hint-seen";
 
 /**
  * Pre-paint script injected into <head>: stamps <html data-theme> from
@@ -58,22 +58,21 @@ export const HINT_KEY = 'omarchy-theme-hint-seen'
  * and the picker can change it like any other choice. Only when storage
  * itself is unavailable does the page fall back to Tokyo Night.
  *
- * The tab icon is created here too, outside React. paintFavicon() replaces
- * that same tagged link; it must not touch a <link> React owns, or React
- * later tries to removeChild a node whose parent is already gone.
+ * The tab icon is created here too. paintFavicon() replaces that same
+ * tagged link after the theme has been resolved.
  */
 export const themeInitScript = `(function(){try{var t=localStorage.getItem('${THEME_KEY}');var ok=${JSON.stringify(
   SITE_THEMES.map((t) => t.id),
-)};if(ok.indexOf(t)<0){t=ok[Math.floor(Math.random()*ok.length)];localStorage.setItem('${THEME_KEY}',t)}document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme='${DEFAULT_THEME}'}if(!document.querySelector('link[rel="icon"][data-theme-icon]')){var l=document.createElement('link');l.rel='icon';l.type='image/svg+xml';l.href='/brand/omarchy-logo.svg';l.setAttribute('data-theme-icon','');document.head.appendChild(l)}})()`
+)};if(ok.indexOf(t)<0){t=ok[Math.floor(Math.random()*ok.length)];localStorage.setItem('${THEME_KEY}',t)}document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme='${DEFAULT_THEME}'}if(!document.querySelector('link[rel="icon"][data-theme-icon]')){var l=document.createElement('link');l.rel='icon';l.type='image/svg+xml';l.href='/brand/omarchy-logo.svg';l.setAttribute('data-theme-icon','');document.head.appendChild(l)}})()`;
 
 export function readTheme(): string {
   try {
-    const stored = localStorage.getItem(THEME_KEY)
-    if (SITE_THEMES.some((t) => t.id === stored)) return stored as string
+    const stored = localStorage.getItem(THEME_KEY);
+    if (SITE_THEMES.some((t) => t.id === stored)) return stored as string;
   } catch {
     /* storage unavailable */
   }
-  return DEFAULT_THEME
+  return DEFAULT_THEME;
 }
 
 /**
@@ -82,25 +81,23 @@ export function readTheme(): string {
  * Tokyo Night green, which only that one theme could wear, so this replaces
  * the tagged link with the same path painted in the current color. Browsers
  * cache a favicon by its element, not its URL, so the link is replaced
- * outright rather than re-pointed. Only [data-theme-icon] is touched: a
- * React-owned <link rel="icon"> pulled out of <head> crashes the next
- * commit with removeChild on a null parent.
+ * outright rather than re-pointed. Only [data-theme-icon] is touched.
  */
 export function paintFavicon() {
   const brand = getComputedStyle(document.documentElement)
-    .getPropertyValue('--color-brand')
-    .trim()
-  if (!brand) return
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200"><path fill="${brand}" fill-rule="evenodd" clip-rule="evenodd" d="${OMARCHY_MARK_PATH}"/></svg>`
-  const link = document.createElement('link')
-  link.rel = 'icon'
-  link.type = 'image/svg+xml'
-  link.setAttribute('data-theme-icon', '')
-  link.href = `data:image/svg+xml,${encodeURIComponent(svg)}`
+    .getPropertyValue("--color-brand")
+    .trim();
+  if (!brand) return;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200"><path fill="${brand}" fill-rule="evenodd" clip-rule="evenodd" d="${OMARCHY_MARK_PATH}"/></svg>`;
+  const link = document.createElement("link");
+  link.rel = "icon";
+  link.type = "image/svg+xml";
+  link.setAttribute("data-theme-icon", "");
+  link.href = `data:image/svg+xml,${encodeURIComponent(svg)}`;
   document
     .querySelectorAll('link[rel="icon"][data-theme-icon]')
-    .forEach((old) => old.remove())
-  document.head.appendChild(link)
+    .forEach((old) => old.remove());
+  document.head.appendChild(link);
 }
 
 /**
@@ -109,23 +106,23 @@ export function paintFavicon() {
  * serialised in whatever space they were authored in, and a meta tag wants
  * one concrete value.
  */
-let probe: CanvasRenderingContext2D | null | undefined
+let probe: CanvasRenderingContext2D | null | undefined;
 function toBytes(color: string) {
   if (probe === undefined) {
     probe =
-      document.createElement('canvas').getContext('2d', {
+      document.createElement("canvas").getContext("2d", {
         willReadFrequently: true,
-      }) ?? null
+      }) ?? null;
   }
-  if (!probe) return null
-  probe.clearRect(0, 0, 1, 1)
-  probe.fillStyle = color
-  probe.fillRect(0, 0, 1, 1)
-  const [r, g, b, a] = probe.getImageData(0, 0, 1, 1).data
-  return { r, g, b, a }
+  if (!probe) return null;
+  probe.clearRect(0, 0, 1, 1);
+  probe.fillStyle = color;
+  probe.fillRect(0, 0, 1, 1);
+  const [r, g, b, a] = probe.getImageData(0, 0, 1, 1).data;
+  return { r, g, b, a };
 }
 
-const hex = (n: number) => n.toString(16).padStart(2, '0')
+const hex = (n: number) => n.toString(16).padStart(2, "0");
 
 /**
  * The colour actually painted at the very top of the window: the first thing
@@ -142,41 +139,41 @@ const hex = (n: number) => n.toString(16).padStart(2, '0')
  * The bar is skipped, or it would sample itself.
  */
 function groundAtPoint(x: number, y: number) {
-  const GROUNDS = 'section, main, footer, body'
+  const GROUNDS = "section, main, footer, body";
   const hit = document
     .elementsFromPoint(x, y)
-    .find((el) => !el.closest('header'))
-  let el: Element | null = hit?.closest(GROUNDS) ?? null
+    .find((el) => !el.closest("header"));
+  let el: Element | null = hit?.closest(GROUNDS) ?? null;
   while (el) {
-    const rgb = toBytes(getComputedStyle(el).backgroundColor)
+    const rgb = toBytes(getComputedStyle(el).backgroundColor);
     // A ground you can see through is not the ground; keep going up.
-    if (rgb && rgb.a >= 250) return { el, rgb }
-    el = el.parentElement?.closest(GROUNDS) ?? null
+    if (rgb && rgb.a >= 250) return { el, rgb };
+    el = el.parentElement?.closest(GROUNDS) ?? null;
   }
-  return null
+  return null;
 }
 
 const paint6 = (rgb: { r: number; g: number; b: number }) =>
-  `#${hex(rgb.r)}${hex(rgb.g)}${hex(rgb.b)}`
+  `#${hex(rgb.r)}${hex(rgb.g)}${hex(rgb.b)}`;
 
 /**
  * The colour a given ground is painted, walking up while it is see-through:
  * a section with no background of its own is showing the page's.
  */
 export function groundOf(node: Element) {
-  let el: Element | null = node
+  let el: Element | null = node;
   while (el) {
-    const rgb = toBytes(getComputedStyle(el).backgroundColor)
-    if (rgb && rgb.a >= 250) return paint6(rgb)
-    el = el.parentElement
+    const rgb = toBytes(getComputedStyle(el).backgroundColor);
+    if (rgb && rgb.a >= 250) return paint6(rgb);
+    el = el.parentElement;
   }
-  return null
+  return null;
 }
 
 /** The colour of the ground at a single point. */
 export function groundAt(x: number, y: number) {
-  const found = groundAtPoint(x, y)
-  return found ? paint6(found.rgb) : null
+  const found = groundAtPoint(x, y);
+  return found ? paint6(found.rgb) : null;
 }
 
 /**
@@ -189,29 +186,29 @@ export function groundAt(x: number, y: number) {
  * section's colour exactly as that section finishes arriving under it.
  */
 export function groundAcross(x: number, top: number, bottom: number) {
-  const lower = groundAtPoint(x, bottom)
-  if (!lower) return null
-  const upper = groundAtPoint(x, top)
-  if (!upper || upper.el === lower.el) return paint6(lower.rgb)
+  const lower = groundAtPoint(x, bottom);
+  if (!lower) return null;
+  const upper = groundAtPoint(x, top);
+  if (!upper || upper.el === lower.el) return paint6(lower.rgb);
 
   const edges = [
     upper.el.getBoundingClientRect().bottom,
     lower.el.getBoundingClientRect().top,
-  ].filter((edge) => edge > top && edge < bottom)
-  const boundary = edges.length ? Math.min(...edges) : bottom
+  ].filter((edge) => edge > top && edge < bottom);
+  const boundary = edges.length ? Math.min(...edges) : bottom;
   // The share of the strip still held by the ground above.
-  const held = (boundary - top) / (bottom - top)
-  const blend = (a: number, b: number) => Math.round(a * held + b * (1 - held))
+  const held = (boundary - top) / (bottom - top);
+  const blend = (a: number, b: number) => Math.round(a * held + b * (1 - held));
   return paint6({
     r: blend(upper.rgb.r, lower.rgb.r),
     g: blend(upper.rgb.g, lower.rgb.g),
     b: blend(upper.rgb.b, lower.rgb.b),
-  })
+  });
 }
 
 /** The colour at the very top of the window, for the browser's own chrome. */
 function topColor() {
-  return groundAt(Math.floor(document.documentElement.clientWidth / 2), 1)
+  return groundAt(Math.floor(document.documentElement.clientWidth / 2), 1);
 }
 
 /**
@@ -222,17 +219,19 @@ function topColor() {
  * section's. It follows the scroll instead.
  */
 export function paintChrome() {
-  const root = getComputedStyle(document.documentElement)
-  const fallback = root.getPropertyValue('--color-bg').trim()
-  const color = topColor() ?? fallback
-  if (!color) return
-  let meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]')
+  const root = getComputedStyle(document.documentElement);
+  const fallback = root.getPropertyValue("--color-bg").trim();
+  const color = topColor() ?? fallback;
+  if (!color) return;
+  let meta = document.querySelector<HTMLMetaElement>(
+    'meta[name="theme-color"]',
+  );
   if (!meta) {
-    meta = document.createElement('meta')
-    meta.name = 'theme-color'
-    document.head.appendChild(meta)
+    meta = document.createElement("meta");
+    meta.name = "theme-color";
+    document.head.appendChild(meta);
   }
-  if (meta.content !== color) meta.content = color
+  if (meta.content !== color) meta.content = color;
 }
 
 /**
@@ -244,17 +243,17 @@ export function watchChrome() {
   // couple of style reads, and iOS defers animation frames during a momentum
   // scroll - which is exactly the part of a scroll this needs to keep up
   // with. scrollend catches the settle on the browsers that fire it.
-  paintChrome()
-  window.addEventListener('scroll', paintChrome, { passive: true })
-  window.addEventListener('scrollend', paintChrome)
-  window.addEventListener('resize', paintChrome)
-  window.addEventListener('orientationchange', paintChrome)
+  paintChrome();
+  window.addEventListener("scroll", paintChrome, { passive: true });
+  window.addEventListener("scrollend", paintChrome);
+  window.addEventListener("resize", paintChrome);
+  window.addEventListener("orientationchange", paintChrome);
   return () => {
-    window.removeEventListener('scroll', paintChrome)
-    window.removeEventListener('scrollend', paintChrome)
-    window.removeEventListener('resize', paintChrome)
-    window.removeEventListener('orientationchange', paintChrome)
-  }
+    window.removeEventListener("scroll", paintChrome);
+    window.removeEventListener("scrollend", paintChrome);
+    window.removeEventListener("resize", paintChrome);
+    window.removeEventListener("orientationchange", paintChrome);
+  };
 }
 
 /**
@@ -263,18 +262,18 @@ export function watchChrome() {
  * listen for THEME_EVENT and re-read their colors.
  */
 export function applyTheme(id: string) {
-  const root = document.documentElement
-  root.classList.add('no-transitions')
-  root.dataset.theme = id
+  const root = document.documentElement;
+  root.classList.add("no-transitions");
+  root.dataset.theme = id;
   try {
-    localStorage.setItem(THEME_KEY, id)
+    localStorage.setItem(THEME_KEY, id);
   } catch {
     /* storage unavailable */
   }
-  paintFavicon()
-  paintChrome()
-  window.dispatchEvent(new CustomEvent(THEME_EVENT, { detail: id }))
+  paintFavicon();
+  paintChrome();
+  window.dispatchEvent(new CustomEvent(THEME_EVENT, { detail: id }));
   requestAnimationFrame(() => {
-    requestAnimationFrame(() => root.classList.remove('no-transitions'))
-  })
+    requestAnimationFrame(() => root.classList.remove("no-transitions"));
+  });
 }

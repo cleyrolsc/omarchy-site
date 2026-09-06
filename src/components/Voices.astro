@@ -1,0 +1,120 @@
+---
+import voices from "../data/voices.json";
+export interface Props {}
+import { voiceLinks } from "../lib/voice-links";
+---
+
+<div class="voices-wall" data-voices-wall>
+  {
+    voices.map((post) => (
+      <article>
+        <blockquote>
+          {voiceLinks(post.text).map((part) =>
+            part.href ? <a href={part.href}>{part.text}</a> : part.text,
+          )}
+        </blockquote>
+        {post.images?.map((image) => (
+          <a href={post.url}>
+            <img
+              class="post-image"
+              src={image}
+              alt={`Image accompanying ${post.name}'s post`}
+              width="600"
+              height="400"
+              loading="lazy"
+              decoding="async"
+            />
+          </a>
+        ))}
+        <footer>
+          <a href={post.url}>
+            <time datetime={post.date}>{post.date}</time>
+            {post.video && " · Watch on X"} ↗
+          </a>
+        </footer>
+      </article>
+    ))
+  }
+</div>
+<button
+  class="btn voices-toggle"
+  data-voices-toggle
+  hidden
+  aria-expanded="false">Show more voices</button
+>
+<style>
+  .voices-wall {
+    margin-top: var(--space-8);
+    columns: 1;
+    column-gap: var(--space-5);
+    position: relative;
+  }
+  .voices-wall[data-collapsed] {
+    max-height: 42rem;
+    overflow: hidden;
+    mask-image: linear-gradient(to bottom, var(--color-black) 85%, transparent);
+  }
+  article {
+    break-inside: avoid;
+    display: block;
+    padding: var(--space-5);
+    margin-bottom: var(--space-5);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-card);
+  }
+  header {
+    display: flex;
+    gap: var(--space-3);
+    align-items: center;
+  }
+  header > img {
+    width: var(--space-10);
+    height: var(--space-10);
+    object-fit: cover;
+  }
+  header > div {
+    display: grid;
+  }
+  header a {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    text-decoration: none;
+  }
+  header span,
+  footer {
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+  }
+  blockquote {
+    margin: var(--space-4) 0;
+    border: 0;
+    padding: 0;
+    white-space: pre-line;
+    color: var(--color-text-secondary);
+    font-size: var(--text-caption);
+  }
+  .post-image {
+    width: 100%;
+    max-height: 24rem;
+    height: auto;
+    object-fit: contain;
+    background: var(--color-bg-deep);
+  }
+  footer {
+    margin-top: var(--space-3);
+  }
+  .voices-toggle {
+    margin: var(--space-5) auto 0;
+    display: flex;
+  }
+  @media (min-width: 40rem) {
+    .voices-wall {
+      columns: 2;
+    }
+  }
+  @media (min-width: 64rem) {
+    .voices-wall {
+      columns: 3;
+    }
+  }
+</style>

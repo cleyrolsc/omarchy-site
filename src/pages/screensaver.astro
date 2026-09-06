@@ -1,0 +1,136 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Omarchy screensaver"
+  description="The Omarchy screensaver, with terminal text effects in your browser."
+  transitions={false}
+  htmlClass="screensaver"
+>
+  <main id="main">
+    <h1 class="screensaver__title">
+      Omarchy screensaver. Press f for fullscreen.
+    </h1>
+    <canvas class="screensaver__canvas" id="screensaver" aria-hidden="true"
+    ></canvas>
+    <pre
+      class="screensaver__art"
+      id="screensaver-art">
+                 ▄▄▄
+ ▄█████▄    ▄███████████▄    ▄███████   ▄███████   ▄███████   ▄█   █▄    ▄█   █▄
+███   ███  ███   ███   ███  ███   ███  ███   ███  ███   ███  ███   ███  ███   ███
+███   ███  ███   ███   ███  ███   ███  ███   ███  ███   █▀   ███   ███  ███   ███
+███   ███  ███   ███   ███ ▄███▄▄▄███ ▄███▄▄▄██▀  ███       ▄███▄▄▄███▄ ███▄▄▄███
+███   ███  ███   ███   ███ ▀███▀▀▀███ ▀███▀▀▀▀    ███      ▀▀███▀▀▀███  ▀▀▀▀▀▀███
+███   ███  ███   ███   ███  ███   ███ ██████████  ███   █▄   ███   ███  ▄██   ███
+███   ███  ███   ███   ███  ███   ███  ███   ███  ███   ███  ███   ███  ███   ███
+ ▀█████▀    ▀█   ███   █▀   ███   █▀   ███   ███  ███████▀   ███   █▀    ▀█████▀
+                                       ███   █▀
+</pre>
+    <noscript>
+      <style>
+        /* Mirror of the .screensaver--static ruleset: that class only exists
+           once JS adds it, so without JS the same styling applies from here. */
+        html.screensaver .screensaver__canvas {
+          display: none;
+        }
+        html.screensaver,
+        html.screensaver body {
+          cursor: auto;
+        }
+        html.screensaver .screensaver__art {
+          align-content: center;
+          color: var(--color-brand);
+          display: grid;
+          font-size: clamp(0.35rem, 1.1vw, 1rem);
+          height: 100%;
+          inset: 0;
+          justify-content: center;
+          letter-spacing: -0.0425em;
+          line-height: 1.09375;
+          margin: 0;
+          place-items: center;
+          position: fixed;
+          white-space: pre;
+          width: 100%;
+        }
+      </style>
+    </noscript>
+  </main>
+  <script src="/assets/js/modules/screensaver.js" type="module" is:inline
+  ></script>
+</BaseLayout>
+
+<style is:global>
+  @layer components {
+    html.screensaver {
+      background: var(--color-black);
+      color-scheme: dark;
+      cursor: none;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    html.screensaver body {
+      background: var(--color-black);
+      color: var(--color-white);
+      cursor: none;
+      font-family: var(--font-mono);
+      height: 100%;
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    .screensaver__title {
+      clip: rect(0 0 0 0);
+      clip-path: inset(50%);
+      height: 1px;
+      overflow: hidden;
+      position: absolute;
+      white-space: nowrap;
+      width: 1px;
+    }
+
+    .screensaver__canvas {
+      background: var(--color-black);
+      display: block;
+      height: 100%;
+      inset: 0;
+      position: fixed;
+      touch-action: none;
+      width: 100%;
+    }
+
+    .screensaver__art {
+      display: none;
+    }
+
+    html.screensaver.screensaver--static .screensaver__art {
+      align-content: center;
+      color: var(--color-brand);
+      display: grid;
+      font-size: clamp(0.35rem, 1.1vw, 1rem);
+      height: 100%;
+      inset: 0;
+      justify-content: center;
+      letter-spacing: -0.0425em;
+      line-height: 1.09375;
+      margin: 0;
+      place-items: center;
+      position: fixed;
+      white-space: pre;
+      width: 100%;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html.screensaver,
+      html.screensaver body,
+      .screensaver__canvas {
+        cursor: auto;
+      }
+    }
+  }
+</style>

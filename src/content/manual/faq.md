@@ -1,0 +1,89 @@
+---
+{
+  "title": "FAQ",
+  "description": "How do I switch between keyboard layouts? Edit your ~/.config/hypr/input.lua file and add this to switch between layouts on Left Alt + Right Alt : hl.config({ i",
+  "order": 45,
+  "path": "/manual/faq/"
+}
+---
+
+<h3 id="how-do-i-switch-between-keyboard-layouts">How do I switch between keyboard layouts? <a class="manual__heading-link" href="#how-do-i-switch-between-keyboard-layouts" aria-label="Link to this section">#</a></h3>
+
+<p>Edit your <code>~/.config/hypr/input.lua</code> file and add this to switch between layouts on <code>Left Alt + Right Alt</code>:</p>
+
+<pre><code>hl.config({
+  input = {
+    -- Use multiple keyboard layouts and switch between them with Left Alt + Right Alt
+    kb_layout = "us,fr",
+    kb_options = "compose:caps,shift:both_capslock_cancel,grp:alts_toggle",
+  },
+})
+</code></pre>
+
+<p>The bar will automatically show your current keyboard layout once you have multiple layouts configured (and you can click it to switch too).</p>
+
+<h3 id="how-do-i-change-the-clock-format-to-12-hour">How do I change the clock format to 12-hour? <a class="manual__heading-link" href="#how-do-i-change-the-clock-format-to-12-hour" aria-label="Link to this section">#</a></h3>
+
+<p>Right-click the clock in the bar to cycle through the common formats, including the 12-hour ones. You can also set the format directly:</p>
+
+<pre><code>omarchy bar set omarchy.clock format "dddd h:mm AP"
+</code></pre>
+
+<p>This will display Sunday 10:55 AM.</p>
+
+<h3 id="how-do-i-change-my-timezone">How do I change my timezone? <a class="manual__heading-link" href="#how-do-i-change-my-timezone" aria-label="Link to this section">#</a></h3>
+
+<p>Run <em>Update &gt; Timezone</em> in the Omarchy menu and pick from the list. If the timezone is right but the clock itself has drifted, <em>Update &gt; Time</em> restarts the time synchronization for you.</p>
+
+<h3 id="how-do-i-change-my-dns-share-my-wi-fi-or-check-my-connection-speed">How do I change my DNS, share my Wi-Fi, or check my connection speed? <a class="manual__heading-link" href="#how-do-i-change-my-dns-share-my-wi-fi-or-check-my-connection-speed" aria-label="Link to this section">#</a></h3>
+
+<p>Those all live in <a href="/manual/networking/">networking</a>.</p>
+
+<h3 id="how-do-i-check-how-fast-my-disk-is">How do I check how fast my disk is? <a class="manual__heading-link" href="#how-do-i-check-how-fast-my-disk-is" aria-label="Link to this section">#</a></h3>
+
+<p><em>Trigger &gt; Speed Test &gt; Disk Speed Test</em> measures live read and write speed on your drive, or <code>omarchy disk speedtest</code> from the terminal.</p>
+
+<h3 id="why-cant-i-sign-into-my-google-account-in-chromium">Why can’t I sign into my Google account in Chromium? <a class="manual__heading-link" href="#why-cant-i-sign-into-my-google-account-in-chromium" aria-label="Link to this section">#</a></h3>
+
+<p>The plain open source Chromium build doesn’t ship with the OAuth credentials that Google requires for account sign-in. Run <em>Install &gt; Service &gt; Chromium Account</em> in the Omarchy menu to add them, restart the browser, and the sign-in will go through.</p>
+
+<h3 id="how-do-i-add-a-printer">How do I add a printer? <a class="manual__heading-link" href="#how-do-i-add-a-printer" aria-label="Link to this section">#</a></h3>
+
+<p>Printing is set up and running out of the box, and you add each printer yourself from <em>Print Settings</em> in the app launcher (<code>Super + Space</code>).</p>
+
+<p>Choose <em>Add</em>, and give it a moment to look: a printer plugged in over USB, and most network printers, are found for you. If yours isn’t in the list, pick <em>Network Printer &gt; Internet Printing Protocol (ipp)</em> and enter its address - the printer’s own display or its web page will tell you what that is, usually something like <code>192.168.1.50</code> with a queue of <code>ipp/print</code>. <em>Forward</em> then offers a driver, where a modern printer works best on the driverless <em>IPP Everywhere</em> profile and an older one wants the model’s own driver.</p>
+
+<p>Right-click a printer and choose <em>Set as Default</em> to pick which one your apps reach for first, and <em>Properties</em> to set paper size, duplex and quality.</p>
+
+<p>Automatic discovery, where printers on the network appear without being added, is temporarily switched off while it’s reworked, which is why the first step above is yours rather than automatic. Printing to a PDF file works without any printer at all.</p>
+
+<h3 id="how-do-i-change-where-screenshots-or-screenrecordings-are-saved">How do I change where screenshots or screenrecordings are saved? <a class="manual__heading-link" href="#how-do-i-change-where-screenshots-or-screenrecordings-are-saved" aria-label="Link to this section">#</a></h3>
+
+<p>If you want screenshots to be saved to <code>~/Pictures/Screenshots</code> instead of just <code>~/Pictures</code>, you can add this to a file under <code>~/.config/uwsm/env.d/</code> (like <code>~/.config/uwsm/env.d/capture</code>):</p>
+
+<pre><code>export OMARCHY_SCREENSHOT_DIR="$HOME/Pictures/Screenshots"
+</code></pre>
+
+<p>You can do the same for screenrecordings using <code>OMARCHY_SCREENRECORD_DIR</code>.</p>
+
+<p>Just remember to create the directoy you want to save to and restart Omarchy for this to take effect.</p>
+
+<h3 id="how-do-i-get-the-speakers--webcam-working-on-my-apple-studio-display">How do I get the speakers + webcam working on my Apple Studio Display? <a class="manual__heading-link" href="#how-do-i-get-the-speakers--webcam-working-on-my-apple-studio-display" aria-label="Link to this section">#</a></h3>
+
+<p>You’d think that it should all work just plugging in USB C, but unfortunately that isn’t the case. The solution I’ve found to make it work reliably is using <a href="https://www.amazon.com/WJESOG-DisplayPort-Adapter-Converter-Thunderbolt/dp/B0BNX7MS6N/">the WJESOG DisplayPort + USB-A =&gt; USB-C cable</a>. Then speakers and webcam work like a charm.</p>
+
+<p>Remember that you have built-in brightness control in Omarchy for the Apple Displays (both Studio and XDR) using the regular keyboard brightness buttons.</p>
+
+<h3 id="how-do-i-get-rid-of-all-the-extra-software">How do I get rid of all the extra software? <a class="manual__heading-link" href="#how-do-i-get-rid-of-all-the-extra-software" aria-label="Link to this section">#</a></h3>
+
+<p>If you don’t want programs like Obsidian or LibreOffice or any of the other preinstalled stuff, you can very easily remove it.</p>
+
+<p>Run <em>Remove &gt; Package</em> to see every package that’s installed. Then you can select any package you’d like to remove with tab, and start removing everything you’ve selected with return.</p>
+
+<p>And you can use <em>Remove &gt; Web App</em> from the Omarchy menu to remove any of the preinstalled web apps you don’t want.</p>
+
+<p>Or run <em>Remove &gt; Preinstalls</em> to sweep out all the preinstalled extras - web apps, TUIs, and optional applications - in one go. The hotkeys that launched them go away with them, so you’re left with a clean slate of bindings to fill with your own in <code>~/.config/hypr/bindings.lua</code>.</p>
+
+<hr />
+
+<p>For errors and broken bits, see <a href="/manual/troubleshooting/">the Troubleshooting section</a>.</p>

@@ -1,0 +1,64 @@
+---
+import { OMARCHY_MARK_PATH } from "../lib/brand";
+export interface Props {
+  variant?: "mark" | "wordmark";
+  label?: string;
+  class?: string;
+  hero?: boolean;
+}
+const {
+  variant = "wordmark",
+  label = "Omarchy",
+  class: className,
+  hero = false,
+} = Astro.props;
+---
+
+{
+  variant === "mark" ? (
+    <svg
+      class:list={["brand-mark", className]}
+      viewBox="0 0 1200 1200"
+      role="img"
+      aria-label={label}
+    >
+      <path
+        fill="currentColor"
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d={OMARCHY_MARK_PATH}
+      />
+    </svg>
+  ) : (
+    <span
+      class:list={["brand-wordmark", className]}
+      role="img"
+      aria-label={label}
+      data-hero-wordmark={hero || undefined}
+    >
+      <span aria-hidden="true" />
+    </span>
+  )
+}
+<style>
+  .brand-mark {
+    display: block;
+    width: 2rem;
+    height: 2rem;
+    color: var(--color-brand);
+  }
+  .brand-wordmark {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4131 / 950;
+    background: linear-gradient(
+      to bottom,
+      var(--t-field-mid) 0 17%,
+      var(--t-field-lit) 17% 42%,
+      var(--t-field-hover) 42% 67%,
+      var(--t-field-crest) 67% 84%,
+      var(--t-field-lit) 84%
+    );
+    mask: url("/brand/omarchy-wordmark.svg") center / contain no-repeat;
+  }
+</style>

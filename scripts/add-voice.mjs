@@ -26,7 +26,7 @@ import sharp from 'sharp'
 const ROOT = path.resolve(import.meta.dirname, '..')
 const SITE = path.resolve(process.env.OMARCHY_SITE_DIR ?? ROOT)
 const DATA = path.join(ROOT, 'src/data/voices.json')
-const AVATARS = path.join(SITE, 'assets/images/voices')
+const AVATARS = path.join(SITE, 'public/assets/images/voices')
 
 const [, , url, flag] = process.argv
 const dry = flag === '--dry'

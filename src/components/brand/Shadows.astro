@@ -1,0 +1,114 @@
+---
+/**
+ * Shadows — every `--shadow-*` token rendered on a raised card, plus
+ * every `--glow-*` accent token. Side-by-side so you can feel the step
+ * from subtle to dramatic.
+ */
+import BrandSection from "./BrandSection.astro";
+---
+
+<BrandSection
+  kicker="05 — Elevation"
+  title="Shadows & glows"
+  description="<code>--shadow-*</code> tokens use dark, subtle drops for elevation. <code>--glow-*</code> tokens layer an accent glow on hover / focus states of primary components."
+>
+  <div class="shadows" data-shadows data-prefix="--shadow-">
+    <div class="shadows__empty">Loading…</div>
+  </div>
+
+  <h3 class="shadows__subhead">Accent glows</h3>
+  <div class="shadows" data-shadows data-prefix="--glow-">
+    <div class="shadows__empty">Loading…</div>
+  </div>
+</BrandSection>
+
+<script is:inline>
+  (function () {
+    function render(root) {
+      var readTokens = window.__brandReadRootTokens;
+      if (!readTokens) return;
+      var prefix = root.getAttribute("data-prefix") || "--shadow-";
+      var tokens = readTokens(prefix);
+      if (tokens.length === 0) {
+        root.innerHTML =
+          '<div class="shadows__empty">No <code>' +
+          prefix +
+          "*</code> tokens found.</div>";
+        return;
+      }
+      root.innerHTML = tokens
+        .map(function (t) {
+          return (
+            '<div class="shadow-tile">' +
+            '<div class="shadow-tile__box" style="box-shadow:' +
+            t.resolved +
+            ';"></div>' +
+            '<div class="shadow-tile__name">' +
+            t.shortName +
+            "</div>" +
+            '<div class="shadow-tile__value">' +
+            t.resolved +
+            "</div>" +
+            "</div>"
+          );
+        })
+        .join("");
+    }
+
+    function runAll() {
+      document.querySelectorAll("[data-shadows]").forEach(render);
+    }
+
+    if (document.readyState === "complete") {
+      runAll();
+    } else {
+      window.addEventListener("load", runAll, { once: true });
+    }
+  })();
+</script>
+
+<style>
+  .shadows {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+    gap: var(--space-6);
+    padding-block: var(--space-6);
+  }
+  .shadows__subhead {
+    font-size: var(--text-xs);
+    font-weight: var(--font-bold);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+    margin: var(--space-8) 0 0;
+  }
+  .shadows__empty {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .shadows :global(.shadow-tile) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    align-items: flex-start;
+  }
+  .shadows :global(.shadow-tile__box) {
+    inline-size: 100%;
+    block-size: 4rem;
+    background-color: var(--color-bg-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+  }
+  .shadows :global(.shadow-tile__name) {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text);
+  }
+  .shadows :global(.shadow-tile__value) {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--color-text-faint);
+    word-break: break-all;
+  }
+</style>

@@ -1,0 +1,21 @@
+---
+import BaseLayout, { type Props } from "./BaseLayout.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import SiteDialogs from "../components/SiteDialogs.astro";
+import ThemeHint from "../components/ThemeHint.astro";
+import MusicControl from "../components/MusicControl.astro";
+---
+
+<BaseLayout {...Astro.props as Props}>
+  <SiteHeader />
+  <slot />
+  <SiteFooter />
+  <SiteDialogs />
+  <MusicControl />
+  <ThemeHint />
+  <script>
+    import { initSite } from "../scripts/site";
+    document.addEventListener("astro:page-load", initSite);
+  </script>
+</BaseLayout>

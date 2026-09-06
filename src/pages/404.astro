@@ -1,0 +1,54 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+---
+
+<SiteLayout title="Page not found - Omarchy" markdownPath={false} noindex
+  ><main id="main" class="not-found" data-hero-sentinel>
+    <canvas data-pixel-field="not-found" aria-hidden="true"></canvas><div>
+      <img
+        data-hero-wordmark
+        src="/brand/not-found-wordmark.svg"
+        alt=""
+        width="896"
+        height="160"
+      /><h1>Page not found</h1><p>
+        The address may have changed, or the page may never have existed.
+      </p><a class="btn btn--primary" href="/">Back to Omarchy</a>
+    </div>
+  </main></SiteLayout
+>
+<style>
+  .not-found {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: 75svh;
+    background: var(--t-field-bg);
+    padding: var(--space-12) var(--space-6);
+    text-align: center;
+  }
+  canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .not-found > div {
+    position: relative;
+    width: min(100%, 56rem);
+  }
+  img {
+    width: 100%;
+    margin-bottom: var(--space-10);
+  }
+  h1 {
+    margin: var(--space-6) 0;
+  }
+  p {
+    margin-bottom: var(--space-6);
+    color: var(--color-text-secondary);
+  }
+  [data-painted] {
+    visibility: hidden;
+  }
+</style>

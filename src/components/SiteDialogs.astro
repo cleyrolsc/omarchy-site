@@ -1,0 +1,186 @@
+---
+import { X } from "@lucide/astro";
+import { SITE_THEMES } from "../lib/theme";
+export interface Props {
+  preview?: "search" | "themes";
+}
+const { preview } = Astro.props;
+---
+
+<dialog
+  id="site-search"
+  open={preview === "search"}
+  aria-labelledby="search-title"
+>
+  <div class="dialog-heading">
+    <h2 id="search-title">Search Omarchy</h2><button
+      data-close-dialog
+      aria-label="Close search"><X size={20} /></button>
+  </div><label class="sr-only" for="site-search-input"
+    >Search the manual, news, pages, themes, and plugins</label
+  ><input
+    id="site-search-input"
+    class="search-field"
+    type="search"
+    placeholder="Search the manual, news, themes…"
+    autocomplete="off"
+  /><p class="search-status muted" role="status" data-search-status>
+    Start typing to search.
+  </p><ul class="search-results" data-search-results></ul><p
+    class="dialog-hint muted"
+  >
+    ↑ ↓ to select · Enter to open · Esc to close
+  </p>
+</dialog>
+<dialog
+  id="site-themes"
+  open={preview === "themes"}
+  aria-labelledby="themes-title"
+>
+  <div class="dialog-heading">
+    <h2 id="themes-title">Choose a theme</h2><button
+      data-close-dialog
+      aria-label="Close theme picker"><X size={20} /></button>
+  </div><label class="sr-only" for="theme-filter">Filter themes</label><input
+    id="theme-filter"
+    class="search-field"
+    type="search"
+    placeholder="Find a theme…"
+  /><div class="theme-picker-options">
+    {
+      SITE_THEMES.map((theme) => (
+        <button
+          type="button"
+          data-set-theme={theme.id}
+          data-theme-option
+          aria-pressed="false"
+        >
+          {theme.name}
+          <span>{theme.light ? "Light" : "Dark"}</span>
+        </button>
+      ))
+    }
+  </div><p class="dialog-hint muted">
+    Your selection is saved for your next visit.
+  </p>
+</dialog>
+<dialog id="site-media" aria-label="Media viewer">
+  <button class="media-close" data-close-dialog aria-label="Close media viewer"
+    ><X size={24} /></button
+  ><div data-media-content></div>
+</dialog>
+<style>
+  dialog {
+    width: min(42rem, calc(100vw - var(--space-8)));
+    max-height: calc(100dvh - var(--space-12));
+    margin: auto;
+    padding: var(--space-6);
+    border: 1px solid var(--color-border-strong);
+    background: var(--color-bg);
+    color: var(--color-text);
+    box-shadow: var(--shadow-overlay);
+    overflow: auto;
+  }
+  dialog::backdrop {
+    background: color-mix(in srgb, var(--color-black), transparent 25%);
+    backdrop-filter: blur(4px);
+  }
+  .dialog-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-5);
+    gap: var(--space-4);
+  }
+  h2 {
+    margin: 0;
+    font-size: var(--text-lg);
+  }
+  button[data-close-dialog] {
+    display: grid;
+    place-items: center;
+    padding: var(--space-2);
+    border: 0;
+    background: var(--color-surface);
+    color: var(--color-text);
+  }
+  .dialog-hint {
+    margin: var(--space-4) 0 0;
+  }
+  .search-status {
+    margin: var(--space-3) 0;
+  }
+  .search-results {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--space-2);
+  }
+  .search-results :global(a) {
+    display: block;
+    padding: var(--space-3);
+    text-decoration: none;
+    background: var(--color-surface);
+  }
+  .search-results :global(a:hover),
+  .search-results :global(a[data-selected]) {
+    outline: 2px solid var(--color-brand);
+    outline-offset: -2px;
+  }
+  .search-results :global(strong) {
+    display: block;
+    font-size: var(--text-sm);
+  }
+  .search-results :global(span) {
+    display: block;
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+  }
+  .theme-picker-options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-2);
+    margin-top: var(--space-4);
+  }
+  .theme-picker-options button {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-2);
+    padding: var(--space-3);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    text-align: left;
+    font-size: var(--text-caption);
+  }
+  .theme-picker-options button[aria-pressed="true"] {
+    border-color: var(--color-brand);
+  }
+  .theme-picker-options span {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+  #site-media {
+    width: min(72rem, calc(100vw - var(--space-8)));
+  }
+  .media-close {
+    margin: 0 0 var(--space-3) auto;
+  }
+  [data-media-content] :global(iframe) {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 0;
+  }
+  [data-media-content] :global(img) {
+    display: block;
+    margin: auto;
+    max-height: 75dvh;
+    object-fit: contain;
+  }
+  @media (max-width: 30rem) {
+    .theme-picker-options {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

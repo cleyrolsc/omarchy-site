@@ -4,10 +4,10 @@
  * { x, y, cw, ch } in CSS px (client coords at measure time) whenever the
  * field's geometry changes; GRID_CLEAR_EVENT fires when the hero unmounts.
  */
-export const GRID_EVENT = 'omarchy-pixel-grid'
-export const GRID_CLEAR_EVENT = 'omarchy-pixel-grid-clear'
+export const GRID_EVENT = "omarchy-pixel-grid";
+export const GRID_CLEAR_EVENT = "omarchy-pixel-grid-clear";
 
-export type PixelGrid = { x: number; y: number; cw: number; ch: number }
+export type PixelGrid = { x: number; y: number; cw: number; ch: number };
 
 /**
  * Translates every [data-px-snap] element onto the nearest cell line.
@@ -19,36 +19,36 @@ export type PixelGrid = { x: number; y: number; cw: number; ch: number }
  * settling through several visibly different states on load.
  */
 export function snapToGrid(grid: PixelGrid) {
-  const els = [...document.querySelectorAll<HTMLElement>('[data-px-snap]')]
-  if (els.length === 0) return
+  const els = [...document.querySelectorAll<HTMLElement>("[data-px-snap]")];
+  if (els.length === 0) return;
 
   // Buttons carry transition-all, which would animate the translate and
   // turn measurement into a moving target; freeze, snap, restore.
   for (const el of els) {
-    el.style.transition = 'none'
-    el.style.transform = ''
+    el.style.transition = "none";
+    el.style.transform = "";
   }
   for (const el of els) {
-    const r = el.getBoundingClientRect()
+    const r = el.getBoundingClientRect();
     const dx =
-      Math.round((r.left - grid.x) / grid.cw) * grid.cw + grid.x - r.left
+      Math.round((r.left - grid.x) / grid.cw) * grid.cw + grid.x - r.left;
     // Mode "x" snaps horizontally only: navbar items keep their natural
     // vertical centering so the bar's own axis can never break.
     const dy =
-      el.dataset.pxSnap === 'x'
+      el.dataset.pxSnap === "x"
         ? 0
-        : Math.round((r.top - grid.y) / grid.ch) * grid.ch + grid.y - r.top
-    el.style.transform = `translate(${dx.toFixed(2)}px, ${dy.toFixed(2)}px)`
+        : Math.round((r.top - grid.y) / grid.ch) * grid.ch + grid.y - r.top;
+    el.style.transform = `translate(${dx.toFixed(2)}px, ${dy.toFixed(2)}px)`;
   }
   requestAnimationFrame(() => {
-    for (const el of els) el.style.transition = ''
-  })
+    for (const el of els) el.style.transition = "";
+  });
 }
 
 /** Removes everything snapToGrid applied. */
 export function clearGridSnap() {
-  for (const el of document.querySelectorAll<HTMLElement>('[data-px-snap]')) {
-    el.style.transform = ''
-    el.style.transition = ''
+  for (const el of document.querySelectorAll<HTMLElement>("[data-px-snap]")) {
+    el.style.transform = "";
+    el.style.transition = "";
   }
 }

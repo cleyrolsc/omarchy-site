@@ -1,0 +1,100 @@
+---
+export interface Props {
+  chapters: { title: string; path: string }[];
+  currentPath?: string;
+}
+const { chapters, currentPath } = Astro.props;
+---
+
+<nav class="manual-navigation" aria-label="Manual chapters">
+  <ol>
+    {
+      chapters.map((chapter) => (
+        <li>
+          <a
+            href={chapter.path}
+            aria-current={chapter.path === currentPath ? "page" : undefined}
+            title={chapter.title}
+          >
+            {chapter.title}
+          </a>
+        </li>
+      ))
+    }
+  </ol>
+</nav>
+<details class="manual-mobile">
+  <summary>Chapters</summary><nav aria-label="Manual chapters on mobile">
+    <ol>
+      {
+        chapters.map((chapter) => (
+          <li>
+            <a
+              href={chapter.path}
+              aria-current={chapter.path === currentPath ? "page" : undefined}
+            >
+              {chapter.title}
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </nav>
+</details>
+<style>
+  .manual-navigation {
+    display: none;
+  }
+  ol {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+  a {
+    display: block;
+    padding: var(--space-1_5) var(--space-2);
+    color: var(--color-text-secondary);
+    font-size: var(--text-caption);
+    line-height: 1.35;
+    text-decoration: none;
+  }
+  a:hover,
+  a[aria-current] {
+    background: var(--color-surface-2);
+    color: var(--color-text);
+  }
+  .manual-mobile {
+    border: 1px solid var(--color-border);
+  }
+  summary {
+    padding: var(--space-3) var(--space-4);
+    cursor: pointer;
+  }
+  .manual-mobile ol {
+    max-height: 20rem;
+    overflow: auto;
+    padding: var(--space-2);
+  }
+  @media (min-width: 64rem) {
+    .manual-mobile {
+      display: none;
+    }
+    .manual-navigation {
+      display: block;
+      position: sticky;
+      top: calc(var(--nav-h) + var(--space-12));
+      align-self: start;
+      border-right: 1px solid var(--color-border);
+    }
+    .manual-navigation ol {
+      max-height: calc(100dvh - var(--nav-h) - var(--space-24));
+      overflow-y: auto;
+      padding-right: var(--space-6);
+    }
+    .manual-navigation a {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+</style>

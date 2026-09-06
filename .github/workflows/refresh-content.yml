@@ -1,10 +1,5 @@
-# Keeps the plugin catalogue current without anyone running the importer by
-# hand. Everything else the site shows comes from this repository's own
-# files and needs no refreshing: the news the Ruby build renders, the manual
-# the bot regenerates, the themes page contributors edit, the assets. The
-# catalogue and the similarity map derived from it come from the marketplace
-# repository, and the release version from the OS repository's releases, so
-# they are fetched here on a schedule and committed.
+# Refresh external data snapshots independently of the Astro build.
+# Authored news/manual/pages live in src/content; site datasets live in src/data.
 #
 # A commit pushed with the workflow's own token does not trigger other
 # workflows - GitHub stops workflows from setting each other off by

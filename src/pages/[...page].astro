@@ -1,0 +1,62 @@
+---
+import { getCollection, render } from "astro:content";
+import SiteLayout from "../layouts/SiteLayout.astro";
+import RedirectPage from "../layouts/RedirectPage.astro";
+import { redirects } from "../lib/redirects";
+export async function getStaticPaths() {
+  return [
+    ...(await getCollection("pages"))
+      .filter((page) => page.id !== "teams")
+      .map((page) => ({
+        params: { page: page.id },
+        props: { page, to: undefined },
+      })),
+    ...Object.entries(redirects).map(([path, to]) => ({
+      params: { page: path.replace(/^\/|\/$/g, "") },
+      props: { page: undefined, to },
+    })),
+  ];
+}
+const { page, to } = Astro.props;
+const rendered = page ? await render(page) : undefined;
+const Content = rendered?.Content;
+const narrow = [
+  "server",
+  "meetups",
+  "air",
+  "foundation",
+  "sponsorships",
+  "security",
+  "brand",
+  "omakub",
+].includes(page?.id || "");
+---
+
+{
+  to ? (
+    <RedirectPage to={to} />
+  ) : (
+    page &&
+    Content && (
+      <SiteLayout
+        title={page.data.seoTitle || page.data.title}
+        description={page.data.description}
+        canonicalPath={page.data.path}
+      >
+        <main id="main" class:list={["page", { "page--reading": narrow }]}>
+          <>
+            <h1>{page.data.title}</h1>
+            <div class="prose ported standalone-content">
+              <Content />
+            </div>
+          </>
+        </main>
+      </SiteLayout>
+    )
+  )
+}
+<style>
+  .standalone-content {
+    margin-top: var(--space-8);
+  }
+</style>

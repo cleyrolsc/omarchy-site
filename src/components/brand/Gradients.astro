@@ -1,0 +1,101 @@
+---
+/**
+ * Gradients — every `--gradient-*` token rendered as a full-width bar.
+ * Use gradients as accent pieces (text highlights, stats, CTA glows),
+ * not as large background fills.
+ */
+import BrandSection from "./BrandSection.astro";
+---
+
+<BrandSection
+  kicker="06 — Gradients"
+  title="Brand gradients"
+  description="<code>--gradient-*</code> tokens. Applied to short strokes only — key phrases, stat numbers, accent underlines, and hover glows. Never a full-section background."
+>
+  <div class="gradients" data-gradients>
+    <div class="gradients__empty">Loading…</div>
+  </div>
+</BrandSection>
+
+<script is:inline>
+  (function () {
+    function render(root) {
+      var readTokens = window.__brandReadRootTokens;
+      if (!readTokens) return;
+      var tokens = readTokens("--gradient-");
+      if (tokens.length === 0) {
+        root.innerHTML =
+          '<div class="gradients__empty">No <code>--gradient-*</code> tokens found.</div>';
+        return;
+      }
+      root.innerHTML = tokens
+        .map(function (t) {
+          return (
+            '<div class="gradient-row">' +
+            '<div class="gradient-row__bar" style="background-image:' +
+            t.resolved +
+            ';"></div>' +
+            '<div class="gradient-row__meta">' +
+            '<div class="gradient-row__name">' +
+            t.shortName +
+            "</div>" +
+            '<div class="gradient-row__value">' +
+            t.resolved +
+            "</div>" +
+            "</div>" +
+            "</div>"
+          );
+        })
+        .join("");
+    }
+
+    function runAll() {
+      document.querySelectorAll("[data-gradients]").forEach(render);
+    }
+
+    if (document.readyState === "complete") {
+      runAll();
+    } else {
+      window.addEventListener("load", runAll, { once: true });
+    }
+  })();
+</script>
+
+<style>
+  .gradients {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+  .gradients__empty {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .gradients :global(.gradient-row) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .gradients :global(.gradient-row__bar) {
+    block-size: 3.5rem;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+  }
+  .gradients :global(.gradient-row__meta) {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .gradients :global(.gradient-row__name) {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text);
+  }
+  .gradients :global(.gradient-row__value) {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--color-text-faint);
+    word-break: break-all;
+  }
+</style>

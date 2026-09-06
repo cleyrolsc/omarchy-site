@@ -1,0 +1,170 @@
+---
+import Brand from "./Brand.astro";
+export interface Props {}
+const groups = [
+  {
+    title: "Omarchy",
+    links: [
+      ["Manual", "/manual/"],
+      ["News", "/news/"],
+      ["Themes", "/themes/"],
+      ["Plugins", "https://plugins.omarchy.org"],
+    ],
+  },
+  {
+    title: "Community",
+    links: [
+      ["Discord", "https://discord.gg/tXFUdasqhY"],
+      ["Meetups", "/meetups/"],
+      ["Teams", "/teams/"],
+      ["Workstations", "/workstations/"],
+    ],
+  },
+  {
+    title: "Foundation",
+    links: [
+      ["About", "/foundation/"],
+      ["Patrons", "/patrons/"],
+      ["Sponsorships", "/sponsorships/"],
+      ["Artists in Residence", "/air/"],
+    ],
+  },
+  {
+    title: "Project",
+    links: [
+      ["GitHub", "https://github.com/omacom/omarchy"],
+      ["Security", "/security/"],
+      ["Brand", "/brand/"],
+      ["Merch", "https://supply.37signals.com/collections/omarchy"],
+    ],
+  },
+];
+---
+
+<footer class="site-footer">
+  <div class="footer-field">
+    <canvas data-pixel-field="field" aria-hidden="true"></canvas>
+  </div>
+  <div class="footer-inner">
+    <div class="footer-brand" data-quiet>
+      <a href="/" aria-label="Omarchy home"><Brand /></a><p>
+        Beautiful, fun &amp; agentic Linux by <a href="https://dhh.dk">DHH</a>.
+      </p><p>
+        Incubated at <a href="https://37signals.com">37signals</a>.<br
+        />Sponsored hosting by <a href="https://cloudflare.com">Cloudflare</a>.
+      </p><button data-open-theme hidden class="text-link" type="button"
+        >Make yourself at home. Pick a theme.</button>
+    </div>
+    <nav class="footer-nav" aria-label="Footer navigation" data-quiet>
+      {
+        groups.map((group) => (
+          <div>
+            <>
+              <h2>{group.title}</h2>
+              <ul>
+                {group.links.map(([label, href]) => (
+                  <li>
+                    <a href={href}>{label}</a>
+                  </li>
+                ))}
+              </ul>
+            </>
+          </div>
+        ))
+      }
+    </nav>
+    <div class="footer-meta" data-quiet>
+      <a href="/brand/">Omarchy is a pending trademark</a><a
+        href="/screensaver/"
+        data-astro-reload>Screensaver</a
+      ><a href="/news/rss.xml">RSS</a><a href="/llms.txt">llms.txt</a><a
+        href="mailto:david@omarchy.org">Become a partner or patron</a>
+    </div>
+  </div>
+</footer>
+<style>
+  .site-footer {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border-top: 1px solid var(--color-border);
+    background: var(--t-field-bg);
+  }
+  .footer-field {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+  canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .footer-inner {
+    position: relative;
+    max-width: var(--container-max);
+    margin: auto;
+    padding: var(--space-14) var(--space-6);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-10);
+  }
+  .footer-brand {
+    max-width: 24rem;
+  }
+  .footer-brand p {
+    margin-top: var(--space-5);
+    color: var(--color-text-secondary);
+    font-size: var(--text-caption);
+  }
+  .footer-brand button {
+    background: none;
+    border: 0;
+    padding: 0;
+    color: var(--color-text-secondary);
+    font-size: var(--text-caption);
+  }
+  .footer-nav {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-8);
+  }
+  .footer-nav h2 {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    margin-bottom: var(--space-4);
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--space-3);
+  }
+  li a {
+    font-size: var(--text-caption);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+  }
+  a:hover {
+    color: var(--color-brand);
+  }
+  .footer-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-5);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+  @media (min-width: 64rem) {
+    .footer-inner {
+      grid-template-columns: 24rem 1fr;
+    }
+    .footer-nav {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    .footer-meta {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

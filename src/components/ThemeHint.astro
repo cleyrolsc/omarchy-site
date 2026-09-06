@@ -1,0 +1,70 @@
+---
+import { Paintbrush, X } from "@lucide/astro";
+export interface Props {
+  visible?: boolean;
+}
+const { visible = false } = Astro.props;
+---
+
+<aside
+  class="theme-hint"
+  data-theme-hint
+  hidden={!visible}
+  aria-label="Theme shortcut"
+>
+  <Paintbrush size={19} />
+  <button type="button" data-open-theme
+    ><strong>Change the theme</strong><span
+      >Press T, or tap here.<br />Inside Omarchy it is<br />Super + Ctrl + Shift
+      + Space.</span
+    ></button
+  >
+  <button type="button" data-hint-dismiss aria-label="Dismiss theme hint"
+    ><X size={16} /></button
+  >
+</aside>
+<style>
+  .theme-hint {
+    position: fixed;
+    z-index: var(--z-dropdown);
+    top: calc(var(--nav-h) + var(--space-3));
+    right: var(--space-4);
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    width: min(18rem, calc(100vw - var(--space-8)));
+    padding: var(--space-5);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-card);
+  }
+  .theme-hint > svg {
+    flex-shrink: 0;
+    color: var(--color-brand);
+  }
+  button {
+    padding: 0;
+    background: none;
+    border: 0;
+    color: var(--color-text);
+    text-align: left;
+    font-size: var(--text-caption);
+  }
+  button[data-open-theme] {
+    flex: 1;
+  }
+  strong {
+    display: block;
+    font-family: var(--font-sans);
+    margin-bottom: var(--space-1);
+  }
+  span {
+    display: block;
+    color: var(--color-text-secondary);
+  }
+  button[data-hint-dismiss] {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-3);
+  }
+</style>

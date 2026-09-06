@@ -1,0 +1,53 @@
+---
+import "../../../src/styles/main.css";
+import { toId, storyNameFromExport } from "storybook/internal/csf";
+import type { AstroComponentFactory } from "astro/runtime/server/index.js";
+type NamedStory = {
+  args: Record<string, unknown>;
+  render?: () => AstroComponentFactory;
+};
+type StoryModule = {
+  default: { title: string; component?: AstroComponentFactory };
+} & Record<string, NamedStory>;
+export async function getStaticPaths() {
+  const modules = import.meta.glob<StoryModule>(
+    "../../../src/**/*.stories.ts",
+    { eager: true },
+  );
+  return Object.values(modules).flatMap((module) =>
+    Object.entries(module).flatMap(([name, entry]) => {
+      if (name === "default" || !entry || !("args" in entry)) return [];
+      const value = entry as NamedStory;
+      const Component = value.render
+        ? value.render()
+        : module.default.component;
+      if (!Component)
+        throw new Error(
+          `Missing Astro component for ${module.default.title}/${name}`,
+        );
+      return [
+        {
+          params: {
+            story: toId(module.default.title, storyNameFromExport(name)),
+          },
+          props: {
+            Component,
+            args: value.args,
+          },
+        },
+      ];
+    }),
+  );
+}
+const { Component, args } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head
+    ><meta charset="utf-8" /><meta
+      name="viewport"
+      content="width=device-width,initial-scale=1"
+    /><title>Omarchy component preview</title></head
+  ><body><Component {...args} /></body>
+</html>

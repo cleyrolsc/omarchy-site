@@ -1,0 +1,170 @@
+/*
+ * Layout primitives
+ * -----------------
+ * Shared layout classes used by most pages:
+ *   .container         — centered, padded, max-width
+ *   .container-narrow  — for prose / single-column content
+ *   .container-reading — for articles (~72ch)
+ *   .page-stack        — vertical rhythm between sections (gap-driven)
+ *   .section-band      — section with a distinct background, needs padding
+ *   .stack / .cluster  — small-scale vertical/horizontal flow
+ *
+ * Lives in @layer components so components can override if needed, but
+ * in practice you should rarely need to. Portable across projects.
+ */
+
+@layer components {
+  /* ==========================================================================
+     Container — centered, max-width, responsive horizontal padding
+     ========================================================================== */
+
+  .container {
+    inline-size: 100%;
+    max-inline-size: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--container-padding);
+  }
+
+  .container-narrow {
+    inline-size: 100%;
+    max-inline-size: var(--container-narrow);
+    margin-inline: auto;
+    padding-inline: var(--container-padding);
+  }
+
+  .container-reading {
+    inline-size: 100%;
+    max-inline-size: var(--container-reading);
+    margin-inline: auto;
+    padding-inline: var(--container-padding);
+  }
+
+  @media (min-width: 48rem) {
+    .container,
+    .container-narrow,
+    .container-reading {
+      padding-inline: var(--space-8);
+    }
+  }
+
+  /* ==========================================================================
+     Page stack — layout owns vertical rhythm between sections.
+     Apply to <main> (or any parent that directly contains section components).
+     Components should NOT add outer vertical padding unless they are a
+     "band" (have their own background) — see .section-band.
+     ========================================================================== */
+
+  .page-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--section-gap);
+  }
+
+  .page-stack--compact {
+    gap: var(--section-gap-sm);
+  }
+  .page-stack--spacious {
+    gap: var(--section-gap-lg);
+  }
+
+  @media (max-width: 48rem) {
+    .page-stack {
+      gap: var(--section-gap-sm);
+    }
+    .page-stack--compact {
+      gap: var(--space-12);
+    }
+    .page-stack--spacious {
+      gap: var(--section-gap);
+    }
+  }
+
+  /* ==========================================================================
+     Section — semantic wrapper. No spacing by default; use .section-band
+     when the section has its own background.
+     ========================================================================== */
+
+  .section-band {
+    padding-block: var(--section-padding);
+    background-color: var(--color-bg-raised);
+    border-block: 1px solid var(--color-border);
+  }
+
+  .section-band--sm {
+    padding-block: var(--section-padding-sm);
+  }
+  .section-band--lg {
+    padding-block: var(--section-gap-lg);
+  }
+
+  @media (max-width: 48rem) {
+    .section-band {
+      padding-block: var(--section-padding-sm);
+    }
+    .section-band--sm {
+      padding-block: var(--space-12);
+    }
+    .section-band--lg {
+      padding-block: var(--section-padding);
+    }
+  }
+
+  /* ==========================================================================
+     Section spacing overrides — sparingly, for edge cases.
+     ========================================================================== */
+
+  .space-before-lg {
+    margin-block-start: var(--space-16);
+  }
+  .space-before-xl {
+    margin-block-start: var(--space-24);
+  }
+  .space-before-none {
+    margin-block-start: calc(var(--section-gap) * -1);
+  }
+  .space-after-lg {
+    margin-block-end: var(--space-16);
+  }
+  .space-after-xl {
+    margin-block-end: var(--space-24);
+  }
+
+  /* ==========================================================================
+     Stack — small vertical flow inside a component
+     (e.g., a card's title + description + meta)
+     ========================================================================== */
+
+  .stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+  .stack-sm {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .stack-lg {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  /* ==========================================================================
+     Cluster — horizontal flow that wraps (e.g., tag row, inline metadata)
+     ========================================================================== */
+
+  .cluster {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .cluster-sm {
+    gap: var(--space-2);
+  }
+  .cluster-lg {
+    gap: var(--space-5);
+  }
+}

@@ -1,0 +1,22 @@
+---
+{
+  "title": "Runs great on ancient hardware",
+  "description": "Omarchy runs great on ancient hardware.",
+  "path": "/potato/",
+  "seoTitle": "Ancient Hardware - Omarchy"
+}
+---
+
+<div class="potato">
+<p class="potato__intro">A 2011 ThinkPad X220. Just 2GB of RAM. Watch Omarchy run with room to spare.</p>
+
+<figure class="potato__demo">
+<iframe width="1280" height="720" title="Omarchy running on 2011 X220 2GB RAM (with room to spare)" src="https://www.youtube-nocookie.com/embed/jgSjG0IYw4o" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<figcaption>David Heinemeier Hansson takes Omarchy for a spin on a very modest machine.</figcaption>
+</figure>
+
+<div class="potato__next">
+<p>You don't need a new computer to try Omarchy. Give the one you already have a second life.</p>
+<a href="/#install">Install Omarchy <span aria-hidden="true">→</span></a>
+</div>
+</div>

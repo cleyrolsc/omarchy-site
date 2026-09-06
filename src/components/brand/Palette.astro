@@ -1,0 +1,154 @@
+---
+/**
+ * Palette — all `--color-*` tokens on :root, rendered as swatches in
+ * source order. Alias tokens (`--color-bg: var(--color-canvas)`) show
+ * their resolved value so you can see what the semantic name means.
+ */
+import BrandSection from "./BrandSection.astro";
+
+export interface Props {
+  prefix?: string;
+  kicker?: string;
+  title?: string;
+  description?: string;
+}
+
+const {
+  prefix = "--color-",
+  kicker = "01 — Palette",
+  title = "Colors",
+  description = "All <code>--color-*</code> custom properties declared on <code>:root</code>, in source order. Semantic aliases render with their resolved value so you can see which brand token they point to.",
+} = Astro.props;
+---
+
+<BrandSection kicker={kicker} title={title} description={description}>
+  <div class="palette" data-palette data-prefix={prefix}>
+    <div class="palette__empty">Loading tokens…</div>
+  </div>
+</BrandSection>
+
+<script is:inline>
+  (function () {
+    function renderPalette(root) {
+      var readTokens = window.__brandReadRootTokens;
+      var prettyValue =
+        window.__brandPrettyValue ||
+        function (v) {
+          return v;
+        };
+      if (!readTokens) {
+        return;
+      }
+      var prefix = root.getAttribute("data-prefix") || "--color-";
+      var tokens = readTokens(prefix);
+      if (tokens.length === 0) {
+        root.innerHTML =
+          '<div class="palette__empty">No tokens found for prefix <code>' +
+          prefix +
+          "</code>.</div>";
+        return;
+      }
+      root.innerHTML = tokens
+        .map(function (t) {
+          var value = prettyValue(t.resolved);
+          var isAlias = t.value.indexOf("var(") === 0;
+          return (
+            '<div class="swatch">' +
+            '<div class="swatch__chip" style="background:' +
+            t.resolved +
+            ';"></div>' +
+            '<div class="swatch__meta">' +
+            '<div class="swatch__name">' +
+            t.shortName +
+            "</div>" +
+            '<div class="swatch__value">' +
+            value +
+            "</div>" +
+            (isAlias
+              ? '<div class="swatch__alias">' + t.value + "</div>"
+              : "") +
+            "</div>" +
+            "</div>"
+          );
+        })
+        .join("");
+    }
+
+    function runAll() {
+      document.querySelectorAll("[data-palette]").forEach(renderPalette);
+    }
+
+    // window.load fires after stylesheets are fully loaded, which we need
+    // before readRootTokens can see the --color-* declarations.
+    if (document.readyState === "complete") {
+      runAll();
+    } else {
+      window.addEventListener("load", runAll, { once: true });
+    }
+  })();
+</script>
+
+<style>
+  .palette {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+    gap: var(--space-3);
+  }
+
+  .palette__empty {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .palette :global(.swatch) {
+    background-color: var(--color-bg-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .palette :global(.swatch__chip) {
+    block-size: 5rem;
+    border-block-end: 1px solid var(--color-border);
+    /* Transparent tokens (rgba/hsla) need a checker underlay to read */
+    background-image:
+      linear-gradient(45deg, rgba(255, 255, 255, 0.06) 25%, transparent 25%),
+      linear-gradient(-45deg, rgba(255, 255, 255, 0.06) 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, rgba(255, 255, 255, 0.06) 75%),
+      linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, 0.06) 75%);
+    background-size: 12px 12px;
+    background-position:
+      0 0,
+      0 6px,
+      6px -6px,
+      -6px 0;
+  }
+
+  .palette :global(.swatch__meta) {
+    padding: var(--space-3);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .palette :global(.swatch__name) {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text);
+  }
+
+  .palette :global(.swatch__value) {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .palette :global(.swatch__alias) {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--color-text-faint);
+    margin-block-start: var(--space-1);
+  }
+</style>

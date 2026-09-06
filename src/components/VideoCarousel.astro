@@ -1,0 +1,111 @@
+---
+import { Play, ArrowLeft, ArrowRight } from "@lucide/astro";
+export interface Props {
+  videos: { id: string; title: string; channel: string; thumb: string }[];
+}
+const { videos } = Astro.props;
+---
+
+<div class="video-gallery" data-carousel>
+  <div
+    class="video-rail"
+    data-carousel-rail
+    tabindex="0"
+    role="region"
+    aria-label="Videos about Omarchy"
+  >
+    {
+      videos.map((video) => (
+        <figure>
+          <>
+            <a
+              href={`https://www.youtube.com/watch?v=${video.id}`}
+              data-video={video.id}
+              data-video-title={video.title}
+              aria-label={`Play ${video.title}`}
+            >
+              <>
+                <img
+                  src={video.thumb}
+                  alt={video.title}
+                  width="1280"
+                  height="720"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <span class="play">
+                  <Play size={32} />
+                </span>
+              </>
+            </a>
+            <figcaption>
+              <>
+                <strong>{video.title}</strong>
+                <span>{video.channel}</span>
+              </>
+            </figcaption>
+          </>
+        </figure>
+      ))
+    }
+  </div>
+  <div class="carousel-controls">
+    <button class="btn" data-carousel-prev hidden aria-label="Previous video"
+      ><ArrowLeft size={20} /></button
+    ><button class="btn" data-carousel-next hidden aria-label="Next video"
+      ><ArrowRight size={20} /></button>
+  </div>
+</div>
+<style>
+  .video-rail {
+    display: flex;
+    gap: var(--space-6);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+  }
+  figure {
+    margin: 0;
+    flex: 0 0 100%;
+    scroll-snap-align: center;
+  }
+  figure a {
+    display: block;
+    position: relative;
+  }
+  img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    display: block;
+  }
+  .play {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: var(--color-text);
+    background: color-mix(in srgb, var(--color-black), transparent 75%);
+  }
+  .play svg {
+    filter: drop-shadow(0 1px 4px var(--color-black));
+  }
+  figcaption {
+    display: grid;
+    gap: var(--space-1);
+    margin-top: var(--space-3);
+  }
+  strong {
+    font-family: var(--font-sans);
+    font-weight: var(--font-medium);
+  }
+  figcaption span {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+  .carousel-controls {
+    margin-top: var(--space-4);
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-2);
+  }
+</style>

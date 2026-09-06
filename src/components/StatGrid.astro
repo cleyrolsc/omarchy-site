@@ -1,0 +1,155 @@
+---
+import momentum from "../data/momentum.json";
+export interface Props {}
+const n = (value: number) => value.toLocaleString("en-US");
+const max = Math.max(...momentum.github.weeks);
+---
+
+<div class="stat-grid">
+  <article>
+    <a href="/foundation/"
+      ><h3>Omacom Foundation</h3><strong>${momentum.foundation.total}M</strong
+      ><p>Backing the people building better Linux.</p></a
+    ><ol class="funding-history">
+      {
+        momentum.foundation.steps.map((step) => (
+          <li>
+            <a href={step.post}>
+              <>
+                <time datetime={step.date}>{step.date}</time>
+                <span>${step.amount}M</span>
+              </>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </article>
+  <article>
+    <a href={momentum.downloads.post}
+      ><h3>ISO downloads</h3><strong>{n(momentum.downloads.total)}</strong><p>
+        Across {momentum.downloads.countries} countries.
+      </p></a
+    ><dl>
+      {
+        momentum.downloads.periods.map((period) => (
+          <div>
+            <>
+              <dt>{period.label}</dt>
+              <dd>{n(period.count)}</dd>
+            </>
+          </div>
+        ))
+      }
+    </dl>
+  </article>
+  <article>
+    <a href="https://github.com/omacom/omarchy"
+      ><h3>Built in the open</h3><strong>{n(momentum.github.stars)}</strong><p>
+        GitHub stars
+      </p></a
+    ><div
+      class="commit-bars"
+      role="img"
+      aria-label={`${n(momentum.github.commitsYear)} commits over the last year`}
+    >
+      {
+        momentum.github.weeks.map((count, index) => (
+          <span
+            style={`--bar-height:${Math.max(2, (count / max) * 100)}%`}
+            title={`Week ${index + 1}: ${count} commits`}
+          />
+        ))
+      }
+    </div><dl>
+      <div>
+        <dt>Contributors</dt><dd>{n(momentum.github.contributors)}</dd>
+      </div><div>
+        <dt>Pull requests</dt><dd>{n(momentum.github.pullRequests)}</dd>
+      </div><div>
+        <dt>Commits this year</dt><dd>{n(momentum.github.commitsYear)}</dd>
+      </div>
+    </dl>
+  </article>
+</div>
+<p class="muted checked">Figures checked {momentum.checked}.</p>
+<style>
+  .stat-grid {
+    margin-top: var(--space-8);
+    display: grid;
+    gap: var(--space-5);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  }
+  article {
+    padding: var(--space-6);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-card);
+  }
+  article > a {
+    text-decoration: none;
+  }
+  h3 {
+    font-size: var(--text-sm);
+    margin: 0 0 var(--space-4);
+  }
+  strong {
+    font-size: var(--text-4xl);
+    font-family: var(--font-sans);
+    font-weight: var(--font-semibold);
+    color: var(--color-brand);
+  }
+  p {
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+  }
+  dl {
+    margin-top: var(--space-6);
+    display: grid;
+    gap: var(--space-2);
+    font-size: var(--text-xs);
+  }
+  dl > div {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-4);
+  }
+  dd {
+    margin: 0;
+  }
+  dt {
+    color: var(--color-text-muted);
+  }
+  .funding-history {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-6) 0 0;
+    display: grid;
+    gap: var(--space-1);
+    font-size: var(--text-xs);
+  }
+  li a {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-3);
+    text-decoration: none;
+  }
+  time {
+    color: var(--color-text-muted);
+  }
+  .commit-bars {
+    display: flex;
+    align-items: end;
+    gap: 2px;
+    height: var(--space-16);
+    margin-top: var(--space-5);
+  }
+  .commit-bars span {
+    flex: 1;
+    height: var(--bar-height);
+    background: var(--color-brand);
+    min-width: 0;
+  }
+  .checked {
+    margin-top: var(--space-3);
+  }
+</style>

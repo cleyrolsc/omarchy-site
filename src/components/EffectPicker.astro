@@ -1,0 +1,70 @@
+---
+import { DEFAULT_EFFECT, EFFECTS } from "../lib/etch";
+export interface Props {
+  visible?: boolean;
+}
+const { visible = false } = Astro.props;
+---
+
+<details
+  class="effect-picker"
+  data-effect-picker
+  data-no-stamp
+  hidden={!visible}
+  open
+>
+  <summary>etch: <span data-effect-name>{DEFAULT_EFFECT}</span></summary>
+  <div aria-label="Wordmark effect" role="group">
+    {
+      ["random", ...EFFECTS].map((name) => (
+        <button
+          type="button"
+          data-effect={name}
+          aria-pressed={name === DEFAULT_EFFECT}
+        >
+          {name}
+        </button>
+      ))
+    }
+  </div>
+</details>
+<style>
+  .effect-picker {
+    position: fixed;
+    bottom: var(--space-24);
+    left: var(--space-4);
+    z-index: var(--z-dropdown);
+    font-size: var(--text-xs);
+    pointer-events: auto;
+    max-width: calc(100vw - var(--space-8));
+  }
+  summary {
+    cursor: pointer;
+    padding: var(--space-2) var(--space-3);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+  }
+  div {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    max-height: 60dvh;
+    overflow: auto;
+    width: 22rem;
+    max-width: 100%;
+    padding: var(--space-1);
+    background: var(--color-surface);
+  }
+  button {
+    color: var(--color-text-secondary);
+    text-align: left;
+    background: transparent;
+    border: 0;
+    padding: var(--space-2);
+    font-size: inherit;
+  }
+  button:hover,
+  button[aria-pressed="true"] {
+    background: var(--color-surface-2);
+    color: var(--color-brand);
+  }
+</style>

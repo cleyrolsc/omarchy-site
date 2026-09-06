@@ -1,0 +1,186 @@
+---
+import { Search, Palette, Rss } from "@lucide/astro";
+import Brand from "./Brand.astro";
+import githubSvg from "../icons/github.svg?raw";
+export interface Props {
+  pathname?: string;
+}
+const pathname = Astro.props.pathname ?? Astro.url?.pathname ?? "/";
+const links = [
+  ["News", "/news/"],
+  ["Manual", "/manual/"],
+  ["Plugins", "https://plugins.omarchy.org"],
+  ["Themes", "/themes/"],
+];
+---
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="/" aria-label="Omarchy home" class="home-mark"
+      ><Brand variant="mark" /></a
+    >
+    <nav class="desktop-nav" aria-label="Main navigation">
+      {
+        links.map(([label, href]) => (
+          <a
+            href={href}
+            aria-current={pathname.startsWith(href) ? "page" : undefined}
+          >
+            {label}
+          </a>
+        ))
+      }
+    </nav>
+    <div class="header-actions">
+      <button
+        type="button"
+        class="icon-button"
+        data-open-search
+        hidden
+        aria-label="Search the site"
+        title="Search (/)"><Search size={19} /></button
+      >
+      <button
+        type="button"
+        class="icon-button"
+        data-open-theme
+        hidden
+        aria-label="Choose a theme"
+        title="Choose a theme (T)"><Palette size={19} /></button
+      >
+      <a
+        class="icon-button rss-link"
+        href="/news/rss.xml"
+        aria-label="Omarchy News RSS feed"><Rss size={19} /></a
+      >
+      <a
+        class="icon-button github-link"
+        href="https://github.com/omacom/omarchy"
+        aria-label="Omarchy on GitHub"><Fragment set:html={githubSvg} /></a
+      >
+      <a class="btn btn--primary install-link" href="/#install">Install</a>
+      <details class="mobile-menu">
+        <summary aria-label="Open navigation">Menu</summary><nav
+          aria-label="Mobile navigation"
+        >
+          {links.map(([label, href]) => <a href={href}>{label}</a>)}<a
+            href="/teams/">Teams</a
+          ><a href="/foundation/">Foundation</a><a
+            href="https://github.com/omacom/omarchy">GitHub</a
+          ><a href="/#install">Install Omarchy</a>
+        </nav>
+      </details>
+    </div>
+  </div>
+</header>
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-nav);
+    height: var(--nav-h);
+    padding-top: env(safe-area-inset-top, 0px);
+    background: var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .site-header.over-hero {
+    background: transparent;
+    border-color: transparent;
+  }
+  .header-inner {
+    height: var(--header-height);
+    max-width: var(--container-max);
+    margin: auto;
+    padding-inline: var(--space-6);
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+  }
+  .home-mark {
+    flex-shrink: 0;
+  }
+  .home-mark :global(svg) {
+    width: var(--space-6);
+    height: var(--space-6);
+  }
+  .install-link {
+    min-height: var(--space-8);
+    padding-block: var(--space-1);
+    font-family: var(--font-mono);
+  }
+  .desktop-nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-7);
+  }
+  .desktop-nav a {
+    font-size: var(--text-sm);
+    text-decoration: none;
+    color: var(--color-text-secondary);
+  }
+  .desktop-nav a:hover,
+  .desktop-nav a[aria-current] {
+    color: var(--color-brand);
+  }
+  .header-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .icon-button {
+    display: grid;
+    place-items: center;
+    width: var(--space-10);
+    height: var(--space-10);
+    padding: var(--space-2);
+    background: transparent;
+    border: 0;
+    color: var(--color-text-secondary);
+  }
+  .icon-button:hover {
+    color: var(--color-brand);
+    background: var(--color-surface);
+  }
+  .mobile-menu {
+    display: none;
+  }
+  .mobile-menu summary {
+    cursor: pointer;
+    padding: var(--space-2);
+    font-size: var(--text-sm);
+  }
+  .mobile-menu nav {
+    position: absolute;
+    top: var(--nav-h);
+    left: 0;
+    right: 0;
+    padding: var(--space-5) var(--space-6);
+    background: var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+    display: grid;
+    gap: var(--space-4);
+  }
+  @media (max-width: 48rem) {
+    .desktop-nav,
+    .github-link,
+    .rss-link {
+      display: none;
+    }
+    .mobile-menu {
+      display: block;
+    }
+    .header-inner {
+      gap: var(--space-3);
+      padding-inline: var(--space-4);
+    }
+    .header-actions {
+      gap: var(--space-1);
+    }
+  }
+  @media (max-width: 25rem) {
+    .install-link {
+      display: none;
+    }
+  }
+</style>

@@ -4,9 +4,8 @@
  *   src/data/plugins.json      the marketplace's built catalogue (full field set)
  *   public/data/explorer.json  the plugin similarity map for /plugins/explore
  *   src/data/version.json      the current release, from the OS repo's releases
- * Everything the site shows from its own files - the manual, the news, the
- * pages, the teams, the theme gallery - is read at build time by
- * scripts/port_content.py instead, so it is never behind a deploy.
+ * Astro reads the manual, news, and pages from src/content, and the teams
+ * and theme gallery from committed src/data snapshots at build time.
  *
  * Run: node scripts/refresh-data.mjs   (npm run refresh-data)
  * CI runs it on a schedule and commits what changed.

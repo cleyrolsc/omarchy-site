@@ -1,0 +1,19 @@
+---
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import NewsList from "../../components/NewsList.astro";
+import { newsSummaries } from "../../lib/content";
+const posts = await newsSummaries();
+---
+
+<SiteLayout
+  title="Omarchy News"
+  description="Notes on the people, ideas, and releases shaping Omarchy."
+  ><main id="main" class="page page--reading">
+    <h1>News</h1><p>
+      Notes on the people, ideas, and releases shaping Omarchy. <a
+        class="text-link"
+        href="/news/rss.xml">Subscribe via RSS</a
+      >.
+    </p><NewsList posts={posts} />
+  </main></SiteLayout
+>
