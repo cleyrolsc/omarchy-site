@@ -8,9 +8,7 @@
 }
 ---
 
-<p>The nonprofit funding the development, maintenance, and spread of Omarchy.<br>Interested in becoming a founding or distinguished patron? Write <a href="mailto:david@omarchy.org">david@omarchy.org</a>.</p>
-
-      <div class="teams">
+<div class="teams">
 
         <section class="team" id="founding-patrons">
           <header class="team__header">
@@ -165,6 +163,13 @@
               <h3 class="member__name"><a href="https://openai.com">OpenAI</a></h3>
             </article>
           </div>
+        </section>
+
+        <section class="team" id="become-a-patron">
+          <header class="team__header">
+            <h2 class="team__name"><a href="#become-a-patron">Become a Founding or Distinguished Patron</a></h2>
+            <p class="team__description">Interested in becoming a founding or distinguished patron? Write <a href="mailto:david@omarchy.org">david@omarchy.org</a>.</p>
+          </header>
         </section>
 
         <section class="team" id="everyone">

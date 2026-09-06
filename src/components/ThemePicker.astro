@@ -8,6 +8,7 @@ const { preview = false } = Astro.props;
 const index = SITE_THEMES.findIndex((theme) => theme.id === DEFAULT_THEME);
 ---
 
+<div class="theme-backdrop" aria-hidden="true"></div>
 <dialog
   id="site-themes"
   class="theme-picker"
@@ -115,12 +116,21 @@ const index = SITE_THEMES.findIndex((theme) => theme.id === DEFAULT_THEME);
   .theme-picker::backdrop {
     background: transparent;
   }
-  .theme-dimmer {
-    position: absolute;
+  .theme-backdrop {
+    display: none;
+    position: fixed;
     inset: 0;
+    z-index: var(--z-modal);
     isolation: isolate;
     background: color-mix(in srgb, var(--color-black) 55%, transparent);
     backdrop-filter: blur(4px);
+  }
+  .theme-backdrop:has(+ .theme-picker[open]) {
+    display: block;
+  }
+  .theme-dimmer {
+    position: absolute;
+    inset: 0;
   }
   .theme-deck {
     pointer-events: none;

@@ -12,8 +12,7 @@ export default defineConfig({
         !page.includes("/404") &&
         !page.includes("/plugins/") &&
         !page.includes("/discord/") &&
-        !page.includes("/manual/toc/") &&
-        !page.includes("/security/credits/"),
+        !page.includes("/manual/toc/"),
     }),
   ],
   markdown: { syntaxHighlight: false },

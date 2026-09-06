@@ -1,6 +1,6 @@
 ---
 import SiteLayout from "../../layouts/SiteLayout.astro";
-import Brand from "../../components/Brand.astro";
+import PageHeader from "../../components/PageHeader.astro";
 import SiteIcon from "../../components/SiteIcon.astro";
 import { newsSummaries } from "../../lib/content";
 const posts = await newsSummaries();
@@ -17,7 +17,7 @@ const date = (v: string) =>
   title="News - Omarchy"
   description="Announcements, releases, and other news from the Omarchy project."
   ><main id="main" class="page page--reading news-index">
-    <Brand hero class="news-wordmark" /><h1 class="sr-only">News</h1><ul>
+    <PageHeader title="News" spaced /><ul>
       {
         posts.map((post) => (
           <li>
@@ -42,11 +42,6 @@ const date = (v: string) =>
 <style>
   .news-index {
     padding-block: var(--space-8);
-  }
-  .news-index :global(.news-wordmark) {
-    width: 100%;
-    max-width: 24rem;
-    margin: 0 auto 2.6rem;
   }
   ul {
     padding: 0;

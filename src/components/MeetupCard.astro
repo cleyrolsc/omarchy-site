@@ -1,0 +1,143 @@
+---
+import MeetupCover from "./MeetupCover.astro";
+import { inZone, whenOf, whereOf, type Meetup } from "../lib/meetups";
+import { regionOf } from "../lib/regions";
+export interface Props {
+  event: Meetup;
+  past?: boolean;
+}
+const { event, past = false } = Astro.props;
+const where = whereOf(event);
+---
+
+<li
+  id={`meetup-${event.id}`}
+  data-meetup-card={event.id}
+  data-start={event.start}
+  data-country={event.country || ""}
+  data-region={regionOf(event.country) || ""}
+  class:list={["meetup-card", { "is-past": past }]}
+>
+  <a href={event.url}>
+    <div class="cover">
+      {
+        event.cover ? (
+          <img
+            src={event.cover}
+            alt={event.title}
+            width={event.coverWidth}
+            height={event.coverHeight}
+            loading="lazy"
+            decoding="async"
+          />
+        ) : (
+          <MeetupCover />
+        )
+      }
+    </div>
+    <p class="date upcoming-date">
+      <time datetime={event.start}>{whenOf(event)}</time>
+    </p>
+    <h3 class="upcoming-title">{event.title}</h3>
+    {where && <p class="where">{where}</p>}
+    <p class="date past-date">
+      <time datetime={event.start}
+        >{inZone(event, { month: "short", day: "numeric" })}</time
+      >{where ? ` · ${where}` : ""}
+    </p>
+    <p class="past-title">{event.title}</p>
+  </a>
+</li>
+<style>
+  a {
+    display: block;
+    text-decoration: none;
+  }
+  .cover {
+    width: 100%;
+    aspect-ratio: 1;
+  }
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: outline-color 150ms ease-out;
+  }
+  .date,
+  .where {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    line-height: 1.333333;
+    color: var(--color-text-muted);
+  }
+  .date {
+    margin: var(--space-3) 0 0;
+  }
+  h3 {
+    margin: var(--space-1) 0 0;
+    font-size: var(--text-lg);
+    font-weight: 500;
+    line-height: 1.555556;
+    letter-spacing: normal;
+  }
+  .where {
+    margin: var(--space-1) 0 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  h3,
+  .past-title {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  a:hover h3,
+  .is-active h3 {
+    color: var(--color-brand);
+  }
+  .is-active:not(.is-past) img {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+  }
+  .past-date,
+  .past-title {
+    display: none;
+  }
+  .is-past .upcoming-date,
+  .is-past .upcoming-title,
+  .is-past .where {
+    display: none;
+  }
+  .is-past .past-date {
+    display: block;
+    margin-top: var(--space-2);
+  }
+  .is-past .past-title {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    margin: var(--space-0_5) 0 0;
+    font-size: var(--text-sm);
+    line-height: 1.428571;
+    color: var(--color-text-secondary);
+    transition: color 150ms ease-out;
+  }
+  .is-past .cover {
+    overflow: hidden;
+    background: var(--color-bg-deep);
+    filter: grayscale(1);
+    opacity: 0.7;
+    transition:
+      filter 200ms ease-out,
+      opacity 200ms ease-out;
+  }
+  .is-past a:hover .cover,
+  .is-past.is-active .cover {
+    filter: grayscale(0);
+    opacity: 1;
+  }
+  .is-past a:hover .past-title {
+    color: var(--color-text);
+  }
+</style>

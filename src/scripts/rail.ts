@@ -1,10 +1,25 @@
-export function initVideoCarousels(signal: AbortSignal) {
+export function initRails(signal: AbortSignal) {
   const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
   for (const host of document.querySelectorAll<HTMLElement>(
     "[data-carousel]",
   )) {
     const rail = host.querySelector<HTMLElement>("[data-carousel-rail]")!;
-    const slides = [...rail.querySelectorAll<HTMLElement>("[data-slide]")];
+    const startAligned = host.dataset.railAlign === "start";
+    // Only live slides participate in indexing after the visitor's date filter.
+    rail
+      .querySelectorAll<HTMLElement>("[data-slide][hidden]")
+      .forEach((slide) => slide.removeAttribute("data-slide"));
+    const slides = [
+      ...rail.querySelectorAll<HTMLElement>("[data-slide]"),
+    ].filter((slide) => !slide.hidden);
+    slides.forEach((slide, i) => (slide.dataset.slide = String(i)));
+    if (!slides.length) {
+      for (const button of host.querySelectorAll<HTMLButtonElement>(
+        "[data-carousel-prev],[data-carousel-next]",
+      ))
+        button.disabled = true;
+      continue;
+    }
     const originals = slides.map((slide) => slide.innerHTML);
     const thumb = host.querySelector<HTMLElement>("[data-video-thumb]")!;
     let index = 0,
@@ -29,12 +44,16 @@ export function initVideoCarousels(signal: AbortSignal) {
       options: AddEventListenerOptions = {},
     ) => el.addEventListener(type, fn, { ...options, signal });
     const nearest = () => {
-      const center = rail.getBoundingClientRect().left + rail.clientWidth / 2;
+      const center = startAligned
+        ? rail.getBoundingClientRect().left + slides[0].offsetLeft
+        : rail.getBoundingClientRect().left + rail.clientWidth / 2;
       let best = 0,
         dist = Infinity;
       slides.forEach((slide, i) => {
         const box = slide.getBoundingClientRect();
-        const d = Math.abs(box.left + box.width / 2 - center);
+        const d = Math.abs(
+          box.left + (startAligned ? 0 : box.width / 2) - center,
+        );
         if (d < dist) {
           best = i;
           dist = d;
@@ -44,6 +63,7 @@ export function initVideoCarousels(signal: AbortSignal) {
     };
     const select = (i: number) => {
       index = i;
+      if (startAligned) return;
       slides.forEach((slide, n) => {
         slide.classList.toggle("is-current", n === i);
         if (n !== i && slide.querySelector("iframe[data-playing]"))
@@ -58,6 +78,7 @@ export function initVideoCarousels(signal: AbortSignal) {
     };
     const narrow = matchMedia("(max-width:639.98px)");
     const mobilePlayers = () => {
+      if (startAligned) return;
       slides.forEach((slide, i) => {
         if (narrow.matches) {
           if (slide.querySelector("iframe")) return;
@@ -65,7 +86,7 @@ export function initVideoCarousels(signal: AbortSignal) {
             "[data-carousel-video]",
           )!;
           const embed = document.createElement("iframe");
-          embed.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(a.dataset.carouselVideo!)}`;
+          embed.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(a.dataset.carouselVideo!)}${a.dataset.videoStart ? `?start=${a.dataset.videoStart}` : ""}`;
           embed.title = a.dataset.videoTitle!;
           embed.allow = "autoplay; encrypted-media; picture-in-picture";
           embed.allowFullscreen = true;
@@ -77,18 +98,40 @@ export function initVideoCarousels(signal: AbortSignal) {
     };
     mobilePlayers();
     on(narrow, "change", mobilePlayers);
+    const columnAt = (left: number) => {
+      if (!startAligned) return;
+      const pad = slides[0].offsetLeft;
+      slides.forEach((slide) =>
+        slide.classList.toggle(
+          "is-outside",
+          slide.offsetLeft < left + pad - 1 ||
+            slide.offsetLeft + slide.clientWidth >
+              left + rail.clientWidth - pad + 1,
+        ),
+      );
+    };
     const sync = () => {
       const ratio = Math.min(1, rail.clientWidth / rail.scrollWidth),
         reach = rail.scrollWidth - rail.clientWidth,
         progress = reach > 0 ? rail.scrollLeft / reach : 0;
       thumb.style.width = `${ratio * 100}%`;
       thumb.style.transform = `translateX(${(progress * (1 - ratio) * 100) / ratio}%)`;
+      if (!frame) columnAt(rail.scrollLeft);
+      if (startAligned)
+        for (const button of host.querySelectorAll<HTMLButtonElement>(
+          "[data-carousel-prev],[data-carousel-next]",
+        ))
+          button.disabled = button.hasAttribute("data-carousel-prev")
+            ? rail.scrollLeft <= 1
+            : rail.scrollLeft >= reach - 1;
       if (!frame && !drag) select(nearest());
     };
     const glide = (i: number) => {
       cancelAnimationFrame(frame);
       frame = 0;
-      i = (i + slides.length) % slides.length;
+      i = startAligned
+        ? Math.max(0, Math.min(slides.length - 1, i))
+        : (i + slides.length) % slides.length;
       select(i);
       const from = rail.scrollLeft;
       const slide = slides[i].getBoundingClientRect(),
@@ -97,9 +140,15 @@ export function initVideoCarousels(signal: AbortSignal) {
         0,
         Math.min(
           rail.scrollWidth - rail.clientWidth,
-          from + slide.left - box.left - (rail.clientWidth - slide.width) / 2,
+          from +
+            slide.left -
+            box.left -
+            (startAligned
+              ? slides[0].offsetLeft
+              : (rail.clientWidth - slide.width) / 2),
         ),
       );
+      columnAt(to);
       rail.style.scrollSnapType = "none";
       if (still || Math.abs(to - from) < 1) {
         rail.scrollLeft = to;
@@ -127,7 +176,24 @@ export function initVideoCarousels(signal: AbortSignal) {
       button.hidden = false;
       on(button, "click", (e) => {
         e.stopPropagation();
-        glide(index + (button.hasAttribute("data-carousel-next") ? 1 : -1));
+        const step = slides[1]
+          ? slides[1].offsetLeft - slides[0].offsetLeft
+          : slides[0].clientWidth;
+        const gap = Math.max(0, step - slides[0].clientWidth);
+        const perView = startAligned
+          ? Math.max(
+              1,
+              Math.floor(
+                (rail.clientWidth - slides[0].offsetLeft * 2 + gap) /
+                  Math.max(1, step) +
+                  0.05,
+              ),
+            )
+          : 1;
+        glide(
+          (startAligned ? nearest() : index) +
+            (button.hasAttribute("data-carousel-next") ? perView : -perView),
+        );
       });
     }
     on(rail, "scroll", sync, { passive: true });
@@ -181,7 +247,10 @@ export function initVideoCarousels(signal: AbortSignal) {
         (performance.now() - drag.lastT < 90 ? -drag.speed * 150 : 0);
       const target =
         drag.index +
-        (travelled > step * 0.2 ? 1 : travelled < -step * 0.2 ? -1 : 0);
+        (Math.abs(travelled / step) < 0.2
+          ? 0
+          : Math.sign(travelled) *
+            Math.max(1, Math.round(Math.abs(travelled / step))));
       swallow = drag.moved > 6;
       drag = undefined;
       glide(Math.max(0, Math.min(slides.length - 1, target)));
@@ -212,7 +281,7 @@ export function initVideoCarousels(signal: AbortSignal) {
           return;
         }
         const frame = document.createElement("iframe");
-        frame.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(a.dataset.carouselVideo!)}?autoplay=1`;
+        frame.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(a.dataset.carouselVideo!)}?autoplay=1${a.dataset.videoStart ? `&start=${a.dataset.videoStart}` : ""}`;
         frame.title = a.dataset.videoTitle!;
         frame.allow =
           "autoplay; encrypted-media; picture-in-picture; fullscreen";

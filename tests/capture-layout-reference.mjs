@@ -13,14 +13,20 @@ const branch = execFileSync("git", ["rev-parse", "HEAD"], {
   encoding: "utf8",
 }).trim();
 const browser = await chromium.launch();
-const result = { sourceCommit: branch, viewports: {} };
+const result = { sourceCommit: branch, viewports: {}, states: {} };
 for (const [name, viewport] of Object.entries(viewports)) {
   const page = await browser.newPage({ viewport, reducedMotion: "reduce" });
   await prepare(page);
   result.viewports[name] = {};
+  result.states[name] = {};
   for (const route of routes) {
     await page.goto(new URL(route, base).href, { waitUntil: "networkidle" });
     result.viewports[name][route] = await metrics(page);
+    if (route === "/meetups/") {
+      await page.getByRole("button", { name: /^Europe/ }).click();
+      await page.waitForTimeout(500);
+      result.states[name].meetupsEurope = await metrics(page);
+    }
   }
   await page.close();
 }

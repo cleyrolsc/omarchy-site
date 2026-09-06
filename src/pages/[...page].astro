@@ -1,12 +1,13 @@
 ---
 import { getCollection, render } from "astro:content";
+import PageHeader from "../components/PageHeader.astro";
 import SiteLayout from "../layouts/SiteLayout.astro";
 import RedirectPage from "../layouts/RedirectPage.astro";
 import { redirects } from "../lib/redirects";
 export async function getStaticPaths() {
   return [
     ...(await getCollection("pages"))
-      .filter((page) => page.id !== "teams")
+      .filter((page) => !["teams", "meetups"].includes(page.id))
       .map((page) => ({
         params: { page: page.id },
         props: { page, to: undefined },
@@ -28,9 +29,11 @@ const narrow = [
   "foundation",
   "sponsorships",
   "security",
+  "security/credits",
   "brand",
   "omakub",
 ].includes(page?.id || "");
+const sharedHeader = page?.id === "patrons" || page?.id.startsWith("security");
 ---
 
 {
@@ -44,18 +47,26 @@ const narrow = [
         description={page.data.description}
         canonicalPath={page.data.path}
       >
-        <main id="main" class:list={["page", { "page--reading": narrow }]}>
+        <main
+          id="main"
+          class:list={[
+            "page",
+            { "page--reading": narrow, "shared-header": sharedHeader },
+          ]}
+        >
           <>
-            <h1 class:list={[{ centered: page.id === "patrons/badges" }]}>
-              {page.data.title}
-            </h1>
+            {sharedHeader ? (
+              <PageHeader title={page.data.title} />
+            ) : (
+              <h1 class:list={[{ centered: page.id === "patrons/badges" }]}>
+                {page.data.title}
+              </h1>
+            )}
             <div
               class:list={[
                 "prose ported standalone-content",
                 {
-                  subtitle: ["patrons", "foundation", "potato"].includes(
-                    page.id,
-                  ),
+                  subtitle: ["foundation", "potato"].includes(page.id),
                 },
               ]}
             >
@@ -72,6 +83,9 @@ const narrow = [
   )
 }
 <style>
+  .shared-header {
+    padding-block: var(--space-8);
+  }
   h1 {
     margin: 0;
     font-size: var(--text-3xl);

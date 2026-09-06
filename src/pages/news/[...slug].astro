@@ -1,6 +1,6 @@
 ---
 import { render } from "astro:content";
-import Brand from "../../components/Brand.astro";
+import PageHeader from "../../components/PageHeader.astro";
 import SiteIcon from "../../components/SiteIcon.astro";
 import SiteLayout from "../../layouts/SiteLayout.astro";
 import { newsEntries, newsPath, excerpt } from "../../lib/content";
@@ -37,7 +37,7 @@ const published = post.data.date.toISOString();
   }}
 >
   <main id="main" class="page page--reading">
-    <Brand hero class="news-wordmark" />
+    <PageHeader title="News" level="p" spaced />
     <article>
       <header>
         <p class="article-byline">
@@ -51,7 +51,8 @@ const published = post.data.date.toISOString();
                 day: "numeric",
                 year: "numeric",
               })
-            }</time>
+            }</time
+          >
         </p><h1 class="article-title">{post.data.title}</h1>
       </header><div class="prose article-content"><Content /></div>
     </article><a class="all-news" href="/news/"
@@ -62,11 +63,6 @@ const published = post.data.date.toISOString();
 <style>
   .page {
     padding-block: var(--space-8);
-  }
-  .page :global(.news-wordmark) {
-    width: 100%;
-    max-width: 24rem;
-    margin: 0 auto 2.6rem;
   }
   .article-title {
     margin: var(--space-2) 0 0;

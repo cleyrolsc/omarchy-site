@@ -966,6 +966,9 @@
   --section-padding-sm: var(--space-12);
   --text-body: 0.9375rem;
   --text-caption: 0.8125rem;
+  --shadow-map-card:
+    0 20px 25px -5px color-mix(in srgb, var(--color-black) 10%, transparent),
+    0 8px 10px -6px color-mix(in srgb, var(--color-black) 10%, transparent);
   --shadow-card: var(--t-elevation);
   --shadow-elevated: var(--t-elevation-hover);
   --pxc: min(calc((100vw - 3rem) * 0.88 / 81), calc(56rem / 81));

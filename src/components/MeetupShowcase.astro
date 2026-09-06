@@ -1,119 +1,167 @@
 ---
 import SectionHeading from "./SectionHeading.astro";
-import Brand from "./Brand.astro";
+import MeetupCover from "./MeetupCover.astro";
 import SiteIcon from "./SiteIcon.astro";
-import meetups from "../data/meetups.json";
+import { events, snapshotTime, inZone } from "../lib/meetups";
 export interface Props {}
-const upcoming = meetups.events
-  .filter(
-    (event) =>
-      Date.parse(event.start) >= Date.parse(`${meetups.refreshed}T00:00:00Z`),
-  )
+const upcoming = events
+  .filter((e) => Date.parse(e.start) >= snapshotTime)
   .sort((a, b) => Date.parse(a.start) - Date.parse(b.start));
 ---
 
-<SectionHeading
-  wide
-  anchor="meetups"
-  title="Share the love of beautiful, fun & agentic Linux"
-  description="Get together with others who love computers as much as you do. Share plugins, present work, and help newcomers into the community."
-/>
-<ul class="meetup-rail scroll-accent" aria-label="Upcoming Omarchy meetups">
-  {
-    upcoming.map((event, index) => (
-      <li data-meetup-start={event.start} hidden={index >= 15}>
-        <a class="meetup-card" href={event.url}>
-          {event.cover ? (
-            <img
-              src={event.cover}
-              alt={event.title}
-              width={event.coverWidth}
-              height={event.coverHeight}
-              loading="lazy"
-              decoding="async"
-            />
-          ) : (
-            <div class="meetup-cover" role="img" aria-label="Omarchy Meetup">
-              <svg
-                viewBox="0 0 600 600"
-                preserveAspectRatio="none"
-                aria-hidden="true"
-                fill="none"
-              >
-                <path
-                  d="M0 105H105V0M0 135H135V0M465 600V465H600M495 600V495H600"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  opacity=".22"
-                />
-                <path
-                  d="M35 225V35H225M375 565H565V375"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  opacity=".35"
-                />
-                <g fill="currentColor" opacity=".2">
-                  <path d="M465 65h20v20h-20zM495 95h20v20h-20zM525 65h20v20h-20zM65 465h20v20H65zM95 495h20v20H95zM65 525h20v20H65z" />
-                </g>
-              </svg>
-              <Brand />
-              <span>MEETUP</span>
-            </div>
-          )}
-          <>
+<div data-carousel data-rail-align="start">
+  <div class="meetup-column">
+    <SectionHeading
+      roomy
+      anchor="meetups"
+      title="Share the love of beautiful, fun & agentic Linux"
+    >
+      <Fragment slot="description"
+        >Get together with others who love computers as much as you do. <span
+          class="description-line"
+          >Share plugins, present work, and help newcomers into the community.</span
+        ></Fragment
+      >
+      <div slot="action" class="meetup-actions">
+        <a class="section-link" href="/meetups/"
+          >All meetups<SiteIcon name="ArrowRight" size={20} /></a
+        >
+        <div class="meetup-arrows">
+          <button
+            class="btn"
+            data-carousel-prev
+            hidden
+            aria-label="Previous meetups"
+            ><SiteIcon name="ChevronLeft" size={20} /></button
+          ><button
+            class="btn"
+            data-carousel-next
+            hidden
+            aria-label="Next meetups"
+            ><SiteIcon name="ChevronRight" size={20} /></button>
+        </div>
+      </div>
+    </SectionHeading>
+  </div>
+  <ul
+    class="meetup-rail"
+    data-carousel-rail
+    aria-label="Upcoming Omarchy meetups"
+  >
+    {
+      upcoming.map((event, index) => (
+        <li
+          data-slide={index}
+          data-meetup-start={event.start}
+          hidden={index >= 15}
+        >
+          <a class="meetup-card" href={event.url} draggable="false">
+            {event.cover ? (
+              <img
+                src={event.cover}
+                alt={event.title}
+                width={event.coverWidth}
+                height={event.coverHeight}
+                loading="lazy"
+                decoding="async"
+                draggable="false"
+              />
+            ) : (
+              <MeetupCover />
+            )}
             <p>
               <time datetime={event.start}>
-                {new Intl.DateTimeFormat("en-US", {
+                {inZone(event, {
                   month: "short",
                   day: "numeric",
                   year: "numeric",
-                  timeZone: event.timezone || "UTC",
-                }).format(new Date(event.start))}
+                })}
               </time>
               {event.city ? ` · ${event.city}` : ""}
             </p>
             <h3>{event.title}</h3>
-          </>
-        </a>
-      </li>
-    ))
-  }
-  <li class="more">
-    <a href="https://luma.com/omarchy"
-      ><span>MORE</span><SiteIcon name="ArrowRight" /></a
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+  <div class="meetup-column">
+    <div class="meetup-track" aria-hidden="true">
+      <div data-video-thumb></div>
+    </div>
+    <p class="meetup-note">
+      Don't see a meetup in your city? <a class="text-link" href="/meetups/"
+        >Start your own</a
+      >.
+    </p>
+    <a class="section-link section-mobile-link" href="/meetups/"
+      >All meetups<SiteIcon name="ArrowRight" size={20} /></a
     >
-  </li>
-</ul>
-<p class="meetup-note">
-  Don't see a meetup in your city? <a class="text-link" href="/meetups/"
-    >Start your own</a
-  >.
-</p>
+  </div>
+</div>
 <style>
+  .meetup-column {
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--space-4);
+  }
+  .meetup-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--space-3);
+  }
+  .meetup-arrows {
+    display: flex;
+    gap: var(--space-2);
+  }
+  .meetup-arrows .btn {
+    width: var(--space-10);
+    height: var(--space-10);
+    padding: 0;
+  }
+  .meetup-arrows .btn:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
   .meetup-rail {
+    position: relative;
+    --rail-pad: max(1rem, calc((100% - min(100% - 2rem, 69rem)) / 2));
     margin: var(--space-6) 0 0;
-    padding: 0 0 var(--space-5);
+    padding: 0 var(--rail-pad);
+    scroll-padding-inline: var(--rail-pad);
     display: flex;
     gap: var(--space-6);
     overflow-x: auto;
-    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    scroll-snap-type: x mandatory;
     list-style: none;
+    cursor: grab;
+    user-select: none;
+  }
+  .meetup-rail::-webkit-scrollbar {
+    display: none;
+  }
+  .meetup-rail:active {
+    cursor: grabbing;
   }
   li {
     width: 42.5%;
-    max-width: 15rem;
     flex-shrink: 0;
     scroll-snap-align: start;
+    transition:
+      opacity 300ms ease-out,
+      filter 300ms ease-out;
   }
-  a {
+  li.is-outside {
+    opacity: 0.4;
+    filter: brightness(0.75);
+  }
+  .meetup-card {
     display: block;
     text-decoration: none;
   }
-  a:hover {
-    text-decoration: none;
-  }
-  .meetup-card img,
-  .meetup-cover {
+  img {
     width: 100%;
     aspect-ratio: 1;
     object-fit: cover;
@@ -121,6 +169,7 @@ const upcoming = meetups.events
   }
   .meetup-card p {
     margin: var(--space-3) 0 0;
+    font-family: var(--font-mono);
     font-size: var(--text-xs);
     line-height: 1.333333;
     color: var(--color-text-muted);
@@ -131,89 +180,73 @@ const upcoming = meetups.events
     line-height: 1.555556;
     font-weight: 500;
     letter-spacing: normal;
-    color: var(--color-text);
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
-  a:hover h3 {
+  .meetup-card:hover h3 {
     color: var(--color-brand);
   }
-  .more {
-    width: 10rem;
+  .meetup-track {
+    margin-top: var(--space-5);
+    height: var(--space-2);
+    background: color-mix(
+      in oklch,
+      var(--color-border-subtle) 50%,
+      transparent
+    );
   }
-  .more a {
-    display: flex;
-    min-height: 10rem;
-    height: auto;
-    aspect-ratio: 16/9;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-3);
-    font-size: var(--text-lg);
-    color: var(--color-text);
+  .meetup-track > div {
+    height: 100%;
+    background: var(--color-brand);
+    cursor: grab;
+    touch-action: none;
+    transition: background-color 150ms ease-out;
   }
-  .more a:hover {
-    color: var(--color-brand);
+  .meetup-track > div:hover {
+    background: var(--t-field-hover);
   }
-  .more span {
-    text-decoration: underline;
-    text-underline-offset: 4px;
-  }
-  .meetup-note a {
-    color: inherit;
-    display: inline;
-    white-space: nowrap;
-    text-decoration: underline;
-  }
-  .meetup-note a:hover {
-    color: var(--color-brand);
+  .meetup-track > div:active {
+    background: var(--t-field-crest);
+    cursor: grabbing;
   }
   .meetup-note {
-    margin-top: var(--space-6);
+    margin: var(--space-6) 0 0;
     font-size: var(--text-body);
     line-height: 1.625;
     color: var(--color-text-secondary);
   }
-  .meetup-cover {
-    container-type: inline-size;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 8%;
-    overflow: hidden;
-    background: var(--color-bg-deep);
-    padding-inline: 10%;
-    color: var(--color-brand);
-  }
-  .meetup-cover svg {
-    position: absolute;
-    inset: 0;
-    height: 100%;
-    width: 100%;
-  }
-  .meetup-cover :global(.brand-wordmark) {
-    position: relative;
-    width: 100%;
-  }
-  .meetup-cover > span {
-    position: relative;
-    padding-left: 0.28em;
-    font-size: clamp(1.5rem, 9cqw, 4rem);
-    line-height: 1;
-    letter-spacing: 0.28em;
+  .meetup-note a {
+    white-space: nowrap;
   }
   @media (min-width: 40rem) {
-    .more {
-      width: 14rem;
+    .meetup-column {
+      padding-inline: var(--space-6);
+    }
+    .meetup-rail {
+      --rail-pad: max(1.5rem, calc((100% - min(100% - 3rem, 69rem)) / 2));
+    }
+    li {
+      width: calc((100% - 3rem) / 3);
+    }
+  }
+  @media (min-width: 48rem) {
+    .description-line {
+      display: block;
     }
   }
   @media (min-width: 64rem) {
     .meetup-rail {
       margin-top: var(--space-10);
+    }
+    li {
+      width: calc((100% - 4.5rem) / 4);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    li {
+      transition: none;
     }
   }
 </style>

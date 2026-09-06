@@ -1,6 +1,6 @@
 ---
 {
-  "title": "Meetups around the world",
+  "title": "Meetups",
   "description": "Omarchy meetups around the world, and how to run your own: about Omarchy, Linux and adjacent hacker culture, open to everyone, and run by the community.",
   "path": "/meetups/",
   "seoTitle": "Meetups - Omarchy",
@@ -9,24 +9,6 @@
 ---
 
 <div class="meetups">
-
-        <div class="meetups__calendar">
-          <iframe
-            class="meetups__embed"
-            src="https://luma.com/embed/calendar/cal-SDGGMsEps9ExsrT/events?lt=dark"
-            width="600"
-            height="450"
-            frameborder="0"
-            title="Upcoming Omarchy meetups on Luma"
-            referrerpolicy="strict-origin-when-cross-origin"
-            allowfullscreen
-          ></iframe>
-
-          <a class="button" href="https://luma.com/omarchy" aria-label="The Omarchy calendar on Luma">
-            <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M10 2c.83 0 1.5.67 1.5 1.5V5h9V3.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5V5h2.5C28.43 5 30 6.57 30 8.5v18c0 1.93-1.57 3.5-3.5 3.5h-21C3.57 30 2 28.43 2 26.5v-18C2 6.57 3.57 5 5.5 5H8V3.5C8 2.67 8.67 2 9.5 2zM27 13H5v13.5c0 .28.22.5.5.5h21c.28 0 .5-.22.5-.5zm-16.5 4a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm5.5 0a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm5.5 0a2 2 0 1 1 0 4 2 2 0 0 1 0-4z" fill="currentColor"/></svg>
-            <span>Open in Luma</span>
-          </a>
-        </div>
 
         <section class="rules">
           <header class="rules__header">

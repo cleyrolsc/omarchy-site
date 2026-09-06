@@ -21,7 +21,7 @@
     "storybook": "storybook dev -p 6006 --host 127.0.0.1",
     "check": "astro check",
     "typecheck": "astro check",
-    "refresh-data": "node scripts/refresh-data.mjs",
+    "refresh-data": "node scripts/refresh-data.mjs && node scripts/meetup-map.mjs",
     "parity": "node tests/parity.mjs",
     "test:browser": "playwright test"
   },
@@ -50,7 +50,11 @@
     "storybook": "^10.3.5",
     "storybook-astro": "^0.2.1",
     "typescript": "^5.7.0",
-    "wrangler": "^4.129.0"
+    "wrangler": "^4.129.0",
+    "d3-geo": "^3.1.1",
+    "topojson-client": "^3.1.0",
+    "world-atlas": "^2.0.2",
+    "world-countries": "^5.1.0"
   },
   "overrides": {
     "yaml-language-server": {

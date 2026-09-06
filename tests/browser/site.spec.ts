@@ -99,7 +99,7 @@ test("themes persist through Astro navigation and dialogs restore focus", async 
   await page.keyboard.press("Escape");
 });
 
-test("mobile menu, gallery filtering and layouts fit a phone", async ({
+test("mobile menu, community themes and layouts fit a phone", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
@@ -112,14 +112,13 @@ test("mobile menu, gallery filtering and layouts fit a phone", async ({
     .getByRole("link", { name: "Themes", exact: true })
     .click();
   await expect(page).toHaveURL(/\/themes\/$/);
-  await page.locator("[data-gallery-search]").fill("aetheria");
-  await expect(page.locator("[data-theme-card]:visible")).toHaveCount(1);
-  await page
-    .locator("[data-gallery-search]")
-    .fill("no-theme-matches-this-query");
-  await expect(page.locator("[data-gallery-count]")).toHaveText(
-    /0 \/ \d+ themes/,
-  );
+  await expect(
+    page.getByRole("heading", { name: "Community themes" }),
+  ).toBeVisible();
+  await expect(page.locator("[data-theme-card]").first()).toBeVisible();
+  await expect(
+    page.getByRole("searchbox", { name: "Filter themes" }),
+  ).toHaveCount(0);
   for (const route of [
     "/",
     "/manual/getting-started/",
@@ -156,9 +155,11 @@ test("video rail plays inline and stops the previous slide", async ({
     "src",
     /youtube-nocookie\.com\/embed\//,
   );
-  await page.locator("[data-carousel-next]:visible").click();
+  await page.locator(".video-gallery [data-carousel-next]:visible").click();
   await expect(page.locator("[data-carousel] iframe")).toHaveCount(0);
-  await expect(page.locator('[data-slide="1"]')).toHaveClass(/is-current/);
+  await expect(page.locator('.video-gallery [data-slide="1"]')).toHaveClass(
+    /is-current/,
+  );
 });
 
 test("gallery images open using the keyboard", async ({ page }) => {

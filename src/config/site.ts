@@ -48,6 +48,13 @@ export const site = {
         description: "Community themes and their source repositories.",
       },
       {
+        title: "Meetups",
+        path: "/meetups/",
+        markdownPath: "/meetups.md",
+        description:
+          "Community meetups around the world and how to run your own.",
+      },
+      {
         title: "Teams",
         path: "/teams/",
         markdownPath: "/teams.md",

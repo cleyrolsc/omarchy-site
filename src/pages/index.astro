@@ -8,6 +8,7 @@ import SectionHeading from "../components/SectionHeading.astro";
 import PluginCard from "../components/PluginCard.astro";
 import CardRail from "../components/CardRail.astro";
 import FeatureShowcase from "../components/FeatureShowcase.astro";
+import WindowsShowcase from "../components/WindowsShowcase.astro";
 import MeetupShowcase from "../components/MeetupShowcase.astro";
 import ThemeShowcase from "../components/ThemeShowcase.astro";
 import VideoCarousel from "../components/VideoCarousel.astro";
@@ -28,21 +29,23 @@ const news = await newsSummaries();
 const featured = home.featuredPluginIds
   .map((id) => catalogue.plugins.find((p) => p.id === id))
   .filter((p): p is (typeof catalogue.plugins)[number] => Boolean(p));
-const patronGroups = patrons.map((group) => ({
-  ...group,
-  name:
-    group.id === "founding-token-patrons"
-      ? "Founding Corporate Patrons"
-      : group.name,
-  description:
-    group.id === "founding-patrons"
-      ? "$1,000,000 from each"
-      : group.id === "founding-token-patrons"
-        ? "$1,000,000/year x 3 or $1,500,000 in tokens"
-        : group.id === "distinguished-corporate-patrons"
-          ? "$100,000/year x 3 or $150,000 in tokens"
-          : "$100,000 from each",
-}));
+const patronGroups = patrons
+  .filter((group) => group.members.length > 0)
+  .map((group) => ({
+    ...group,
+    name:
+      group.id === "founding-token-patrons"
+        ? "Founding Corporate Patrons"
+        : group.name,
+    description:
+      group.id === "founding-patrons"
+        ? "$1,000,000 from each"
+        : group.id === "founding-token-patrons"
+          ? "$1,000,000/year x 3 or $1,500,000 in tokens"
+          : group.id === "distinguished-corporate-patrons"
+            ? "$100,000/year x 3 or $150,000 in tokens"
+            : "$100,000 from each",
+  }));
 ---
 
 <SiteLayout title={intro.data.title} description={intro.data.description}>
@@ -282,7 +285,10 @@ const patronGroups = patrons.map((group) => ({
     <section id="gaming" class="section">
       <div class="section-inner"><FeatureShowcase kind="gaming" /></div>
     </section>
-    <section id="news" class="section section--deep">
+    <section id="windows" class="section section--deep">
+      <div class="section-inner"><WindowsShowcase /></div>
+    </section>
+    <section id="news" class="section">
       <div class="section-inner">
         <SectionHeading
           anchor="news"
@@ -295,7 +301,7 @@ const patronGroups = patrons.map((group) => ({
         >
       </div>
     </section>
-    <section id="figures" class="section">
+    <section id="figures" class="section section--deep">
       <div class="section-inner">
         <SectionHeading
           anchor="figures"
@@ -304,7 +310,7 @@ const patronGroups = patrons.map((group) => ({
         /><StatGrid />
       </div>
     </section>
-    <section id="voices" class="section section--deep">
+    <section id="voices" class="section">
       <div class="section-inner">
         <SectionHeading
           anchor="voices"
@@ -323,7 +329,7 @@ const patronGroups = patrons.map((group) => ({
         >
       </div>
     </section>
-    <section id="teams" class="section">
+    <section id="teams" class="section section--deep">
       <div class="section-inner">
         <SectionHeading
           anchor="teams"
@@ -337,7 +343,7 @@ const patronGroups = patrons.map((group) => ({
         >
       </div>
     </section>
-    <section id="patrons" class="section section--deep">
+    <section id="patrons" class="section">
       <div class="section-inner">
         <SectionHeading
           anchor="patrons"
@@ -356,10 +362,10 @@ const patronGroups = patrons.map((group) => ({
         >
       </div>
     </section>
-    <section id="meetups" class="section">
-      <div class="section-inner"><MeetupShowcase /></div>
+    <section id="meetups" class="section section--deep meetup-section">
+      <MeetupShowcase />
     </section>
-    <section id="community" class="section section--deep">
+    <section id="community" class="section">
       <div class="section-inner">
         <SectionHeading
           anchor="community"
@@ -393,6 +399,14 @@ const patronGroups = patrons.map((group) => ({
   </main>
 </SiteLayout>
 <style>
+  .meetup-section {
+    padding-block: var(--space-12);
+  }
+  @media (min-width: 64rem) {
+    .meetup-section {
+      padding-block: var(--space-24);
+    }
+  }
   .hero {
     position: relative;
     margin-top: calc(-1 * var(--nav-h));

@@ -10,6 +10,12 @@ test("theme deck browses without applying and chooses with the frosted wipe", as
   await page.goto("/");
   await page.getByRole("button", { name: "Change website theme" }).click();
   const dialog = page.getByRole("dialog", { name: "Theme picker" });
+  await expect(page.locator(".theme-backdrop")).toBeVisible();
+  await expect(page.locator(".theme-backdrop")).toHaveCSS(
+    "backdrop-filter",
+    "blur(4px)",
+  );
+  await expect(dialog.locator(".theme-backdrop")).toHaveCount(0);
   await expect(dialog.locator("[data-picker-card]:visible")).toHaveCount(5);
   await expect(dialog.locator('[data-depth="0"] .theme-frame')).toHaveCSS(
     "clip-path",
@@ -73,4 +79,25 @@ test("voices unfolds, team faces fan out, and mobile rails track a swipe", async
     "transform",
     "matrix(1, 0, 0, 1, 0, 0)",
   );
+});
+
+test("mobile menu finishes its closing fold before the hero ghost returns", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  const menu = page.locator(".site-header .mobile-menu");
+  const summary = menu.locator("summary");
+  await page.mouse.move(300, 500);
+  await expect(summary).toHaveCSS("color", "rgba(0, 0, 0, 0)");
+  await menu.evaluate((el: HTMLDetailsElement) => {
+    el.open = true;
+  });
+  await expect(summary).not.toHaveCSS("color", "rgba(0, 0, 0, 0)");
+  await menu.evaluate((el: HTMLDetailsElement) => {
+    el.open = false;
+  });
+  await page.waitForTimeout(100);
+  await expect(summary).not.toHaveCSS("color", "rgba(0, 0, 0, 0)");
+  await expect(summary).toHaveCSS("color", "rgba(0, 0, 0, 0)");
 });

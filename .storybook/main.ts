@@ -57,6 +57,8 @@ const config: StorybookConfig & {
     );
     return {
       ...config,
+      // Storybook staticDirs owns public assets; a second Vite copy races it.
+      publicDir: false,
       plugins: [
         ...plugins,
         {

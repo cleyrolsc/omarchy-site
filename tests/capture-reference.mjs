@@ -45,9 +45,14 @@ for (const post of json("news-posts"))
 for (const [slug, page] of Object.entries(json("pages"))) {
   if (slug === "teams") continue; // Its redesigned roster is checked against the team data below.
   capture(
-    slug === "security/credits" ? "/security/" : `/${slug}/`,
-    slug === "security/credits" ? "Security" : page.title,
-    page.html,
+    `/${slug}/`,
+    slug === "meetups" ? "Meetups" : page.title,
+    slug === "meetups"
+      ? page.html.replace(
+          /<div class="meetups__calendar">[\s\S]*?<\/div>\s*/,
+          "",
+        )
+      : page.html,
     ".standalone-content",
   );
 }

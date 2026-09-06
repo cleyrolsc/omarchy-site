@@ -46,7 +46,7 @@ export async function documents(): Promise<Document[]> {
     "Experience a transfer of enthusiasm.",
     ...home.videos.map(
       (video) =>
-        `- ${link(video.title, "https://www.youtube.com/watch?v=" + video.id)} — ${video.channel}`,
+        `- ${link(video.title, "https://www.youtube.com/watch?v=" + video.id + (video.start ? "&t=" + video.start : ""))} — ${video.channel}`,
     ),
     "## Install Omarchy",
     "Be up and running in as little as 35 seconds on the fastest machines, and in less than two minutes on the majority of computers.",
@@ -100,6 +100,15 @@ export async function documents(): Promise<Document[]> {
         `### ${link(game.name, "/manual/gaming/#" + game.section)}\n\n${game.description}`,
     ),
     link("Get your game on", "/manual/gaming/"),
+    "## It even runs Windows!",
+    "Keep the Windows apps you need, right inside Omarchy. Our Windows 11 VM setup makes room for native Microsoft Office and the other programs you can't leave behind.",
+    "### Your Windows apps, at home",
+    "Choose Install > Windows from the Omarchy menu. Hardware virtualization brings near-native CPU performance for Office and everyday work, with a shared clipboard and a folder for moving files between Windows and Linux.",
+    "### Bring your Windows key",
+    "Bring a Windows 11 Pro license valid for a VM. Run `omarchy windows key` to retrieve your machine's original key (this only works on Pro, not Home licenses).",
+    "### For work, not gaming",
+    "This setup has no GPU acceleration or passthrough. It's a great home for documents, spreadsheets, and Windows-only work apps, but isn't intended for gaming or demanding graphics work.",
+    link("Set up Windows", "/manual/windows-vm/"),
     "## What's been happening",
     ...news
       .slice(0, 6)
@@ -134,7 +143,7 @@ export async function documents(): Promise<Document[]> {
         (event) =>
           `- ${link(event.title, event.url)} · ${event.start}${event.city ? " · " + event.city : ""}`,
       ),
-    link("More meetups", "https://luma.com/omarchy"),
+    link("All meetups", "/meetups/"),
     "Don't see a meetup in your city? " + link("Start your own", "/meetups/"),
     "## Get involved with Omarchy",
     "Command your agent, and hang out with the people doing the same.",
@@ -175,7 +184,33 @@ export async function documents(): Promise<Document[]> {
         path: page.data.path,
         title: page.data.title,
         description: page.data.description,
-        body: cleanMarkdown(page.body || ""),
+        body:
+          (page.id === "meetups"
+            ? [
+                "Omarchy meetups are popping up around the world. Find one near you, or start one. They all live on the Omarchy calendar on Luma.",
+                link("The calendar on Luma", "https://luma.com/omarchy"),
+                "## Upcoming meetups",
+                ...meetups.events
+                  .filter(
+                    (e) => Date.parse(e.start) >= Date.parse(meetups.refreshed),
+                  )
+                  .map(
+                    (e) =>
+                      `- ${link(e.title, e.url)} · ${e.start}${e.city ? " · " + e.city : ""}`,
+                  ),
+                "## Already happened",
+                ...meetups.events
+                  .filter(
+                    (e) => Date.parse(e.start) < Date.parse(meetups.refreshed),
+                  )
+                  .reverse()
+                  .map(
+                    (e) =>
+                      `- ${link(e.title, e.url)} · ${e.start}${e.city ? " · " + e.city : ""}`,
+                  ),
+                "## Run your own",
+              ].join("\n\n") + "\n\n"
+            : "") + cleanMarkdown(page.body || ""),
       })),
     {
       path: "/news/",

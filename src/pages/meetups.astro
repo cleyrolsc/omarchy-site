@@ -1,0 +1,333 @@
+---
+import { getEntry } from "astro:content";
+import SiteLayout from "../layouts/SiteLayout.astro";
+import SiteIcon from "../components/SiteIcon.astro";
+import MeetupMap from "../components/MeetupMap.astro";
+import MeetupCard from "../components/MeetupCard.astro";
+import { events, snapshotTime, byMonth, countryOf } from "../lib/meetups";
+import { REGIONS, regionOf } from "../lib/regions";
+const rules = (await getEntry("pages", "meetups"))!;
+const upcoming = events
+  .filter((e) => Date.parse(e.start) >= snapshotTime)
+  .sort((a, b) => Date.parse(a.start) - Date.parse(b.start));
+const past = events
+  .filter((e) => Date.parse(e.start) < snapshotTime)
+  .sort((a, b) => Date.parse(b.start) - Date.parse(a.start));
+const countries = [
+  ...new Set(events.flatMap((e) => (e.country ? [e.country] : []))),
+].sort((a, b) => countryOf(a).localeCompare(countryOf(b)));
+---
+
+<SiteLayout title="Meetups - Omarchy" description={rules.data.description}>
+  <main id="main" class="page meetups-page" data-meetups-page>
+    <header class="meetups-header">
+      <div>
+        <h1>Meetups</h1><p>
+          Omarchy meetups are popping up around the world. Find one near you, or
+          start one. They all live on the Omarchy calendar on Luma.
+        </p>
+      </div>
+      <a class="section-link calendar-desktop" href="https://luma.com/omarchy"
+        >The calendar on Luma<SiteIcon name="ArrowRight" size={20} /></a
+      >
+    </header>
+    <nav
+      aria-label="Filter the meetups by region"
+      class="meetup-filters"
+      data-meetup-filters
+      hidden
+    >
+      <ul class="region-chips">
+        {
+          [null, ...REGIONS].map((region) => (
+            <li
+              data-region-option={region || ""}
+              hidden={
+                !!region &&
+                !upcoming.some((e) => regionOf(e.country) === region)
+              }
+            >
+              <button
+                type="button"
+                data-region={region || ""}
+                aria-pressed={!region}
+              >
+                {region || "Everywhere"}
+                <span>
+                  {region
+                    ? upcoming.filter((e) => regionOf(e.country) === region)
+                        .length
+                    : upcoming.length}
+                </span>
+              </button>
+            </li>
+          ))
+        }
+      </ul>
+      <ul class="country-chips">
+        {
+          countries.map((code) => (
+            <li hidden>
+              <button type="button" data-country={code} aria-pressed="false">
+                <span class="country-name">{countryOf(code)}</span>
+                <span class="country-count">
+                  {upcoming.filter((e) => e.country === code).length}
+                </span>
+              </button>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    <div class="map-wrap"><MeetupMap /></div>
+    <div data-months>
+      {
+        byMonth(upcoming).map((month, index) => (
+          <section
+            class="meetup-month"
+            data-month={month.name}
+            data-first-month={index === 0}
+            aria-labelledby={`month-${month.id}`}
+          >
+            <>
+              <div class="month-heading">
+                <>
+                  <h2 id={`month-${month.id}`}>{month.name}</h2>
+                  <span data-month-count>{month.events.length}</span>
+                </>
+              </div>
+              <ul class="meetup-grid">
+                {month.events.map((event) => (
+                  <MeetupCard event={event} />
+                ))}
+              </ul>
+            </>
+          </section>
+        ))
+      }
+    </div>
+    <p class="meetup-empty" data-meetup-empty hidden={upcoming.length > 0}>
+      Nothing on the calendar right now. The next one may be yours.
+    </p>
+    <a class="section-link section-mobile-link" href="https://luma.com/omarchy"
+      >The calendar on Luma<SiteIcon name="ArrowRight" size={20} /></a
+    >
+    <section
+      class="meetup-archive"
+      aria-labelledby="past-meetups"
+      data-meetup-archive
+      hidden={past.length === 0}
+    >
+      <div class="month-heading">
+        <h2 id="past-meetups">Already happened</h2><span data-past-count
+          >{past.length}</span
+        >
+      </div>
+      <ul class="archive-grid">
+        {past.map((event) => <MeetupCard event={event} past />)}
+      </ul>
+    </section>
+    <section id="run-your-own" class="meetup-rules">
+      <div class="prose ported standalone-content" set:html={rules.body} />
+    </section>
+  </main>
+</SiteLayout>
+<style>
+  .meetups-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-4);
+  }
+  .meetups-header > div {
+    max-width: 42rem;
+  }
+  h1 {
+    margin: 0;
+    font-size: var(--text-3xl);
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  .meetups-header p {
+    margin: var(--space-3) 0 0;
+    font-size: var(--text-body);
+    line-height: 1.625;
+    color: var(--color-text-secondary);
+    text-wrap: pretty;
+  }
+  .calendar-desktop {
+    display: none;
+  }
+  .meetup-filters {
+    margin-top: var(--space-10);
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .region-chips,
+  .country-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .region-chips button {
+    display: inline-flex;
+    min-height: var(--space-11);
+    align-items: center;
+    gap: var(--space-2);
+    border: 1px solid var(--color-border-strong);
+    padding: 0 var(--space-3);
+    font-size: var(--text-sm);
+    line-height: 1.428571;
+    background: var(--color-surface);
+    color: var(--color-text);
+    transition:
+      color 150ms ease-out,
+      background-color 150ms ease-out,
+      border-color 150ms ease-out;
+  }
+  .region-chips button:hover {
+    background: var(--color-surface-2);
+  }
+  .region-chips button[aria-pressed="true"] {
+    border-color: var(--color-brand);
+    background: var(--color-brand);
+    color: var(--color-brand-ink);
+  }
+  button span {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    line-height: 1.333333;
+    color: var(--color-text-muted);
+  }
+  .region-chips [aria-pressed="true"] span {
+    color: color-mix(in srgb, var(--color-brand-ink) 70%, transparent);
+  }
+  .country-chips {
+    margin-top: var(--space-3);
+    min-height: 0;
+    gap: 0 var(--space-4);
+  }
+  .country-chips button {
+    display: inline-flex;
+    align-items: baseline;
+    position: relative;
+    min-height: var(--space-9);
+    padding: var(--space-2) 0;
+    border: 0;
+    background: none;
+    font-size: var(--text-sm);
+    line-height: 1.428571;
+    color: var(--color-text-secondary);
+    text-underline-offset: 4px;
+    transition: color 150ms ease-out;
+  }
+  .country-chips button::before {
+    content: "";
+    position: absolute;
+    inset: calc(-1 * var(--space-1)) 0;
+  }
+  .country-chips button[aria-pressed="true"] {
+    color: var(--color-brand);
+    text-decoration: underline;
+  }
+  .country-chips button:hover {
+    color: var(--color-text);
+  }
+  .country-chips .country-name {
+    font: inherit;
+    color: inherit;
+  }
+  .country-chips .country-count {
+    margin-left: var(--space-1_5);
+  }
+  .map-wrap {
+    display: none;
+    margin-top: var(--space-6);
+  }
+  /* New month groups created as the visitor's clock changes use the same styles. */
+  :global(.meetups-page .meetup-month) {
+    margin-top: var(--space-12);
+  }
+  :global(.meetups-page .meetup-month[data-first-month]) {
+    margin-top: var(--space-10);
+  }
+  :global(.meetups-page .month-heading) {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+  }
+  :global(.meetups-page .month-heading h2) {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: var(--text-lg);
+    line-height: 1.555556;
+    font-weight: 500;
+    letter-spacing: normal;
+  }
+  :global(.meetups-page .month-heading span) {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    line-height: 1.333333;
+    color: var(--color-text-muted);
+  }
+  :global(.meetups-page .meetup-grid) {
+    margin: var(--space-5) 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-8) var(--space-6);
+  }
+  .meetup-empty {
+    margin-top: var(--space-10);
+    font-size: var(--text-body);
+    color: var(--color-text-secondary);
+  }
+  .meetup-archive,
+  .meetup-rules {
+    margin-top: var(--space-14);
+    border-top: 1px solid var(--color-border-subtle);
+    padding-top: var(--space-10);
+  }
+  .archive-grid {
+    margin-top: var(--space-5);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-6) var(--space-4);
+  }
+  .meetup-rules {
+    max-width: 48rem;
+    scroll-margin-top: calc(var(--nav-h) + 2rem);
+  }
+  @media (min-width: 40rem) {
+    .map-wrap {
+      display: block;
+    }
+    .calendar-desktop {
+      display: inline-flex;
+    }
+    .region-chips button,
+    .country-chips button,
+    .country-chips {
+      min-height: var(--space-9);
+    }
+    :global(.meetups-page .meetup-grid) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .archive-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 64rem) {
+    :global(.meetups-page .meetup-grid) {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    .archive-grid {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+  }
+</style>

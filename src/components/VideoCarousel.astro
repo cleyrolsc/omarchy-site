@@ -3,7 +3,13 @@ import SiteIcon from "./SiteIcon.astro";
 import Brand from "./Brand.astro";
 import SectionHeading from "./SectionHeading.astro";
 export interface Props {
-  videos: { id: string; title: string; channel: string; thumb: string }[];
+  videos: {
+    id: string;
+    title: string;
+    channel: string;
+    thumb: string;
+    start?: number;
+  }[];
   title?: string;
   description?: string;
 }
@@ -30,7 +36,8 @@ const {
           aria-label="Previous video"
           ><SiteIcon name="ChevronLeft" size={20} /></button
         ><button class="btn" data-carousel-next hidden aria-label="Next video"
-          ><SiteIcon name="ChevronRight" size={20} /></button>
+          ><SiteIcon name="ChevronRight" size={20} /></button
+        >
       </div>
     </div>
   </div>
@@ -51,8 +58,9 @@ const {
           aria-label={`${i + 1} of ${videos.length}: ${video.title}`}
         >
           <a
-            href={`https://www.youtube.com/watch?v=${video.id}`}
+            href={`https://www.youtube.com/watch?v=${video.id}${video.start ? `&t=${video.start}` : ""}`}
             data-carousel-video={video.id}
+            data-video-start={video.start}
             data-video-title={`${video.title} by ${video.channel}`}
             aria-label={`${i === 0 ? "Play" : "Show"}: ${video.title} by ${video.channel}`}
           >
@@ -93,7 +101,8 @@ const {
       <button class="btn" data-carousel-prev hidden aria-label="Previous video"
         ><SiteIcon name="ChevronLeft" size={20} /></button
       ><button class="btn" data-carousel-next hidden aria-label="Next video"
-        ><SiteIcon name="ChevronRight" size={20} /></button>
+        ><SiteIcon name="ChevronRight" size={20} /></button
+      >
     </div>
   </div>
 </div>
@@ -122,6 +131,10 @@ const {
     margin-top: var(--space-6);
   }
   .video-rail {
+    scroll-padding-inline: max(
+      1rem,
+      calc((100% - min(100% - 2rem, 69rem)) / 2)
+    );
     display: flex;
     gap: var(--space-4);
     overflow-x: auto;
@@ -251,6 +264,10 @@ const {
       padding-inline: var(--space-6);
     }
     .video-rail {
+      scroll-padding-inline: max(
+        1.5rem,
+        calc((100% - min(100% - 3rem, 69rem)) / 2)
+      );
       padding-inline: max(1.5rem, calc((100% - min(100% - 3rem, 69rem)) / 2));
     }
     .carousel-arrows {

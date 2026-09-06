@@ -1,0 +1,95 @@
+---
+import SectionHeading from "./SectionHeading.astro";
+import SiteIcon from "./SiteIcon.astro";
+export interface Props {}
+---
+
+<SectionHeading
+  anchor="windows"
+  title="It even runs Windows!"
+  description="Keep the Windows apps you need, right inside Omarchy. Our Windows 11 VM setup makes room for native Microsoft Office and the other programs you can't leave behind."
+  href="/manual/windows-vm/"
+  link="Set up Windows"
+/>
+<img
+  src="/manual/images/windows-vm.webp"
+  alt="Windows 11 running Outlook inside Omarchy, with the Omarchy desktop bar visible above it"
+  width="1600"
+  height="1067"
+  loading="lazy"
+  decoding="async"
+/>
+<div class="windows-columns">
+  <div>
+    <h3>Your Windows apps, at home</h3><p>
+      Choose <em>Install &gt; Windows</em> from the Omarchy menu. Hardware virtualization
+      brings near-native CPU performance for Office and everyday work, with a shared
+      clipboard and a folder for moving files between Windows and Linux.
+    </p>
+  </div>
+  <div>
+    <h3>Bring your Windows key</h3><p>
+      Bring a Windows 11 Pro license valid for a VM. Run <code
+        >omarchy windows key</code
+      > to retrieve your machine's original key (this only works on Pro, not Home
+      licenses).
+    </p>
+  </div>
+  <div>
+    <h3>For work, not gaming</h3><p>
+      This setup has no GPU acceleration or passthrough. It's a great home for
+      documents, spreadsheets, and Windows-only work apps, but isn't intended
+      for gaming or demanding graphics work.
+    </p>
+  </div>
+</div>
+<a class="section-link section-mobile-link" href="/manual/windows-vm/"
+  >Set up Windows<SiteIcon name="ArrowRight" size={20} /></a
+>
+<style>
+  img {
+    margin-top: var(--space-6);
+    width: 100%;
+    height: auto;
+  }
+  .windows-columns {
+    margin-top: var(--space-6);
+    display: grid;
+    gap: var(--space-6);
+  }
+  h3 {
+    margin: 0;
+    font-size: var(--text-lg);
+    line-height: 1.555556;
+    font-weight: 500;
+    letter-spacing: normal;
+  }
+  p {
+    margin: var(--space-3) 0 0;
+    font-size: var(--text-body);
+    line-height: 1.625;
+    color: var(--color-text-secondary);
+  }
+  code {
+    white-space: nowrap;
+    border-radius: var(--radius-sm);
+    background: var(--color-surface-2);
+    padding: var(--space-0_5) var(--space-1_5);
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    color: var(--color-text);
+  }
+  @media (min-width: 48rem) {
+    .windows-columns {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 64rem) {
+    img {
+      margin-top: var(--space-10);
+    }
+    .windows-columns {
+      gap: var(--space-8);
+    }
+  }
+</style>

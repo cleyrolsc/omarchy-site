@@ -1,0 +1,49 @@
+---
+import Brand from "./Brand.astro";
+export interface Props {
+  title: string;
+  level?: "h1" | "p";
+  spaced?: boolean;
+  narrow?: boolean;
+}
+const {
+  title,
+  level: Title = "h1",
+  spaced = false,
+  narrow = false,
+} = Astro.props;
+---
+
+<header class:list={["page-header", { spaced }]}>
+  <Brand hero class="page-wordmark" />
+  <Title class:list={["page-subtitle", { narrow }]}>{title}</Title>
+</header>
+<style>
+  .page-header :global(.page-wordmark) {
+    width: 59.5%;
+    max-width: 26.775rem;
+    margin: 0 auto var(--space-3);
+  }
+  .page-subtitle {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.779625rem;
+    line-height: 1.5;
+    font-weight: 400;
+    letter-spacing: normal;
+    text-align: center;
+    color: var(--color-text-secondary);
+  }
+  .page-subtitle.narrow {
+    max-width: 42rem;
+    margin-inline: auto;
+  }
+  .spaced {
+    margin-bottom: var(--space-8);
+  }
+  @media (min-width: 40rem) {
+    .page-subtitle {
+      font-size: 0.86625rem;
+    }
+  }
+</style>

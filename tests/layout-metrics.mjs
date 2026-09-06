@@ -13,6 +13,7 @@ export const routes = [
   "/patrons/",
   "/patrons/badges/",
   "/security/",
+  "/security/credits/",
   "/brand/",
   "/meetups/",
   "/workstations/",

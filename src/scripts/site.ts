@@ -1,5 +1,5 @@
 import { initHome } from "./home";
-import { initVideoCarousels } from "./video-carousel";
+import { initRails } from "./rail";
 import { initThemePicker } from "./theme-picker";
 import { initClusters } from "./clusters";
 import { navigate } from "astro:transitions/client";
@@ -30,7 +30,11 @@ export function initSite() {
   const { signal } = controller;
   initClusters(signal);
   initHome(signal);
-  initVideoCarousels(signal);
+  if (document.querySelector("[data-meetups-page]"))
+    void import("./meetups").then(({ initMeetups }) => {
+      if (!signal.aborted) initMeetups(signal);
+    });
+  initRails(signal);
   const cleanups: (() => void)[] = [];
   const on = (target: EventTarget, event: string, handler: EventListener) =>
     target.addEventListener(event, handler, { signal });
@@ -499,7 +503,14 @@ export function initSite() {
         ".desktop-nav a,.icon-button,summary",
       ),
     ];
+    let wasMenuOpen = Boolean(menu?.open),
+      ghostAfter = 0,
+      foldTimer = 0;
+    cleanups.push(() => clearTimeout(foldTimer));
     const surface = () => {
+      if (wasMenuOpen && !menu?.open) ghostAfter = performance.now() + 260;
+      wasMenuOpen = Boolean(menu?.open);
+      clearTimeout(foldTimer);
       const hero = q<HTMLElement>("[data-hero-sentinel]");
       const grounds = all<HTMLElement>(
         "main>section,main [data-ground],.site-footer",
@@ -520,13 +531,18 @@ export function initSite() {
           !(hero && hero.getBoundingClientRect().bottom > header.offsetHeight),
       );
       header.style.setProperty("--nav-surface", String(value));
-      const blend = Boolean(
+      let blend = Boolean(
         ghost &&
         hero &&
         hero.getBoundingClientRect().bottom > header.offsetHeight &&
         !header.matches(":hover") &&
         !menu?.open,
       );
+      // Keep the real bars painted through their closing fold before restoring the ghost.
+      if (blend && performance.now() < ghostAfter) {
+        blend = false;
+        foldTimer = window.setTimeout(surface, ghostAfter - performance.now());
+      }
       if (ghost) ghost.style.opacity = blend ? "1" : "0";
       labels.forEach((el) => (el.style.color = blend ? "transparent" : ""));
       if (ground) {
@@ -558,36 +574,6 @@ export function initSite() {
         if ((e as KeyboardEvent).key === "Escape") menu.open = false;
       });
     }
-  }
-  const gallerySearch = q<HTMLInputElement>("[data-gallery-search]");
-  if (gallerySearch) {
-    const filter = () => {
-      let count = 0;
-      const needle = gallerySearch.value.trim().toLowerCase();
-      const cards = all("[data-theme-card]");
-      cards.forEach((card) => {
-        card.hidden = !card.dataset.searchText?.includes(needle);
-        if (!card.hidden) count++;
-      });
-      const label = q("[data-gallery-count]");
-      if (label) label.textContent = `${count} / ${cards.length} themes`;
-      const empty = q<HTMLElement>("[data-gallery-empty]");
-      if (empty) empty.hidden = count > 0;
-      const grid = q<HTMLElement>("[data-themes-grid]");
-      if (grid) grid.hidden = count === 0;
-      const query = q("[data-gallery-query]");
-      if (query) query.textContent = gallerySearch.value.trim();
-      const clear = q<HTMLElement>(".theme-search [data-gallery-clear]");
-      if (clear) clear.hidden = !needle;
-    };
-    on(gallerySearch, "input", filter);
-    all("[data-gallery-clear]").forEach((button) =>
-      on(button, "click", () => {
-        gallerySearch.value = "";
-        filter();
-        gallerySearch.focus();
-      }),
-    );
   }
   const ua = navigator.userAgent;
   const device = /iPhone|iPad/.test(ua)

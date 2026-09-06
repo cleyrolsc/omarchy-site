@@ -1,0 +1,243 @@
+---
+import map from "../data/meetup-map.json";
+import { events, snapshotTime, whenOf, whereOf } from "../lib/meetups";
+import { PIN_AT } from "../lib/meetup-map";
+export interface Props {}
+const placed = events
+  .filter((e) => PIN_AT.has(e.id))
+  .sort(
+    (a, b) =>
+      Number(Date.parse(a.start) < snapshotTime) -
+      Number(Date.parse(b.start) < snapshotTime),
+  );
+const pins = placed.map((event) => ({
+  event,
+  at: PIN_AT.get(event.id)!,
+  past: Date.parse(event.start) < snapshotTime,
+}));
+const pickable = new Set(
+  events
+    .filter((e) => Date.parse(e.start) >= snapshotTime)
+    .map((e) => e.country),
+);
+---
+
+<div class="meetup-map" data-meetup-map>
+  <svg
+    viewBox={`0 0 ${map.width} ${map.height}`}
+    role="group"
+    aria-label="Where the meetups are, on a map of the world"
+  >
+    <g class="map-world" data-map-world>
+      {
+        map.countries.map((country) => (
+          <path
+            data-map-country={country.id}
+            data-pickable={pickable.has(country.id)}
+            d={country.d}
+            stroke="var(--color-bg)"
+            stroke-width=".7"
+            stroke-linejoin="round"
+          />
+        ))
+      }
+      {
+        pins.map(({ event, at, past }) => (
+          <a
+            href={event.url}
+            data-map-pin={event.id}
+            data-start={event.start}
+            data-title={event.title}
+            data-when={whenOf(event)}
+            data-where={whereOf(event)}
+            data-cover={event.cover}
+            data-approximate={event.geo?.approximate}
+            data-past={past}
+            data-shown="true"
+            aria-label={`${event.title}, ${whenOf(event)}, on Luma`}
+          >
+            <circle
+              class="pin-dot"
+              cx={at.x}
+              cy={at.y}
+              r={past ? 2.2 : 4}
+              stroke="var(--color-bg)"
+              stroke-width="1.2"
+            />
+            <circle
+              class="pin-target"
+              cx={at.x}
+              cy={at.y}
+              r="5.5"
+              fill="transparent"
+            />
+          </a>
+        ))
+      }
+      <circle
+        data-active-pin
+        class="active-pin"
+        cx="0"
+        cy="0"
+        r="5"
+        stroke="var(--color-text)"
+        stroke-width="1.2"
+        visibility="hidden"></circle>
+    </g>
+  </svg>
+  <div role="tooltip" class="map-tooltip" data-map-tooltip hidden>
+    <div class="tooltip-body">
+      <div class="tooltip-cover"><img data-tip-cover alt="" hidden /></div>
+      <div class="tooltip-copy">
+        <p data-tip-title></p><p data-tip-when></p><p data-tip-where></p>
+      </div>
+    </div>
+    <p class="tooltip-status" data-tip-status></p>
+  </div>
+</div>
+<style>
+  .meetup-map {
+    position: relative;
+  }
+  svg {
+    display: block;
+    height: auto;
+    width: 100%;
+    overflow: hidden;
+  }
+  .map-world {
+    transform-origin: 0 0;
+    transition: transform 450ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  path {
+    fill: var(--color-surface-2);
+    transition: fill 300ms ease-out;
+  }
+  path[data-lit="true"] {
+    fill: color-mix(in srgb, var(--color-brand) 8%, transparent);
+  }
+  path[data-lit="true"][data-pickable="true"] {
+    fill: color-mix(in srgb, var(--color-brand) 20%, transparent);
+  }
+  path[data-chosen="true"] {
+    fill: color-mix(in srgb, var(--color-brand) 40%, transparent);
+  }
+  path[data-pickable="true"] {
+    cursor: pointer;
+  }
+  path[data-pickable="true"]:hover {
+    fill: color-mix(in srgb, var(--color-brand) 30%, transparent);
+  }
+  .pin-dot {
+    fill: var(--color-brand);
+    transition: fill 150ms ease-out;
+  }
+  [data-shown="false"] .pin-dot {
+    fill: var(--color-text-muted);
+  }
+  [data-past="true"] .pin-dot {
+    fill: color-mix(in srgb, var(--color-text-muted) 55%, transparent);
+  }
+  a {
+    cursor: pointer;
+  }
+  .active-pin {
+    pointer-events: none;
+    fill: var(--color-brand);
+  }
+  .map-tooltip {
+    pointer-events: none;
+    position: absolute;
+    z-index: 10;
+    overflow: hidden;
+    width: 20rem;
+    background: var(--color-surface);
+    box-shadow:
+      0 0 0 1px var(--color-border-strong),
+      var(--shadow-map-card);
+    animation: card-in 120ms ease-out both;
+  }
+  .map-tooltip.compact {
+    inset: auto 0 0;
+    width: auto;
+  }
+  .tooltip-body {
+    display: flex;
+    gap: var(--space-3);
+    padding: var(--space-3);
+  }
+  .tooltip-cover {
+    width: var(--space-20);
+    height: var(--space-20);
+    flex-shrink: 0;
+    overflow: hidden;
+    background: var(--color-bg-deep);
+  }
+  .tooltip-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .map-tooltip[data-past="true"] .tooltip-cover {
+    filter: grayscale(1);
+  }
+  .tooltip-copy {
+    min-width: 0;
+  }
+  p {
+    margin: 0;
+  }
+  [data-tip-title] {
+    font-size: var(--text-sm);
+    line-height: 1.375;
+    font-weight: 500;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  [data-tip-when],
+  [data-tip-where] {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    line-height: 1.333333;
+  }
+  [data-tip-when] {
+    margin-top: var(--space-1);
+    color: var(--color-text-secondary);
+  }
+  [data-tip-where] {
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .tooltip-status {
+    border-top: 1px solid var(--color-border-subtle);
+    padding: var(--space-1_5) var(--space-3);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--color-text-muted);
+  }
+  @keyframes card-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  .arriving {
+    animation: card-in 300ms ease-out both;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .map-world {
+      transition: none;
+    }
+    .map-tooltip,
+    .arriving {
+      animation: none;
+    }
+  }
+</style>

@@ -8,6 +8,7 @@ export interface Props {
   level?: 2 | 3;
   anchor?: string;
   wide?: boolean;
+  roomy?: boolean;
   socialLink?: boolean;
 }
 const {
@@ -18,13 +19,14 @@ const {
   level = 2,
   anchor,
   wide = false,
+  roomy = false,
   socialLink = false,
 } = Astro.props;
 const Heading = level === 3 ? "h3" : "h2";
 ---
 
 <div class="section-heading">
-  <div class:list={["heading-copy", { wide }]}>
+  <div class:list={["heading-copy", { wide, roomy }]}>
     <Heading
       >{
         anchor ? (
@@ -46,21 +48,23 @@ const Heading = level === 3 ? "h3" : "h2";
     }<slot />
   </div>
   {
-    href && (
+    (href || Astro.slots.has("action")) && (
       <div class="heading-action">
-        <a class="section-link" href={href}>
-          {socialLink ? (
-            <>
-              More on <SiteIcon name="X" size={20} />
-            </>
-          ) : (
-            link
-          )}
-          <SiteIcon
-            name={socialLink ? "ArrowUpRight" : "ArrowRight"}
-            size={20}
-          />
-        </a>
+        <slot name="action">
+          <a class="section-link" href={href}>
+            {socialLink ? (
+              <>
+                More on <SiteIcon name="X" size={20} />
+              </>
+            ) : (
+              link
+            )}
+            <SiteIcon
+              name={socialLink ? "ArrowUpRight" : "ArrowRight"}
+              size={20}
+            />
+          </a>
+        </slot>
       </div>
     )
   }
@@ -75,6 +79,9 @@ const Heading = level === 3 ? "h3" : "h2";
   }
   .heading-copy {
     max-width: 36rem;
+  }
+  .heading-copy.roomy {
+    max-width: 42rem;
   }
   .heading-copy.wide {
     max-width: none;

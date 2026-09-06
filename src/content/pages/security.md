@@ -28,7 +28,7 @@
 
           <p>Code that could be more robust but does not cross a security boundary is an improvement rather than a security vulnerability. We may still merge a proposed fix and credit the reporter in our release notes.</p>
 
-          <p>Eligibility for our <a href="#credits">security credits</a> page depends on whether a report identifies a confirmed security vulnerability, not on its severity.</p>
+          <p>Eligibility for our <a href="/security/credits/">security credits</a> page depends on whether a report identifies a confirmed security vulnerability, not on its severity.</p>
         </section>
 
         <section class="security__section">
@@ -59,7 +59,7 @@
 
         <section class="security__section">
           <h2>Credits</h2>
-          <p>Researchers who privately report a confirmed security vulnerability and give us the chance to ship a fix are thanked on the <a href="#credits">security credits</a> page. Accepted improvements that don&rsquo;t cross a security boundary may still be credited in our release notes.</p>
+          <p>Researchers who privately report a confirmed security vulnerability and give us the chance to ship a fix are thanked on the <a href="/security/credits/">security credits</a> page. Accepted improvements that don&rsquo;t cross a security boundary may still be credited in our release notes.</p>
           <p>Credits link to each reporter&rsquo;s X profile and show their avatar. For duplicate reports, only the first reporter is eligible for credit.</p>
         </section>
 
@@ -69,43 +69,3 @@
         </section>
 
       </div>
-
-<div id="credits"><div class="teams">
-
-        <section class="team">
-          <header class="team__header">
-            <h2 class="team__name">Responsible disclosure</h2>
-            <p class="team__description">They found it, told us privately, and waited for the patch</p>
-          </header>
-
-          <div class="team__members">
-            <article class="member">
-              <img class="member__avatar" src="/assets/images/credits/roger-pinol.webp" width="240" height="240" alt="Roger Piñol" loading="lazy" decoding="async">
-              <h3 class="member__name"><a href="https://x.com/RogerKernel">Roger Piñol</a></h3>
-            </article>
-            <article class="member">
-              <img class="member__avatar" src="/assets/images/credits/ruben-lopes.webp" width="240" height="240" alt="Ruben Lopes" loading="lazy" decoding="async">
-              <h3 class="member__name"><a href="https://x.com/LopesR1993">Ruben Lopes</a></h3>
-            </article>
-            <article class="member">
-              <img class="member__avatar" src="/assets/images/credits/afonso-oliveira.webp" width="240" height="240" alt="Afonso Oliveira" loading="lazy" decoding="async">
-              <h3 class="member__name"><a href="https://www.linkedin.com/in/afoliveira2/">Afonso Oliveira</a></h3>
-            </article>
-            <article class="member">
-              <img class="member__avatar" src="/assets/images/credits/sick.webp" width="240" height="240" alt="_Sick // afflicted.sh" loading="lazy" decoding="async">
-              <h3 class="member__name"><a href="https://x.com/encrypted_past">_SiCk</a></h3>
-            </article>
-            <article class="member">
-              <img class="member__avatar" src="/assets/images/credits/erik-hunstad.webp" width="240" height="240" alt="Erik Hunstad" loading="lazy" decoding="async">
-              <h3 class="member__name"><a href="https://x.com/badsectorlabs">Erik Hunstad</a></h3>
-            </article>
-            <article class="member">
-              <img class="member__avatar" src="/assets/images/credits/teles.webp" width="240" height="240" alt="Teles" loading="lazy" decoding="async">
-              <h3 class="member__name"><a href="https://x.com/teles_dev">Teles</a></h3>
-            </article>
-          </div>
-
-          <p class="team__note">Found something? <a href="/security/">Report it privately</a>. The first reporter of a confirmed vulnerability is credited here.</p>
-        </section>
-
-      </div></div>

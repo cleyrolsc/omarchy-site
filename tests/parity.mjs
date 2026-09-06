@@ -58,6 +58,16 @@ for (const [url, hash] of Object.entries(
     );
 }
 const reference = json("tests/fixtures/content.json");
+const sync = json("redesign-source.json");
+check(
+  /^[0-9a-f]{40}$/.test(sync.lastReviewedCommit),
+  "Source sync record needs a full commit hash",
+);
+for (const fixture of [reference, json("tests/fixtures/layout.json")])
+  check(
+    fixture.sourceCommit === sync.lastReviewedCommit,
+    "Source sync record and captured references disagree",
+  );
 for (const doc of reference.docs) {
   const file = fileFor(doc.route);
   check(Boolean(file), `Missing original route ${doc.route}`);

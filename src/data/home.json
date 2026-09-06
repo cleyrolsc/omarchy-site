@@ -29,6 +29,19 @@
       "title": "If you use AI, switch to Omarchy immediately",
       "channel": "Alex Finn",
       "thumb": "/assets/images/video/alex-finn.webp"
+    },
+    {
+      "id": "2IDjteRQgMQ",
+      "title": "Omarchy Can Do WHAT?! 50 Features You’re Missing",
+      "channel": "NetworkChuck",
+      "thumb": "/images/video/networkchuck-50-features.webp"
+    },
+    {
+      "id": "NYFGCESmikA",
+      "title": "DHH: Future of Programming, AI, Agentic Engineering, Vibe Coding & Linux | Lex Fridman Podcast #501",
+      "channel": "Lex Fridman",
+      "thumb": "/images/video/lex-fridman-dhh.webp",
+      "start": 2326
     }
   ],
   "hardware": [

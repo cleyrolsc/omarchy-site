@@ -62,6 +62,12 @@ const extras =
     anchor={kind}
     title={titles[kind][0]}
     description={titles[kind][1]}
+    href={kind === "agents"
+      ? "/manual/ai/"
+      : kind === "gaming"
+        ? "/manual/gaming/"
+        : undefined}
+    link={kind === "agents" ? "Meet your new agent" : "Get your game on"}
   />
   <div class="feature-columns">
     {
@@ -128,7 +134,7 @@ const extras =
               </li>
             ))}
           </ul>
-          <a class="feature-link closing-link" href="/manual/ai/">
+          <a class="section-link section-mobile-link" href="/manual/ai/">
             <>
               <span>Meet your new agent</span>
               <SiteIcon name="ArrowRight" size={20} />
@@ -154,7 +160,7 @@ const extras =
   }
   {
     kind === "gaming" && (
-      <a class="feature-link closing-link" href="/manual/gaming/">
+      <a class="section-link section-mobile-link" href="/manual/gaming/">
         <>
           <span>Get your game on</span>
           <SiteIcon name="ArrowRight" size={20} />
@@ -227,10 +233,6 @@ const extras =
   }
   .feature-link :global(svg) {
     flex-shrink: 0;
-  }
-  .closing-link {
-    margin-top: var(--space-6);
-    padding-top: 0;
   }
   .agent-logos {
     margin: var(--space-6) 0 0;

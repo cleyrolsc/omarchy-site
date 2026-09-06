@@ -3,7 +3,7 @@ import { render } from "astro:content";
 import SiteLayout from "../../layouts/SiteLayout.astro";
 import ManualNavigation from "../../components/ManualNavigation.astro";
 import SiteIcon from "../../components/SiteIcon.astro";
-import Brand from "../../components/Brand.astro";
+import PageHeader from "../../components/PageHeader.astro";
 import { manualEntries } from "../../lib/content";
 export async function getStaticPaths() {
   const chapters = await manualEntries();
@@ -35,7 +35,7 @@ const { Content } = await render(chapter);
       currentPath={chapter.data.path}
     /><div class="manual-main manual-chapter">
       <article>
-        {chapter.id === "index" && <Brand hero class="manual-wordmark" />}<h1>
+        <PageHeader title="Manual" level="p" spaced /><h1>
           {chapter.data.title}
         </h1><div class="prose manual-prose">
           {
@@ -87,10 +87,6 @@ const { Content } = await render(chapter);
   }
   .manual-prose {
     margin-top: var(--space-6);
-  }
-  :global(.manual-wordmark) {
-    margin: 0 auto var(--space-10);
-    max-width: var(--measure);
   }
   .chapter-pagination {
     display: flex;

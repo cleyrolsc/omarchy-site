@@ -2,7 +2,7 @@
 version: 1
 status: active
 name: Omarchy
-source: barisgirismen/omarchy-site@8419a5a3e9af72c611584e9c170363073ae6519f
+source: barisgirismen/omarchy-site@bb6cdcf85e83a04e18cf3549c265eff330a3d6ac
 description: Preserve the Omarchy redesign while adopting the ThinkOodle Astro starter framework.
 colors:
   background: "#1a1b26"
@@ -29,3 +29,7 @@ Core content, links, headings, download buttons and media posters must work with
 BaseLayout owns canonical metadata, Open Graph, JSON-LD, fonts and Markdown alternates. Every important HTML page gets a clean Markdown twin. Curate llms.txt and llms-full.txt around the product, installation, manual, news and foundation. Every public Astro component has a Storybook story. Run Astro checks, production and Storybook builds, route/content/asset parity checks, and browser interaction checks before completion.
 
 Imported manual and standalone page bodies declare `format: html` so Astro preserves the source’s trusted semantic HTML, including indented elements. New Markdown content uses the default `format: markdown`. Preserve the source’s parallelogram theme deck, 200ms frosted theme wipe, 420ms video glide, circular portrait clusters, testimonial fold, and compact footer. Layout fixtures captured from the source cover desktop and mobile typography, geometry, and controls; interaction tests cover behavior with motion enabled.
+
+The reviewed redesign baseline is tracked in `redesign-source.json`. Shared page wordmarks and small mono subtitles unify news, every manual chapter, teams, themes, patrons, and security. Meetups use the source's Equal Earth country outlines, region/country chips, linked pins, responsive hover/focus cards, and distinct archive. The homepage meetup rail shares the 420ms glide and draggable scrollbar with videos; arriving cards brighten as the glide starts. Preserve the Windows showcase and video start offsets.
+
+On phones, show meetup filters and cards without the map; from 640px up, show the interactive map. Keep country filters compact with extended touch targets. The theme-picker dimmer sits outside its named view-transition layer so it can blur the underlying page. Keep the real menu icon visible for its full 260ms closing fold before handing back to the hero ghost.

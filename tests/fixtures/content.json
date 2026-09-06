@@ -1,5 +1,5 @@
 {
-  "sourceCommit": "8419a5a3e9af72c611584e9c170363073ae6519f",
+  "sourceCommit": "bb6cdcf85e83a04e18cf3549c265eff330a3d6ac",
   "docs": [
     {
       "route": "/manual/",
@@ -3074,7 +3074,7 @@
     },
     {
       "route": "/meetups/",
-      "title": "Meetups around the world",
+      "title": "Meetups",
       "selector": ".standalone-content",
       "fragments": [
         "Run Your Own Omarchy Meetup",
@@ -3116,7 +3116,6 @@
       "title": "Omacom Foundation",
       "selector": ".standalone-content",
       "fragments": [
-        "The nonprofit funding the development, maintenance, and spread of Omarchy.Interested in becoming a founding or distinguished patron? Write david@omarchy.org.",
         "Founding Patrons",
         "Each contributing $1,000,000.",
         "Tobi Lütke",
@@ -3164,6 +3163,8 @@
         "Anthropic",
         "Fireworks",
         "OpenAI",
+        "Become a Founding or Distinguished Patron",
+        "Interested in becoming a founding or distinguished patron? Write david@omarchy.org.",
         "All Patrons",
         "Each contributing as they see fit. Open for everyone.Become a patron and collect your badge.",
         "Joe Watkins",
@@ -3580,6 +3581,7 @@
         "distinguished-patrons",
         "distinguished-corporate-patrons",
         "distinguished-token-patrons",
+        "become-a-patron",
         "everyone"
       ],
       "assets": [
@@ -3679,8 +3681,8 @@
       "assets": []
     },
     {
-      "route": "/security/",
-      "title": "Security",
+      "route": "/security/credits/",
+      "title": "Security credits",
       "selector": ".standalone-content",
       "fragments": [
         "Responsible disclosure",
