@@ -3,7 +3,7 @@ title: Omarchy tops 100,000 downloads in a week
 date: 2026-08-28 20:55 +0200
 author: DHH
 author_url: https://dhh.dk
-description: A hundred thousand people installed Omarchy in seven days, and we moved nearly a petabyte doing it.
+description: "One hundred thousand downloads of the Omarchy ISO in the past week! One hundred thousand people who decided that this was the week they’d finally try Linux (or come back to it). What a bunch of bosses!"
 ---
 
 One hundred thousand downloads of the Omarchy ISO in the past week! One hundred thousand people who decided that this was the week they'd finally try Linux (or come back to it). What a bunch of bosses!

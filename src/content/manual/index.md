@@ -3,7 +3,8 @@
   "title": "Welcome to Omarchy!",
   "description": "Omarchy is an omakase Linux distribution based on Arch , the tiling window manager Hyprland , and the desktop construction-kit Quickshell . It ships with everyt",
   "order": 0,
-  "path": "/manual/"
+  "path": "/manual/",
+  "format": "html"
 }
 ---
 

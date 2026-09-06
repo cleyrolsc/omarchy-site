@@ -1,0 +1,44 @@
+<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M3.75 3.75H20.25V7.75V20.25H3.75V7.75V3.75Z"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="square"
+      />
+      <path
+        d="M3.75 7.75H20.25"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="square"
+      />
+      <path
+        d="M8.25 11.75H7.75V12.25H8.25V11.75Z"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="square"
+      />
+      <path
+        d="M8.25 15.75H7.75V16.25H8.25V15.75Z"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="square"
+      />
+      <path
+        d="M12.25 11.75H11.75V12.25H12.25V11.75Z"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="square"
+      />
+      <path
+        d="M12.25 15.75H11.75V16.25H12.25V15.75Z"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="square"
+      />
+      <path
+        d="M16.25 11.75H15.75V12.25H16.25V11.75Z"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="square"
+      />
+    </svg>

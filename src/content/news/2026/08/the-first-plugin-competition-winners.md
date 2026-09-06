@@ -3,7 +3,7 @@ title: The first plugin competition winners
 date: 2026-08-28 22:58 +0200
 author: DHH
 author_url: https://dhh.dk
-description: Radio Atlas, Omagotchi, and AirPods take the podium in the first Omarchy plugin competition.
+description: "The votes are in! Omarchy Core went through the submissions, voted, and we have a podium for the first plugin competition."
 ---
 
 The votes are in! [Omarchy Core](/teams/) went through the submissions, voted, and we have a podium for [the first plugin competition](/news/2026/08/the-first-plugin-competition).

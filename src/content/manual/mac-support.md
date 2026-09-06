@@ -3,7 +3,8 @@
   "title": "Mac support",
   "description": "Omarchy has built-in support for Intel Macs . There are a couple of known limitations at the moment, but as long as you’re aware and OK with those; you can brea",
   "order": 43,
-  "path": "/manual/mac-support/"
+  "path": "/manual/mac-support/",
+  "format": "html"
 }
 ---
 
@@ -15,7 +16,7 @@
 
 <p><img src="/manual/images/macbook-omarchy.webp" alt="macbook-omarchy" /></p>
 
-<h3 id="installing-omarchy-on-mac">Installing Omarchy on Mac <a class="manual__heading-link" href="#installing-omarchy-on-mac" aria-label="Link to this section">#</a></h3>
+<h3 id="installing-omarchy-on-mac"><a class="manual__heading-link" href="#installing-omarchy-on-mac" aria-label="Link to this section">Installing Omarchy on Mac<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>Omarchy only supports being the <strong>only</strong> OS installed at the moment. During the installation, the drive will be wiped and MacOS will no longer be bootable.</p>
 
@@ -48,7 +49,7 @@
 
 <p>The installer detects Mac hardware and applies the needed fixes automatically: Broadcom Wi-Fi drivers and firmware, the SPI keyboard driver on the MacBook models that need it, and an NVMe suspend fix for those same models.</p>
 
-<h3 id="known-limitations">Known Limitations <a class="manual__heading-link" href="#known-limitations" aria-label="Link to this section">#</a></h3>
+<h3 id="known-limitations"><a class="manual__heading-link" href="#known-limitations" aria-label="Link to this section">Known Limitations<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>Members of the community are constantly working on solutions to these challenges so if these are problematic for you, join #omarchy-on-other in our <a href="https://discord.gg/tXFUdasqhY">Discord</a> and see if there’s any up-to-date methods for resolving these.</p>
 

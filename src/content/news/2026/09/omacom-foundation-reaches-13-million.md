@@ -3,7 +3,7 @@ title: Omacom Foundation reaches $13M with four Distinguished Patrons
 date: 2026-09-02 07:03 -0400
 author: DHH
 author_url: https://dhh.dk
-description: Ryan R. Hughes, Ed Huang, Adrien Treccani, and Max Schoening each pledge $100,000, and the foundation hits $13 million.
+description: "The Omacom Foundation just crossed $13 million! Our first four Distinguished Patrons have pledged $100,000 each to the mission:"
 ---
 
 The [Omacom Foundation](/foundation/) just crossed $13 million! Our first four [Distinguished Patrons](/patrons/#distinguished-patrons) have pledged $100,000 each to the mission:

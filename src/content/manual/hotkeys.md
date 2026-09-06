@@ -3,13 +3,14 @@
   "title": "Hotkeys",
   "description": "You can see all the main keyboard bindings with Super + K (Tmux bindings with Super + Alt + K and Herdr bindings with Super + Ctrl + K ). Navigating Hotkey Func",
   "order": 6,
-  "path": "/manual/hotkeys/"
+  "path": "/manual/hotkeys/",
+  "format": "html"
 }
 ---
 
 <p>You can see all the main keyboard bindings with <code>Super + K</code> (Tmux bindings with <code>Super + Alt + K</code> and Herdr bindings with <code>Super + Ctrl + K</code>).</p>
 
-<h2 id="navigating">Navigating <a class="manual__heading-link" href="#navigating" aria-label="Link to this section">#</a></h2>
+<h2 id="navigating"><a class="manual__heading-link" href="#navigating" aria-label="Link to this section">Navigating<span class="manual__hash" aria-hidden="true">#</span></a></h2>
 
 <table>
   <thead>
@@ -226,7 +227,7 @@
   </tbody>
 </table>
 
-<h2 id="system-controls">System controls <a class="manual__heading-link" href="#system-controls" aria-label="Link to this section">#</a></h2>
+<h2 id="system-controls"><a class="manual__heading-link" href="#system-controls" aria-label="Link to this section">System controls<span class="manual__hash" aria-hidden="true">#</span></a></h2>
 
 <table>
   <thead>
@@ -303,7 +304,7 @@
   </tbody>
 </table>
 
-<h2 id="adjustments">Adjustments <a class="manual__heading-link" href="#adjustments" aria-label="Link to this section">#</a></h2>
+<h2 id="adjustments"><a class="manual__heading-link" href="#adjustments" aria-label="Link to this section">Adjustments<span class="manual__hash" aria-hidden="true">#</span></a></h2>
 
 <table>
   <thead>
@@ -348,7 +349,7 @@
   </tbody>
 </table>
 
-<h2 id="launching-apps">Launching apps <a class="manual__heading-link" href="#launching-apps" aria-label="Link to this section">#</a></h2>
+<h2 id="launching-apps"><a class="manual__heading-link" href="#launching-apps" aria-label="Link to this section">Launching apps<span class="manual__hash" aria-hidden="true">#</span></a></h2>
 
 <table>
   <thead>
@@ -471,7 +472,7 @@
 
 <p>Change/add bindings in <code>~/.config/hypr/bindings.lua</code>.</p>
 
-<h2 id="universal-clipboard">Universal clipboard <a class="manual__heading-link" href="#universal-clipboard" aria-label="Link to this section">#</a></h2>
+<h2 id="universal-clipboard"><a class="manual__heading-link" href="#universal-clipboard" aria-label="Link to this section">Universal clipboard<span class="manual__hash" aria-hidden="true">#</span></a></h2>
 
 <table>
   <thead>
@@ -502,7 +503,7 @@
 
 <p>Usually on Linux, you need <code>Ctrl + Shift + C/V</code> to copy’n’paste in the terminal and <code>Ctrl + C/V</code> to do it everywhere else. These Omarchy unified clipboard hotkeys work everywhere.</p>
 
-<h2 id="capture">Capture <a class="manual__heading-link" href="#capture" aria-label="Link to this section">#</a></h2>
+<h2 id="capture"><a class="manual__heading-link" href="#capture" aria-label="Link to this section">Capture<span class="manual__hash" aria-hidden="true">#</span></a></h2>
 
 <table>
   <thead>
@@ -563,7 +564,7 @@
 
 <p>All capture options are also accessible under <em>Trigger &gt; Capture</em> in the Omarchy menu (<code>Super + Space</code>).</p>
 
-<h2 id="notifications">Notifications <a class="manual__heading-link" href="#notifications" aria-label="Link to this section">#</a></h2>
+<h2 id="notifications"><a class="manual__heading-link" href="#notifications" aria-label="Link to this section">Notifications<span class="manual__hash" aria-hidden="true">#</span></a></h2>
 
 <table>
   <thead>
@@ -596,7 +597,7 @@
   </tbody>
 </table>
 
-<h2 id="style">Style <a class="manual__heading-link" href="#style" aria-label="Link to this section">#</a></h2>
+<h2 id="style"><a class="manual__heading-link" href="#style" aria-label="Link to this section">Style<span class="manual__hash" aria-hidden="true">#</span></a></h2>
 
 <table>
   <thead>
@@ -629,7 +630,7 @@
 
 <p>All style options are also accessible under <em>Style</em> in the Omarchy menu (<code>Super + Space</code>).</p>
 
-<h2 id="toggles">Toggles <a class="manual__heading-link" href="#toggles" aria-label="Link to this section">#</a></h2>
+<h2 id="toggles"><a class="manual__heading-link" href="#toggles" aria-label="Link to this section">Toggles<span class="manual__hash" aria-hidden="true">#</span></a></h2>
 
 <table>
   <thead>
@@ -674,7 +675,7 @@
   </tbody>
 </table>
 
-<h2 id="reminders">Reminders <a class="manual__heading-link" href="#reminders" aria-label="Link to this section">#</a></h2>
+<h2 id="reminders"><a class="manual__heading-link" href="#reminders" aria-label="Link to this section">Reminders<span class="manual__hash" aria-hidden="true">#</span></a></h2>
 
 <table>
   <thead>
@@ -699,7 +700,7 @@
   </tbody>
 </table>
 
-<h2 id="notices">Notices <a class="manual__heading-link" href="#notices" aria-label="Link to this section">#</a></h2>
+<h2 id="notices"><a class="manual__heading-link" href="#notices" aria-label="Link to this section">Notices<span class="manual__hash" aria-hidden="true">#</span></a></h2>
 
 <table>
   <thead>
@@ -724,11 +725,11 @@
   </tbody>
 </table>
 
-<h2 id="tmux">Tmux <a class="manual__heading-link" href="#tmux" aria-label="Link to this section">#</a></h2>
+<h2 id="tmux"><a class="manual__heading-link" href="#tmux" aria-label="Link to this section">Tmux<span class="manual__hash" aria-hidden="true">#</span></a></h2>
 
 <p>The prefix key is <code>Ctrl + Space</code> (<code>Ctrl + B</code> also works). You can change these bindings in <code>~/.config/tmux/tmux.conf</code>.</p>
 
-<h3 id="panes">Panes <a class="manual__heading-link" href="#panes" aria-label="Link to this section">#</a></h3>
+<h3 id="panes"><a class="manual__heading-link" href="#panes" aria-label="Link to this section">Panes<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <table>
   <thead>
@@ -777,7 +778,7 @@
   </tbody>
 </table>
 
-<h3 id="windows">Windows <a class="manual__heading-link" href="#windows" aria-label="Link to this section">#</a></h3>
+<h3 id="windows"><a class="manual__heading-link" href="#windows" aria-label="Link to this section">Windows<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <table>
   <thead>
@@ -814,7 +815,7 @@
   </tbody>
 </table>
 
-<h3 id="sessions">Sessions <a class="manual__heading-link" href="#sessions" aria-label="Link to this section">#</a></h3>
+<h3 id="sessions"><a class="manual__heading-link" href="#sessions" aria-label="Link to this section">Sessions<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <table>
   <thead>
@@ -859,7 +860,7 @@
   </tbody>
 </table>
 
-<h3 id="copy-mode-vi-style">Copy mode (vi-style) <a class="manual__heading-link" href="#copy-mode-vi-style" aria-label="Link to this section">#</a></h3>
+<h3 id="copy-mode-vi-style"><a class="manual__heading-link" href="#copy-mode-vi-style" aria-label="Link to this section">Copy mode (vi-style)<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <table>
   <thead>
@@ -884,7 +885,7 @@
   </tbody>
 </table>
 
-<h3 id="general">General <a class="manual__heading-link" href="#general" aria-label="Link to this section">#</a></h3>
+<h3 id="general"><a class="manual__heading-link" href="#general" aria-label="Link to this section">General<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <table>
   <thead>
@@ -909,7 +910,7 @@
   </tbody>
 </table>
 
-<h3 id="tmux-layout-functions">Tmux layout functions <a class="manual__heading-link" href="#tmux-layout-functions" aria-label="Link to this section">#</a></h3>
+<h3 id="tmux-layout-functions"><a class="manual__heading-link" href="#tmux-layout-functions" aria-label="Link to this section">Tmux layout functions<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>These functions must be run inside a Tmux session.</p>
 
@@ -936,7 +937,7 @@
   </tbody>
 </table>
 
-<h2 id="ghostty-terminal">Ghostty Terminal <a class="manual__heading-link" href="#ghostty-terminal" aria-label="Link to this section">#</a></h2>
+<h2 id="ghostty-terminal"><a class="manual__heading-link" href="#ghostty-terminal" aria-label="Link to this section">Ghostty Terminal<span class="manual__hash" aria-hidden="true">#</span></a></h2>
 
 <p>Ghostty terminal is installed using <em>Install &gt; Terminal</em> via the Omarchy menu.</p>
 
@@ -991,7 +992,7 @@
   </tbody>
 </table>
 
-<h2 id="file-manager">File Manager <a class="manual__heading-link" href="#file-manager" aria-label="Link to this section">#</a></h2>
+<h2 id="file-manager"><a class="manual__heading-link" href="#file-manager" aria-label="Link to this section">File Manager<span class="manual__hash" aria-hidden="true">#</span></a></h2>
 
 <table>
   <thead>
@@ -1016,9 +1017,9 @@
   </tbody>
 </table>
 
-<h2 id="neovim-w-lazyvim">Neovim (w/ lazyvim) <a class="manual__heading-link" href="#neovim-w-lazyvim" aria-label="Link to this section">#</a></h2>
+<h2 id="neovim-w-lazyvim"><a class="manual__heading-link" href="#neovim-w-lazyvim" aria-label="Link to this section">Neovim (w/ lazyvim)<span class="manual__hash" aria-hidden="true">#</span></a></h2>
 
-<h3 id="navigation">Navigation <a class="manual__heading-link" href="#navigation" aria-label="Link to this section">#</a></h3>
+<h3 id="navigation"><a class="manual__heading-link" href="#navigation" aria-label="Link to this section">Navigation<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <table>
   <thead>
@@ -1071,7 +1072,7 @@
   </tbody>
 </table>
 
-<h3 id="while-in-sidebar">While in sidebar <a class="manual__heading-link" href="#while-in-sidebar" aria-label="Link to this section">#</a></h3>
+<h3 id="while-in-sidebar"><a class="manual__heading-link" href="#while-in-sidebar" aria-label="Link to this section">While in sidebar<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <table>
   <thead>
@@ -1110,7 +1111,7 @@
 
 <p><a href="https://www.lazyvim.org/keymaps">See all the Neovim hotkeys configured by LazyVim</a>.</p>
 
-<h2 id="quick-emojis">Quick Emojis <a class="manual__heading-link" href="#quick-emojis" aria-label="Link to this section">#</a></h2>
+<h2 id="quick-emojis"><a class="manual__heading-link" href="#quick-emojis" aria-label="Link to this section">Quick Emojis<span class="manual__hash" aria-hidden="true">#</span></a></h2>
 
 <p>You can use <code>Super + Ctrl + E</code> to show a complete emoji picker that’ll put the selection on the clipboard or you can use these quick access options.</p>
 
@@ -1241,7 +1242,7 @@
   </tbody>
 </table>
 
-<h2 id="quick-completions">Quick Completions <a class="manual__heading-link" href="#quick-completions" aria-label="Link to this section">#</a></h2>
+<h2 id="quick-completions"><a class="manual__heading-link" href="#quick-completions" aria-label="Link to this section">Quick Completions<span class="manual__hash" aria-hidden="true">#</span></a></h2>
 
 <table>
   <thead>

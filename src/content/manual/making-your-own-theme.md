@@ -3,7 +3,8 @@
   "title": "Making your own theme",
   "description": "You can add your own themes to ~/.config/omarchy/themes . Just copy one of the existing ones as a base (look in /usr/share/omarchy/themes ), then tweak to your ",
   "order": 42,
-  "path": "/manual/making-your-own-theme/"
+  "path": "/manual/making-your-own-theme/",
+  "format": "html"
 }
 ---
 
@@ -13,7 +14,7 @@
 
 <p>You can also use the included Aether application to create a new theme using a lovely GUI interface to play with colors and search for backgrounds. Just start it via the apps menu on <code>Super + Alt + Space</code>.</p>
 
-<h3 id="what-an-installed-theme-can-contain">What an installed theme can contain <a class="manual__heading-link" href="#what-an-installed-theme-can-contain" aria-label="Link to this section">#</a></h3>
+<h3 id="what-an-installed-theme-can-contain"><a class="manual__heading-link" href="#what-an-installed-theme-can-contain" aria-label="Link to this section">What an installed theme can contain<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>A theme you write yourself in <code>~/.config/omarchy/themes</code> can contain whatever you like - it’s your machine and your file, and Omarchy applies all of it.</p>
 
@@ -23,25 +24,25 @@
 
 <p>Omarchy tells the two apart by whether the theme has its own git repo inside it, which is what <code>omarchy theme install</code> leaves behind when it clones. So a theme you wrote stays yours, and one you pulled off the internet stays colours.</p>
 
-<h3 id="light-mode">Light mode <a class="manual__heading-link" href="#light-mode" aria-label="Link to this section">#</a></h3>
+<h3 id="light-mode"><a class="manual__heading-link" href="#light-mode" aria-label="Link to this section">Light mode<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>If you’re making a light mode theme, set <code>mode = "light"</code> at the top of your <code>colors.toml</code>. Then it’ll automatically be paired with light mode for all the apps. (The old way of dropping an empty file called <code>light.mode</code> in the root of your theme still works too.)</p>
 
-<h3 id="icon-colors">Icon colors <a class="manual__heading-link" href="#icon-colors" aria-label="Link to this section">#</a></h3>
+<h3 id="icon-colors"><a class="manual__heading-link" href="#icon-colors" aria-label="Link to this section">Icon colors<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>If you’d like to color-match the file manager icons to your theme, add a file called <code>icons.theme</code> with the name of the icon set you want to use. By default, the options are: <code>Yaru Yaru-blue Yaru-dark Yaru-magenta Yaru-olive Yaru-prussiangreen Yaru-purple Yaru-red Yaru-sage Yaru-wartybrown Yaru-yellow</code>.</p>
 
-<h3 id="unlock-image">Unlock image <a class="manual__heading-link" href="#unlock-image" aria-label="Link to this section">#</a></h3>
+<h3 id="unlock-image"><a class="manual__heading-link" href="#unlock-image" aria-label="Link to this section">Unlock image<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>Themes supplied with <code>unlock.png</code> and <code>preview-unlock.png</code> images will be listed under <em>Style &gt; Unlock</em>. Your <code>unlock.png</code> should preferably be a transparent png. And you can create the preview image using <code>omarchy plymouth preview</code>.</p>
 
-<h3 id="theming-apps-omarchy-doesnt-cover">Theming apps Omarchy doesn’t cover <a class="manual__heading-link" href="#theming-apps-omarchy-doesnt-cover" aria-label="Link to this section">#</a></h3>
+<h3 id="theming-apps-omarchy-doesnt-cover"><a class="manual__heading-link" href="#theming-apps-omarchy-doesnt-cover" aria-label="Link to this section">Theming apps Omarchy doesn’t cover<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>If you use an app that isn’t in that list, you can teach Omarchy to theme it yourself with a template. Drop a file in <code>~/.config/omarchy/themed/</code> named after the config it generates plus a <code>.tpl</code> extension, and write the config with <code>{{ background }}</code>, <code>{{ foreground }}</code>, <code>{{ accent }}</code>, <code>{{ red }}</code>, <code>{{ color0 }}</code> through <code>{{ color15 }}</code>, and the rest of the palette as placeholders. Every time you switch themes, the file is regenerated with that theme’s colors.</p>
 
 <p>There’s a fully commented <code>alacritty.toml.tpl.sample</code> in that folder to copy from - it lists every variable you can use, plus the <code>_strip</code> and <code>_rgb</code> modifiers for apps that want their colors without the <code>#</code> or as decimal RGB. Your templates take priority over Omarchy’s own, so you can also use this to override how a built-in app gets themed.</p>
 
-<h3 id="distributing-your-theme">Distributing your theme <a class="manual__heading-link" href="#distributing-your-theme" aria-label="Link to this section">#</a></h3>
+<h3 id="distributing-your-theme"><a class="manual__heading-link" href="#distributing-your-theme" aria-label="Link to this section">Distributing your theme<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>If you want to distribute your theme so others can use it, you need to put it on a public git server, like GitHub. Then people can install it using <em>Install &gt; Style &gt; Theme</em> in the Omarchy menu using that URL. It’s recommended that you follow the naming convention of <code>omarchy-[themename]-theme</code>, as the theme will show correctly as just <code>[themename]</code> in the theme selection menu after installation.</p>
 

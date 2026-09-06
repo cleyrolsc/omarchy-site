@@ -3,7 +3,8 @@
   "title": "Backgrounds",
   "description": "Every theme ships with its own set of backgrounds, and you can add extras of your own in ~/.config/omarchy/backgrounds/[theme] . If you want to add an extra bac",
   "order": 38,
-  "path": "/manual/backgrounds/"
+  "path": "/manual/backgrounds/",
+  "format": "html"
 }
 ---
 

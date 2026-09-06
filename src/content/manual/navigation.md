@@ -3,7 +3,8 @@
   "title": "Navigation",
   "description": "Everything in Omarchy happens via the keyboard - EVERYTHING! When the system first starts, you literally can’t do a thing with the mouse alone. But you can hit ",
   "order": 3,
-  "path": "/manual/navigation/"
+  "path": "/manual/navigation/",
+  "format": "html"
 }
 ---
 
@@ -33,7 +34,7 @@
 
 <p>You can also go full screen with <code>Super + F</code> or even just full-width (keeping the top bar) with <code>Super + Alt + F</code> or full-screen within a window with <code>Super + Ctrl + F</code> (good for YouTube!).</p>
 
-<h3 id="dwindle-vs-scrolling-layout">Dwindle vs scrolling layout <a class="manual__heading-link" href="#dwindle-vs-scrolling-layout" aria-label="Link to this section">#</a></h3>
+<h3 id="dwindle-vs-scrolling-layout"><a class="manual__heading-link" href="#dwindle-vs-scrolling-layout" aria-label="Link to this section">Dwindle vs scrolling layout<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>Omarchy’s default layout is called dwindle. It keeps all the windows you open on a single workspace visible at all time, even if it has to shrink them down.</p>
 
@@ -54,24 +55,24 @@
 })
 </code></pre>
 
-<h3 id="grouping-windows">Grouping windows <a class="manual__heading-link" href="#grouping-windows" aria-label="Link to this section">#</a></h3>
+<h3 id="grouping-windows"><a class="manual__heading-link" href="#grouping-windows" aria-label="Link to this section">Grouping windows<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>Windows can be grouped using <code>Super + G</code>. Once you’re in a group, every window you start while that’s active will belong to the group. You can move between these grouped windows using <code>Super + Ctrl + Arrow Left/Right</code> or <code>Super + Alt + 1/2/3/4</code> to go directly to grouped window in order.</p>
 
 <p>You can move a window out of the grouping with <code>Super + Alt + G</code> or disassemble the entire group by hitting <code>Super + G</code> again. Finally, you can move windows outside the group into it with <code>Super + Alt + Arrows</code>.</p>
 
-<h3 id="popping-windows">Popping windows <a class="manual__heading-link" href="#popping-windows" aria-label="Link to this section">#</a></h3>
+<h3 id="popping-windows"><a class="manual__heading-link" href="#popping-windows" aria-label="Link to this section">Popping windows<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>You can pop a window out of its workspace allocation with <code>Super + O</code>. That’ll pin it as a floating window that follows you on whatever workspace you go to. Great for video players and the like.</p>
 
 <p><img src="/manual/images/navigation-popped-window.webp" alt="navigation-popped-window" /></p>
 
-<h3 id="scratchpad-workspace">Scratchpad workspace <a class="manual__heading-link" href="#scratchpad-workspace" aria-label="Link to this section">#</a></h3>
+<h3 id="scratchpad-workspace"><a class="manual__heading-link" href="#scratchpad-workspace" aria-label="Link to this section">Scratchpad workspace<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>Finally, there’s a special scratchpad workspace that drops down over whatever workspace you’re currently on, much like a Quake console. Toggle it with <code>Super + Grave</code> or <code>Super + S</code>, and place a window there using <code>Super + Shift + Grave</code> or <code>Super + Alt + S</code>.</p>
 
 <p>It works especially well for a terminal running an agent, or for controls you want to interact with quickly without leaving the current workspace. To move a window off the scratchpad, send it directly to another workspace with something like <code>Super + Shift + 1</code>.</p>
 
-<h3 id="it-takes-some-getting-used-to">It takes some getting used to! <a class="manual__heading-link" href="#it-takes-some-getting-used-to" aria-label="Link to this section">#</a></h3>
+<h3 id="it-takes-some-getting-used-to"><a class="manual__heading-link" href="#it-takes-some-getting-used-to" aria-label="Link to this section">It takes some getting used to!<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>It takes a little while to get used to navigating your desktop like this, but once you do, it’ll be hard to go back to a traditional mouse-driven desktop experience!</p>

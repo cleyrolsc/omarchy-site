@@ -2,7 +2,7 @@ export const site = {
   name: "Omarchy",
   url: "https://omarchy.org",
   description:
-    "The malleable OS for the age of agents. Vibe your way through every alteration, tweak, and desire.",
+    "The malleable OS for the age of agents. Vibe your way through every alteration, tweak, or trouble.",
   defaultTitle: "Omarchy - Beautiful, fun & agentic Linux by DHH",
   defaultOgImage: "/brand/omarchy-og.png",
   locale: "en_US",

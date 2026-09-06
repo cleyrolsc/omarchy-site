@@ -3,7 +3,7 @@ title: Introducing Omarchy AIR
 date: 2026-08-28 11:06 +0200
 author: DHH
 author_url: https://dhh.dk
-description: A six-month, funded residency for the artists who make Omarchy beautiful. The first two are HANCORE and OldJobobo.
+description: "Omarchy insists that a computer should be as beautiful as it is productive. That premise has been carried by the theme makers and other Omarchy artists since day one. Building whole palettes, on their own time, for…"
 ---
 
 Omarchy insists that a computer should be as beautiful as it is productive. That premise has been carried by the theme makers and other Omarchy artists since day one. Building whole palettes, on their own time, for free, because they wanted their machine to look like something.

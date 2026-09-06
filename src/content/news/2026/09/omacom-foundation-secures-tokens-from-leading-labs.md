@@ -3,7 +3,7 @@ title: Omacom Foundation secures $1.95M in tokens from leading labs
 date: 2026-09-03 15:45 -0400
 author: DHH
 author_url: https://dhh.dk
-description: Meta Superintelligence Labs joins as Founding Token Patron with $1.5 million in tokens, and Anthropic, OpenAI, and Fireworks each add $150,000 as Distinguished Token Patrons.
+description: "Omarchy isn’t just a beautiful, fun & agentic Linux distribution for those who end up using it. It’s also built that way! With beauty, fun, and a whole lot of tokens. In fact, Omarchy Quattro has almost exclusively been…"
 ---
 
 Omarchy isn't just a beautiful, fun & agentic Linux distribution for those who end up using it. It's also built that way! With beauty, fun, and a whole lot of tokens. In fact, [Omarchy Quattro](https://github.com/omacom/omarchy/releases/tag/v4.0.0) has almost exclusively been built by agents. Because they're just incredibly good at stuff like bash, QML, and debugging Linux issues.

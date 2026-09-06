@@ -2,6 +2,7 @@ import { defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
 const common = z.object({
+  format: z.enum(["markdown", "html"]).default("markdown"),
   title: z.string(),
   description: z.string(),
   seoTitle: z.string().optional(),

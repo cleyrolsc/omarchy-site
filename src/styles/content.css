@@ -1,5 +1,47 @@
 @layer components {
   .prose {
+    max-inline-size: none;
+  }
+  .prose li {
+    margin-top: 0;
+  }
+  .prose img {
+    border: 0;
+  }
+  .prose blockquote {
+    font-style: normal;
+  }
+  .prose pre {
+    font: inherit;
+    border: 0;
+    border-radius: 0;
+  }
+  .prose code,
+  .prose kbd {
+    border: 0;
+    border-radius: 0;
+  }
+  .ported .badges .badge {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    align-items: normal;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    letter-spacing: normal;
+    text-transform: none;
+    color: inherit;
+    background: none;
+  }
+  .prose > * + * {
+    margin-block-start: 0;
+  }
+  .prose :is(h1, h2, h3, h4) {
+    line-height: inherit;
+  }
+
+  .prose {
     font-size: 15px;
     line-height: 1.65;
     color: var(--color-text-secondary);
@@ -92,8 +134,6 @@
     max-width: 100%;
     height: auto;
     margin: 1.25em 0;
-    outline: 1px solid var(--t-img-outline);
-    outline-offset: -1px;
   }
   .prose code,
   .prose kbd {
@@ -316,7 +356,7 @@
     text-align: left;
   }
   .ported:has(#founding-patrons) .member__avatar {
-    width: 140px;
+    width: 100%;
     max-width: 100%;
     border-radius: 0;
   }
@@ -331,8 +371,66 @@
   }
   @media (min-width: 640px) {
     .ported:has(#founding-patrons) .team__members {
-      grid-template-columns: repeat(auto-fill, 9rem);
+      grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
     }
+  }
+
+  .ported .badges {
+    display: grid;
+    gap: 3.5rem;
+  }
+  .ported .badges__lede,
+  .ported .badges__outro {
+    margin: 0;
+    text-align: center;
+    text-wrap: pretty;
+  }
+  .ported .badge {
+    display: grid;
+    gap: 0.75rem;
+    justify-items: center;
+    text-align: center;
+  }
+  .ported .badge + .badge {
+    border-top: 1px solid var(--color-border-subtle);
+    padding-top: 3.5rem;
+  }
+  .ported .badge__art {
+    display: block;
+    width: min(100%, 20rem);
+  }
+  .ported .badge__art img {
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: opacity 150ms ease-out;
+  }
+  @media (hover: hover) {
+    .ported .badge__art:hover img {
+      opacity: 0.8;
+    }
+  }
+  .ported .badge__name {
+    margin: 1rem 0 0;
+    font-family: var(--font-sans);
+    font-size: 1.125rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-text);
+  }
+  .ported .badge__tier {
+    margin: -0.5rem 0 0;
+    font-size: 13px;
+    color: var(--color-text-muted);
+  }
+  .ported .badge__body {
+    margin: 0;
+    max-width: 40em;
+  }
+  .ported .badge > p:last-child {
+    margin: 0;
+    font-size: 13px;
   }
   .ported .patrons__aside {
     margin: 2rem 0 0;
@@ -503,16 +601,35 @@
   .ported .rules {
     margin-top: 1.5em;
   }
-  .ported .rules > *:not(.rules__header) {
+  .ported .rules__title {
     margin: 0;
+  }
+  .ported .rules__header > p {
+    margin: 0.5rem 0 0;
+    color: var(--color-text-secondary);
+  }
+  .ported .rules > ol {
+    margin: 1.5rem 0 0;
+    padding: 0;
+    list-style: none;
   }
   .ported .rule {
     display: grid;
-    grid-template-columns: minmax(10rem, 16rem) minmax(0, 1fr);
-    gap: 1.5rem;
-    padding: 0.85em 0;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.4rem;
+    margin: 0;
+    padding: 1.25rem 0;
     border-bottom: 1px solid var(--color-border-subtle);
-    max-width: 48rem;
+  }
+  .ported .rule:first-child {
+    padding-top: 0;
+  }
+  .ported .rule:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+  .ported .rules__note {
+    margin: 2.5rem 0 0;
   }
   .ported .rule__name {
     margin: 0;
@@ -553,56 +670,5 @@
     margin-top: 2.5em;
     font-size: 14px;
     color: var(--color-text-secondary);
-  }
-
-  .ported .badges {
-    display: grid;
-    gap: var(--space-12);
-    width: 100%;
-    max-width: 52rem;
-    margin-inline: auto;
-  }
-  .ported .badges__lede,
-  .ported .badges__outro {
-    text-align: center;
-    text-wrap: pretty;
-  }
-  .ported .badges .badge {
-    display: grid;
-    gap: var(--space-3);
-    justify-items: center;
-    text-align: center;
-    border: 0;
-    border-radius: 0;
-    background: transparent;
-    color: var(--color-text);
-    padding: 0;
-    font-size: var(--text-body);
-  }
-  .ported .badges .badge + .badge {
-    border-top: 1px solid var(--color-border);
-    padding-top: var(--space-12);
-  }
-  .ported .badge__art {
-    display: block;
-    width: 100%;
-    max-width: 20rem;
-  }
-  .ported .badge__art img {
-    width: 100%;
-    height: auto;
-  }
-  .ported .badge__name {
-    font-size: var(--text-xl);
-    letter-spacing: var(--tracking-wide);
-    text-transform: uppercase;
-    margin: 0;
-  }
-  .ported .badge__tier {
-    color: var(--color-text-muted);
-    font-size: var(--text-sm);
-  }
-  .ported .badge__body {
-    max-width: 40rem;
   }
 }

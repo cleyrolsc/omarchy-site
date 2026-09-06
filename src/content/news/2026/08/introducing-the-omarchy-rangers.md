@@ -3,7 +3,7 @@ title: Introducing Omarchy Rangers
 date: 2026-08-27 20:59 +0200
 author: DHH
 author_url: https://dhh.dk
-description: The first Omarchy Rangers are here to help people find their way, and applications are open.
+description: "Omarchy has grown so fast that thousands of people are arriving at once, and most of them are arriving from macOS or Windows. That’s a lot of first installations, a lot of “where do I even start”, and a lot of questions…"
 ---
 
 Omarchy has grown so fast that thousands of people are arriving at once, and most of them are arriving from macOS or Windows. That's a lot of first installations, a lot of "where do I even start", and a lot of questions that benefit from a real answer from someone who is used to helping others.

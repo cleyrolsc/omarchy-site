@@ -3,13 +3,14 @@
   "title": "Branding",
   "description": "Omarchy allows you to set your company logo or personal image for both the boot unlock, the screensaver, and the about screen. Boot unlock You can use omarchy p",
   "order": 40,
-  "path": "/manual/branding/"
+  "path": "/manual/branding/",
+  "format": "html"
 }
 ---
 
 <p>Omarchy allows you to set your company logo or personal image for both the boot unlock, the screensaver, and the about screen.</p>
 
-<h3 id="boot-unlock">Boot unlock <a class="manual__heading-link" href="#boot-unlock" aria-label="Link to this section">#</a></h3>
+<h3 id="boot-unlock"><a class="manual__heading-link" href="#boot-unlock" aria-label="Link to this section">Boot unlock<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>You can use <code>omarchy plymouth preview</code> to see what your custom logo and colors would look like. It takes a background color, a text color, a logo png, and a path for the preview image:</p>
 
@@ -20,7 +21,7 @@
 
 <p><img src="/manual/images/branding-plymouth-shopify.webp" alt="branding-plymouth-shopify" /></p>
 
-<h3 id="screensaver">Screensaver <a class="manual__heading-link" href="#screensaver" aria-label="Link to this section">#</a></h3>
+<h3 id="screensaver"><a class="manual__heading-link" href="#screensaver" aria-label="Link to this section">Screensaver<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>You can change the logo used for the screensaver under <em>Style &gt; Screensaver</em>. It’s an ASCII logo, so you can edit the text directly, but you can also hand it a png or svg image, and we’ll convert that to ASCII. It looks pretty cool.</p>
 
@@ -34,7 +35,7 @@
   <li><strong>Restore Default</strong> puts the Omarchy logo back.</li>
 </ul>
 
-<h3 id="about-screen">About screen <a class="manual__heading-link" href="#about-screen" aria-label="Link to this section">#</a></h3>
+<h3 id="about-screen"><a class="manual__heading-link" href="#about-screen" aria-label="Link to this section">About screen<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>The same three options are under <em>Style &gt; About</em> for the <em>About</em> screen you get from the Omarchy menu, and they work identically - the file is <code>~/.config/omarchy/branding/about.txt</code>, and the About window pops up after each change. The About art is converted to a smaller size than the screensaver’s, since it has to fit in a window rather than fill your display.</p>
 
@@ -42,7 +43,7 @@
 
 <p><img src="/manual/images/branding-about.webp" alt="branding-about" /></p>
 
-<h3 id="converting-images-yourself">Converting images yourself <a class="manual__heading-link" href="#converting-images-yourself" aria-label="Link to this section">#</a></h3>
+<h3 id="converting-images-yourself"><a class="manual__heading-link" href="#converting-images-yourself" aria-label="Link to this section">Converting images yourself<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>Both of the <em>Set From Image</em> options are just calling <code>omarchy transcode ascii</code>, which you can run directly if you want control over the conversion:</p>
 
@@ -51,7 +52,7 @@
 
 <p>It takes <code>--width</code> and <code>--height</code> in terminal columns and rows, a <code>--mode</code> of either <code>braille</code> (the default, and much finer) or <code>block</code>, a <code>--threshold</code> percentage for deciding which pixels count as part of the logo, and <code>--invert</code> for when your logo is light on a dark background. If a conversion comes out as a blob, the threshold is usually the knob to turn.</p>
 
-<h3 id="words-instead-of-a-logo">Words instead of a logo <a class="manual__heading-link" href="#words-instead-of-a-logo" aria-label="Link to this section">#</a></h3>
+<h3 id="words-instead-of-a-logo"><a class="manual__heading-link" href="#words-instead-of-a-logo" aria-label="Link to this section">Words instead of a logo<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p><code>omarchy ascii</code> draws text in Delta Corps Priest 1, the FIGlet font the Omarchy wordmark itself is drawn in, so a screensaver can say something rather than show a picture:</p>
 

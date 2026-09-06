@@ -3,7 +3,8 @@
   "title": "AI",
   "description": "Omarchy treats AI coding agents as first-class citizens, but it doesn’t pick a favorite for you. Instead, every major coding-agent CLI comes pre-wired as a lazy",
   "order": 16,
-  "path": "/manual/ai/"
+  "path": "/manual/ai/",
+  "format": "html"
 }
 ---
 
@@ -64,7 +65,7 @@
 
 <p>To wrap an additional CLI the same way, run <code>omarchy-mise-install &lt;package&gt; [command-name]</code>. The stubs are kept current along with everything else mise manages when you run <code>omarchy update</code> (or the <code>mup</code> alias).</p>
 
-<h3 id="the-default-agent">The default agent <a class="manual__heading-link" href="#the-default-agent" aria-label="Link to this section">#</a></h3>
+<h3 id="the-default-agent"><a class="manual__heading-link" href="#the-default-agent" aria-label="Link to this section">The default agent<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>Pick your default agent with <code>omarchy default agent &lt;name&gt;</code> or under <em>Setup &gt; Defaults &gt; Agent</em> in the Omarchy Menu (<code>Super + Space</code>). If the agent isn’t installed yet, picking it installs it first. A fresh Omarchy will invite you to make this choice with a one-time notification.</p>
 
@@ -72,13 +73,13 @@
 
 <p>There are terminal shortcuts too: <code>a</code> runs the default agent inline in the current terminal, while <code>c</code>, <code>cx</code>, and <code>cy</code> start OpenCode, Claude Code, and Codex directly (again in their auto-approving modes). Theme changes sync to the agents as well: Claude Code, Pi, and OpenCode all follow along when you switch the Omarchy theme.</p>
 
-<h3 id="the-agents-panel">The agents panel <a class="manual__heading-link" href="#the-agents-panel" aria-label="Link to this section">#</a></h3>
+<h3 id="the-agents-panel"><a class="manual__heading-link" href="#the-agents-panel" aria-label="Link to this section">The agents panel<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>The top bar grows an agents icon the first time Omarchy finds AI coding usage on the machine (and stays out of the way until then). The panel behind it tracks every subscription in one place: your plan, the percentage used of the 5-hour session and weekly limits (or the remaining prepaid balance), and token usage by day and by model. Claude Code, Codex, and Fireworks are covered out of the box.</p>
 
 <p>Left-click the bar icon for the panel, right-click to launch your default agent. The usage records behind it are regenerated every 15 minutes by <code>omarchy agent usage-update</code>, and the panel can even merge usage from your other machines via a synced folder. See the README under <code>$OMARCHY_PATH/shell/plugins/agents/</code> for the full settings.</p>
 
-<h3 id="crash-diagnosis">Crash diagnosis <a class="manual__heading-link" href="#crash-diagnosis" aria-label="Link to this section">#</a></h3>
+<h3 id="crash-diagnosis"><a class="manual__heading-link" href="#crash-diagnosis" aria-label="Link to this section">Crash diagnosis<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>Omarchy watches systemd-coredump for process crashes. When something segfaults, you’ll get a “Process crashed” notification - click it, and the crash is handed to your default agent along with Omarchy’s diagnose-crash skill, which walks the agent through establishing the facts from the core dump and deciding whether the crash is worth reporting upstream. You can also run it by hand against any PID from <code>coredumpctl list</code> with <code>omarchy agent crash &lt;pid&gt;</code>.</p>
 
@@ -86,15 +87,15 @@
 
 <p>Crashes can also be silenced one program at a time, which is what the diagnosis offers you at the end. <code>omarchy crash mute hyprland</code> stops the notifications for that program only, <code>omarchy crash mute hyprland off</code> brings them back, and <code>omarchy crash mute</code> on its own lists what you’ve muted. It takes the binary’s path as happily as its name, so <code>omarchy crash mute /usr/bin/hyprland</code> does the same thing. Quote a name with a space in it, as in <code>omarchy crash mute 'Some App'</code>. Everything else still notifies, and the muted program still crashes - this hides the reminder, it doesn’t fix anything.</p>
 
-<h3 id="desktop-apps">Desktop apps <a class="manual__heading-link" href="#desktop-apps" aria-label="Link to this section">#</a></h3>
+<h3 id="desktop-apps"><a class="manual__heading-link" href="#desktop-apps" aria-label="Link to this section">Desktop apps<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>The <em>Install &gt; AI</em> menu also carries a couple of graphical AI apps: the ChatGPT desktop app, and Grok Bot for chatting with xAI’s models.</p>
 
-<h3 id="local-llms">Local LLMs <a class="manual__heading-link" href="#local-llms" aria-label="Link to this section">#</a></h3>
+<h3 id="local-llms"><a class="manual__heading-link" href="#local-llms" aria-label="Link to this section">Local LLMs<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>Omarchy recommends two ways of running local LLM models: LM Studio and Ollama. LM Studio provides a GUI interface for finding open-weight models, installing them, and running them. It’s a great way to get going easily. Ollama offers a CLI for doing so similarly. But if you’re new to local models, I’d start with LM Studio. You can install either under <em>Install &gt; AI</em> in the Omarchy Menu.</p>
 
-<h3 id="the-omarchy-skill">The Omarchy Skill <a class="manual__heading-link" href="#the-omarchy-skill" aria-label="Link to this section">#</a></h3>
+<h3 id="the-omarchy-skill"><a class="manual__heading-link" href="#the-omarchy-skill" aria-label="Link to this section">The Omarchy Skill<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>Agent skills help AI use specific tools in a specific way, and Omarchy ships with a default skill for tailoring the system. Like tweaking your Hyprland config, adjusting the bar, or even creating a new theme from scratch. It’s symlinked into the skill directories for Claude Code (<code>~/.claude/skills</code>), Codex (<code>~/.codex/skills</code>), Pi (<code>~/.pi/agent/skills</code>), Antigravity (<code>~/.gemini/config/skills</code>), and the generic <code>~/.agents/skills</code> location, so most harnesses pick it up automatically.</p>
 

@@ -3,7 +3,8 @@
   "title": "System snapshots",
   "description": "We create snapshots automatically on every Omarchy update, but should you want to create your own, you can use omarchy-snapshot create . To boot and restore a s",
   "order": 46,
-  "path": "/manual/system-snapshots/"
+  "path": "/manual/system-snapshots/",
+  "format": "html"
 }
 ---
 
@@ -25,7 +26,7 @@
 
 <p><em>Note: This feature is only available on installations using the Limine boot loader, which has been the default since Omarchy 2.0. It’s not available if you’re on GRUB or systemd-boot.</em></p>
 
-<h3 id="skipping-the-boot-menu">Skipping the boot menu <a class="manual__heading-link" href="#skipping-the-boot-menu" aria-label="Link to this section">#</a></h3>
+<h3 id="skipping-the-boot-menu"><a class="manual__heading-link" href="#skipping-the-boot-menu" aria-label="Link to this section">Skipping the boot menu<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>If you never touch the boot menu and just want the machine to go straight to the decryption screen, run <em>Setup &gt; Direct Boot</em> in the Omarchy menu. That adds an EFI entry pointing directly at Omarchy, so the firmware boots it without stopping at Limine.</p>
 

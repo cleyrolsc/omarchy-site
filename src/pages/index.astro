@@ -1,22 +1,14 @@
 ---
 import { getEntry, render } from "astro:content";
-import {
-  Download,
-  Play,
-  ArrowRight,
-  Usb,
-  Monitor,
-  Apple,
-  Shirt,
-  Calendar,
-  MessageCircle,
-  Heart,
-} from "@lucide/astro";
 import SiteLayout from "../layouts/SiteLayout.astro";
 import Brand from "../components/Brand.astro";
+import SiteIcon from "../components/SiteIcon.astro";
 import EffectPicker from "../components/EffectPicker.astro";
 import SectionHeading from "../components/SectionHeading.astro";
 import PluginCard from "../components/PluginCard.astro";
+import CardRail from "../components/CardRail.astro";
+import FeatureShowcase from "../components/FeatureShowcase.astro";
+import MeetupShowcase from "../components/MeetupShowcase.astro";
 import ThemeShowcase from "../components/ThemeShowcase.astro";
 import VideoCarousel from "../components/VideoCarousel.astro";
 import TeamClusters from "../components/TeamClusters.astro";
@@ -26,6 +18,7 @@ import Voices from "../components/Voices.astro";
 import home from "../data/home.json";
 import release from "../data/version.json";
 import banner from "../data/banner.json";
+import pluginStats from "../data/plugin-stats.json";
 import catalogue from "../data/plugins.json";
 import patrons from "../data/patrons.json";
 import { newsSummaries } from "../lib/content";
@@ -42,110 +35,130 @@ const patronGroups = patrons.map((group) => ({
       ? "Founding Corporate Patrons"
       : group.name,
   description:
-    group.id === "founding-token-patrons"
-      ? "$1,000,000/year x 3 or $1,500,000 in tokens"
-      : group.id === "distinguished-corporate-patrons"
-        ? "$100,000/year x 3 or $150,000 in tokens"
-        : group.description,
+    group.id === "founding-patrons"
+      ? "$1,000,000 from each"
+      : group.id === "founding-token-patrons"
+        ? "$1,000,000/year x 3 or $1,500,000 in tokens"
+        : group.id === "distinguished-corporate-patrons"
+          ? "$100,000/year x 3 or $150,000 in tokens"
+          : "$100,000 from each",
 }));
-const communityIcons = [MessageCircle, Calendar, Heart, Shirt];
 ---
 
 <SiteLayout title={intro.data.title} description={intro.data.description}>
   <main id="main">
-    <section class="hero" data-hero-sentinel>
-      <canvas data-pixel-field="hero" aria-hidden="true"></canvas>
-      <EffectPicker />
+    <section id="home" class="hero pixel-container" data-hero-sentinel>
+      <canvas data-pixel-field="hero" aria-hidden="true"></canvas><EffectPicker
+      />
       <div class="hero-body">
+        <div class="hero-spacer"></div>
         {
           banner && (
-            <a class="hero-callout" data-hero-quiet href={banner.href}>
-              <>
-                <span set:html={banner.html} />
-                <ArrowRight size={16} />
-              </>
-            </a>
+            <div class="hero-callout-wrap" data-hero-quiet>
+              <a class="hero-callout" href={banner.href}>
+                <>
+                  <span set:html={banner.html} />
+                  <SiteIcon name="ArrowRight" size={16} />
+                </>
+              </a>
+            </div>
           )
         }
         <Brand hero class="hero-wordmark" />
         <div class="hero-copy" data-hero-quiet>
-          <h1>
-            <span class="sr-only">Omarchy: </span>Beautiful, fun &amp; agentic
-            Linux by <a href="https://dhh.dk">DHH</a>
+          <h1 data-hero-stagger style="--stagger:0">
+            <a href="/#home" class="section-anchor"
+              ><span class="sr-only">Omarchy: </span>Beautiful, fun &amp;
+              agentic Linux</a
+            > by <a href="https://dhh.dk" class="dhh-link">DHH</a>
           </h1>
-          <p>
+          <p data-hero-stagger style="--stagger:1">
             <span>The malleable OS for the age of agents.</span><span
-              >Vibe your way through every alteration, tweak, and desire.</span>
+              >Vibe your way through every alteration, tweak, or trouble.</span
+            >
           </p>
-          <div class="actions hero-actions">
-            <a class="btn btn--primary" href="#install"
-              ><Download size={20} />Get Omarchy</a
-            ><a class="btn" href="#watch"><Play size={20} />See it in action</a>
+          <div
+            class="hero-actions"
+            data-hero-stagger
+            data-hero-cta
+            style="--stagger:2"
+          >
+            <a class="btn btn--primary" href="/#install"
+              ><SiteIcon name="Download" size={20} />Get Omarchy</a
+            ><a class="btn" href="/#watch"
+              ><SiteIcon name="Play" size={20} />See it in action</a
+            >
           </div>
         </div>
+        <div class="hero-spacer"></div>
       </div>
     </section>
-    <section>
+    <section id="about">
       <div class="section-inner intro-grid">
         <div>
-          <h2>
-            <a href="https://wecanfixeverything.com/" class="text-link"
+          <h2 data-typed-block>
+            <a class="section-anchor" href="/#about"
               ><span class="sr-only">We can fix everything.</span><span
                 aria-hidden="true"
-                >We can fix every<span data-typewriter>thing.</span></span
-              ></a>
+                >We can fix every<span data-typewriter>thing.</span><span
+                  class="typed-caret"></span></span
+              ></a
+            >
           </h2><div class="intro-prose"><Content /></div>
-        </div><figure class="quote">
-          <span class="quote-mark" aria-hidden="true">“</span><blockquote
-            cite={home.quote.href}
-          >
-            {home.quote.text}
-          </blockquote><figcaption>
-            <img
-              src="/assets/images/team/dhh.webp"
-              alt=""
-              width="96"
-              height="96"
-              loading="lazy"
-            /><span
-              ><strong>{home.quote.name}</strong><span>{home.quote.role}</span
-              ></span
-            ><a href={home.quote.href} aria-label="Watch him say it on YouTube"
-              ><Play size={20} /></a>
-          </figcaption>
-        </figure>
-      </div>
-    </section>
-    <section id="watch" class="section section--deep">
-      <div class="section-inner">
-        <SectionHeading
-          title="See it in action"
-          description="Experience a transfer of enthusiasm."
-          level={2}
-        /><div class="section-content">
-          <VideoCarousel videos={home.videos} />
+        </div>
+        <div class="quote-wrap">
+          <figure class="quote">
+            <span class="quote-mark" aria-hidden="true">“</span><blockquote
+              cite={home.quote.href}
+            >
+              {home.quote.text}
+            </blockquote><figcaption>
+              <img
+                src="/assets/images/team/dhh.webp"
+                alt=""
+                width="48"
+                height="48"
+                loading="lazy"
+                decoding="async"
+              /><span
+                ><span class="quote-name">{home.quote.name}</span><span
+                  >{home.quote.role}</span
+                ></span
+              ><a
+                href={home.quote.href}
+                aria-label="Watch him say it, on YouTube"
+                ><SiteIcon name="Play" size={20} /></a
+              >
+            </figcaption>
+          </figure>
         </div>
       </div>
-    </section>
-    <section id="install" class="section">
-      <div class="section-inner">
+      <div id="watch" class="watch-band section--deep" data-ground>
+        <VideoCarousel videos={home.videos} />
+      </div>
+      <div id="install" class="section-inner">
         <SectionHeading
+          level={3}
+          anchor="install"
           title="Install Omarchy"
           description="Be up and running in as little as 35 seconds on the fastest machines, and in less than two minutes on the majority of computers."
           href="/manual/getting-started/"
           link="Full installation guide"
-          level={2}
         />
         <div class="install-grid">
-          <article class="install-card">
-            <h3 class="install-title">
-              <Usb size={20} />Full-disk or dual-boot installation
-            </h3><p>
+          <div class="install-card">
+            <div class="install-title">
+              <SiteIcon name="Usb" size={20} /><h4>
+                Full-disk or dual-boot installation
+              </h4>
+            </div><p>
               Write the ISO to a USB stick and answer five questions. It hands
               back a finished desktop.
             </p><div class="install-action">
-              <a class="btn btn--primary" href={release.isoUrl}
-                ><Download size={20} />Download Omarchy {release.version}</a
+              <a class="btn btn--primary btn--lg" href={release.isoUrl}
+                ><SiteIcon name="Download" size={20} />Download Omarchy {
+                  release.version
+                }</a
               ><p class="muted">
                 Under a minute from stick to desktop. <span
                   >Verify the file: <a
@@ -153,32 +166,43 @@ const communityIcons = [MessageCircle, Calendar, Heart, Shirt];
                     href={`${release.isoUrl}.sha256`}>SHA-256</a
                   >, <a class="text-link" href={`${release.isoUrl}.sig`}
                     >signature</a
-                  >.</span>
+                  >.</span
+                >
               </p>
             </div>
-          </article>
-          <article class="install-card">
-            <h3 class="install-title"><Monitor size={20} />Try it first</h3><p>
+          </div>
+          <div class="install-card">
+            <div class="install-title">
+              <SiteIcon name="Display" size={20} /><h4>Try it first</h4>
+            </div><p>
               All of Omarchy running in a virtual machine, so you can get a
               taste first.
             </p><div class="install-action">
               <div class="actions">
                 <a
-                  class="btn"
+                  class="btn btn--lg"
                   data-try="mac"
                   href="https://github.com/omacom/try-omarchy"
-                  ><Apple size={20} />Try on Mac ↗</a
+                  ><SiteIcon name="Apple" size={20} />Try on Mac<SiteIcon
+                    name="ArrowUpRight"
+                    size={20}
+                  /></a
                 ><a
-                  class="btn"
+                  class="btn btn--lg"
                   data-try="windows"
                   href="https://github.com/omacom/try-omarchy-windows"
-                  ><Monitor size={20} />Try on Windows ↗</a>
+                  ><SiteIcon name="Windows" size={20} />Try on Windows<SiteIcon
+                    name="ArrowUpRight"
+                    size={20}
+                  /></a
+                >
               </div><p class="muted">
                 Apple Silicon Macs, Windows 10 and 11.<span
-                  >On Linux, the ISO is the way in.</span>
+                  >On Linux, the ISO is the way in.</span
+                >
               </p>
             </div>
-          </article>
+          </div>
         </div>
         <p class="muted install-note">
           The manual also covers <a
@@ -188,133 +212,180 @@ const communityIcons = [MessageCircle, Calendar, Heart, Shirt];
             >unattended installs</a
           >.
         </p>
+        <a
+          class="section-link section-mobile-link"
+          href="/manual/getting-started/"
+          >Full installation guide<SiteIcon name="ArrowRight" size={20} /></a
+        >
       </div>
     </section>
     <section id="hardware" class="section section--deep">
-      <div class="section-inner">
-        <SectionHeading
-          title="It runs on almost anything"
-          description="You don't need a new machine to try Omarchy. But if you get one, today's laptops are amazing."
-        /><div class="hardware-grid">
-          {
-            home.hardware.map((item) => (
-              <article>
-                <>
-                  <h3>
-                    <Monitor size={20} />
-                    {item.title}
-                  </h3>
-                  <p>{item.description}</p>
-                  <a class="section-link" href={item.href}>
-                    {item.link}
-                    <ArrowRight size={18} />
-                  </a>
-                </>
-              </article>
-            ))
-          }
-        </div>
-      </div>
+      <div class="section-inner"><FeatureShowcase kind="hardware" /></div>
     </section>
-    <section class="section">
+    <section id="plugins" class="section">
       <div class="section-inner">
         <SectionHeading
+          anchor="plugins"
           title="A plugin for every dream, every desire"
-          description={`${catalogue.plugins.length.toLocaleString("en-US")} community plugins for the Quattro shell: bars, widgets, overlays, and services, each one a single command away.`}
+          description="Thousands of community plugins are available for Omarchy. Don't find what you need? Just put your agent on the job, then share when done."
           href="https://plugins.omarchy.org"
           link="All plugins"
-        /><div class="rail section-content">
-          {featured.map((plugin) => <PluginCard plugin={plugin} />)}
-        </div>
+        /><CardRail
+          >{
+            featured.map((plugin) => (
+              <PluginCard
+                plugin={{
+                  ...plugin,
+                  stats:
+                    pluginStats.plugins[
+                      plugin.id as keyof typeof pluginStats.plugins
+                    ],
+                }}
+              />
+            ))
+          }</CardRail
+        ><a
+          class="section-link section-mobile-link"
+          href="https://plugins.omarchy.org"
+          >All plugins<SiteIcon name="ArrowRight" size={20} /></a
+        >
       </div>
     </section>
-    <section class="section section--deep">
+    <section id="agents" class="section section--deep">
+      <div class="section-inner"><FeatureShowcase kind="agents" /></div>
+    </section>
+    <section id="themes" class="section">
       <div class="section-inner">
         <SectionHeading
+          anchor="themes"
           title="Pick a theme, change everything"
-          description="A theme restyles the whole system at once: terminal, bar, notifications, wallpaper. Pick one and this site wears it too. Or press T to flip through them."
           href="/themes/"
           link="More community themes"
-        /><ThemeShowcase />
+          ><Fragment slot="description"
+            >A theme restyles the whole system at once: terminal, bar,
+            notifications, wallpaper. Pick one and this site wears it too.<span
+              class="desktop-inline"
+            >
+              Or press <kbd>T</kbd> to flip through them.</span
+            ></Fragment
+          ></SectionHeading
+        ><ThemeShowcase /><a
+          class="section-link section-mobile-link"
+          href="/themes/"
+          >More community themes<SiteIcon name="ArrowRight" size={20} /></a
+        >
       </div>
     </section>
-    <section class="section">
+    <section id="developers" class="section section--deep">
+      <div class="section-inner"><FeatureShowcase kind="developers" /></div>
+    </section>
+    <section id="gaming" class="section">
+      <div class="section-inner"><FeatureShowcase kind="gaming" /></div>
+    </section>
+    <section id="news" class="section section--deep">
       <div class="section-inner">
         <SectionHeading
+          anchor="news"
           title="What's been happening"
           href="/news/"
           link="All news"
-        /><NewsList posts={news.slice(0, 6)} compact />
+        /><NewsList posts={news.slice(0, 6)} compact /><a
+          class="section-link section-mobile-link"
+          href="/news/">All news<SiteIcon name="ArrowRight" size={20} /></a
+        >
       </div>
     </section>
-    <section id="figures" class="section section--deep">
+    <section id="figures" class="section">
       <div class="section-inner">
         <SectionHeading
+          anchor="figures"
           title="Momentum by the numbers"
           description="Donations, downloads, and contributions. Momentum is based on all of it."
         /><StatGrid />
       </div>
     </section>
-    <section id="voices" class="section">
+    <section id="voices" class="section section--deep">
       <div class="section-inner">
         <SectionHeading
+          anchor="voices"
           title="People love Omarchy"
           description="What people posted on X after installing it."
           href="https://x.com/search?q=omarchy&f=live"
           link="More on X"
-        /><Voices />
+          socialLink
+        /><Voices /><a
+          class="section-link section-mobile-link"
+          href="https://x.com/search?q=omarchy&f=live"
+          >More on <SiteIcon name="X" size={20} /><SiteIcon
+            name="ArrowUpRight"
+            size={20}
+          /></a
+        >
       </div>
     </section>
-    <section class="section section--deep">
+    <section id="teams" class="section">
       <div class="section-inner">
         <SectionHeading
+          anchor="teams"
           title="It takes a village to raise a distro"
           description="Omarchy Core sets the direction, the Security team keeps your system safe, Design shapes how it looks and feels, and the Rangers help others find their way."
           href="/teams/"
           link="All teams"
-        /><TeamClusters />
+        /><TeamClusters /><a
+          class="section-link section-mobile-link"
+          href="/teams/">All teams<SiteIcon name="ArrowRight" size={20} /></a
+        >
       </div>
     </section>
-    <section id="patrons" class="section">
+    <section id="patrons" class="section section--deep">
       <div class="section-inner">
         <SectionHeading
+          anchor="patrons"
           title="Backed by the oligarchy"
-          description="The billionaires, mere millionaires, and corporations funding the development, maintenance, and spread of Omarchy."
+          description="The billionaires, mere millionaires, and corporations funding the lion's share of the development, maintenance, and spread of Omarchy."
           href="/patrons/"
           link="All patrons"
-        /><TeamClusters
-          groups={patronGroups}
-          maxFaces={12}
-          basePath="/patrons/"
-        /><p class="muted install-note">
-          <a href="https://oligarchy.fyi" class="text-link"
-            >Our shadowy agenda? Better Linux.</a>
-        </p>
+        /><TeamClusters groups={patronGroups} maxFaces={12} patrons /><p
+          class="patron-note"
+        >
+          <a class="text-link" href="https://oligarchy.fyi"
+            >Our shadowy agenda? Better Linux.</a
+          >
+        </p><a class="section-link section-mobile-link" href="/patrons/"
+          >All patrons<SiteIcon name="ArrowRight" size={20} /></a
+        >
       </div>
     </section>
-    <section class="section section--deep">
+    <section id="meetups" class="section">
+      <div class="section-inner"><MeetupShowcase /></div>
+    </section>
+    <section id="community" class="section section--deep">
       <div class="section-inner">
         <SectionHeading
+          anchor="community"
           title="Get involved with Omarchy"
           description="Command your agent, and hang out with the people doing the same."
         /><div class="community-grid">
           {
-            home.community.map((card, index) => {
-              const Icon = communityIcons[index];
-              return (
-                <a href={card.href}>
-                  <>
-                    <Icon size={20} />
-                    <h3>{card.title}</h3>
-                    <p>{card.body}</p>
-                    <span>
-                      {card.cta}
-                      <ArrowRight size={16} />
-                    </span>
-                  </>
-                </a>
-              );
-            })
+            home.community.map((card) => (
+              <a href={card.href}>
+                <>
+                  <SiteIcon
+                    name={
+                      card.icon as
+                        "Discord" | "CalendarFilled" | "Github" | "Bank"
+                    }
+                    size={20}
+                  />
+                  <h3>{card.title}</h3>
+                  <p>{card.body}</p>
+                  <span>
+                    {card.cta}
+                    <SiteIcon name="ArrowRight" size={16} />
+                  </span>
+                </>
+              </a>
+            ))
           }
         </div>
       </div>
@@ -324,82 +395,140 @@ const communityIcons = [MessageCircle, Calendar, Heart, Shirt];
 <style>
   .hero {
     position: relative;
-    min-height: 100svh;
     margin-top: calc(-1 * var(--nav-h));
     padding-top: var(--nav-h);
+    min-height: 100svh;
     display: flex;
+    flex-direction: column;
     overflow: hidden;
     border-bottom: 1px solid var(--color-border);
     background: var(--t-field-bg);
+    user-select: none;
+    -webkit-touch-callout: none;
   }
   .hero > canvas {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
+    pointer-events: none;
   }
   .hero-body {
     position: relative;
     display: flex;
+    flex: 1;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    width: 100%;
-    padding: var(--space-16) var(--space-6);
+    padding-inline: var(--space-6);
     pointer-events: none;
   }
-  .hero-callout {
+  .hero-spacer {
+    flex: 1;
+  }
+  .hero-callout-wrap {
+    pointer-events: auto;
     display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: var(--space-12);
+  }
+  .hero-callout {
+    display: inline-flex;
+    max-width: 100%;
     align-items: center;
     gap: var(--space-2);
-    pointer-events: auto;
-    margin-bottom: var(--space-12);
-    max-width: 100%;
-    padding: var(--space-2) var(--space-3);
+    padding: var(--space-1_5) var(--space-3_5);
+    border: 1px solid color-mix(in oklch, var(--color-brand) 40%, transparent);
+    background: color-mix(in oklch, var(--color-bg) 60%, transparent);
     font-size: var(--text-caption);
-    border: 1px solid var(--color-border-strong);
-    background: var(--color-surface);
+    line-height: 1.375;
+    text-align: left;
     color: var(--color-brand);
     text-decoration: none;
-    text-align: center;
+    transition:
+      color 150ms ease-out,
+      background-color 150ms ease-out,
+      border-color 150ms ease-out;
+  }
+  .hero-callout span {
+    min-width: 0;
+  }
+  .hero-callout :global(svg) {
+    flex-shrink: 0;
+    transition: transform 150ms ease-out;
+  }
+  .hero-callout:hover {
+    background: var(--color-brand);
+    border-color: var(--color-brand);
+    color: var(--color-bg);
+  }
+  .hero-callout:hover :global(svg) {
+    transform: translateX(2px);
   }
   .hero-body :global(.hero-wordmark) {
     width: 88%;
     max-width: 56rem;
+    color: var(--t-field-lit);
   }
   .hero-body :global([data-painted]) {
     visibility: hidden;
   }
   .hero-copy {
+    pointer-events: auto;
     margin-top: var(--space-12);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
     max-width: 42rem;
     text-align: center;
-    pointer-events: auto;
   }
   h1 {
-    font-size: var(--text-2xl);
-    font-weight: var(--font-medium);
-    letter-spacing: var(--tracking-tight);
     margin: 0;
+    font-size: var(--text-2xl);
+    line-height: 1.333333;
+    font-weight: 500;
+    letter-spacing: -0.025em;
   }
-  h1 a {
+  .section-anchor {
+    color: inherit;
     text-decoration: none;
   }
-  h1 a:hover {
+  h1 .dhh-link {
     text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 6px;
+  }
+  h1 .dhh-link:hover {
     text-decoration-color: var(--color-brand);
   }
   .hero-copy p {
     margin: var(--space-4) 0 0;
+    font-size: var(--text-body);
+    line-height: 1.625;
     color: var(--color-text-secondary);
-    text-wrap: balance;
   }
   .hero-copy p span {
     display: block;
+    text-wrap: balance;
   }
   .hero-actions {
-    margin-top: var(--space-8);
-    justify-content: center;
+    margin-top: var(--space-9);
+    display: flex;
+    width: 100%;
+    max-width: 20rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-3);
+  }
+  .hero-actions .btn {
+    height: var(--space-10);
+    padding: 0 var(--space-4) 0 var(--space-3);
+    font-size: var(--text-body);
+    line-height: 1.5;
+  }
+  .hero-actions .btn:not(.btn--primary) :global(svg) {
+    margin-right: 2px;
   }
   .intro-grid {
     display: grid;
@@ -407,75 +536,114 @@ const communityIcons = [MessageCircle, Calendar, Heart, Shirt];
   }
   .intro-grid h2 {
     margin: 0;
-  }
-  .intro-grid h2 a {
-    color: var(--color-text);
-  }
-  .intro-prose :global(p) {
-    color: var(--color-text-secondary);
+    font-size: var(--text-2xl);
+    line-height: 1.333333;
+    font-weight: 600;
+    contain: layout;
   }
   .intro-prose {
     margin-top: var(--space-6);
+  }
+  .intro-prose :global(p) {
+    margin: 0;
+    max-width: 35.5rem;
+    font-size: var(--text-body);
+    line-height: 1.625;
     color: var(--color-text-secondary);
+    text-wrap: pretty;
   }
   .intro-prose :global(p + p) {
     margin-top: var(--space-5);
   }
+  .intro-prose :global(a) {
+    text-decoration: underline;
+    text-decoration-color: var(--color-border-strong);
+    text-underline-offset: 4px;
+  }
   .quote {
+    position: relative;
     margin: 0;
-    padding: var(--space-6);
     max-width: 28rem;
+    border: 1px solid var(--color-border-subtle);
     background: var(--color-surface);
-    border: 1px solid var(--color-border);
+    padding: var(--space-5);
+    transition: border-color 150ms ease-out;
+  }
+  .quote:hover {
+    border-color: var(--color-border-strong);
   }
   .quote-mark {
     display: block;
     height: var(--space-10);
     font-family: var(--font-sans);
-    font-size: var(--text-display);
+    font-size: var(--text-6xl);
     line-height: 1;
+    font-weight: 700;
     color: var(--color-brand);
   }
   blockquote {
     margin: 0;
     padding: 0;
     border: 0;
-    color: var(--color-text);
     font-family: var(--font-sans);
     font-size: var(--text-xl);
-    line-height: 1.4;
-    font-weight: var(--font-medium);
+    line-height: 1.375;
+    font-weight: 500;
+    font-style: normal;
+    color: var(--color-text);
     text-wrap: balance;
   }
   figcaption {
     display: flex;
     align-items: center;
-    gap: var(--space-3);
+    gap: var(--space-3_5);
     margin-top: var(--space-6);
   }
   figcaption img {
     width: var(--space-12);
     height: var(--space-12);
+    flex-shrink: 0;
+    border: 1px solid var(--color-border-subtle);
     object-fit: cover;
   }
   figcaption > span {
-    display: grid;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-mono);
+    line-height: 1.375;
     font-size: var(--text-caption);
-  }
-  figcaption > span > span {
     color: var(--color-text-muted);
+  }
+  figcaption .quote-name {
+    font-size: var(--text-body);
+    font-weight: 500;
+    color: var(--color-text);
   }
   figcaption > a {
     margin-left: auto;
+    color: var(--color-text-muted);
+  }
+  figcaption > a::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+  .quote:hover figcaption > a {
+    color: var(--color-text);
+  }
+  .watch-band {
+    padding-block: var(--space-12);
+    border-block: 1px solid var(--color-border-subtle);
   }
   .install-grid {
     display: grid;
     gap: var(--space-4);
-    margin-top: var(--space-8);
+    margin-top: var(--space-6);
   }
   .install-card {
     display: flex;
     flex-direction: column;
+    min-width: 0;
     padding: var(--space-6);
     background: var(--color-surface);
     box-shadow: var(--shadow-card);
@@ -484,59 +652,55 @@ const communityIcons = [MessageCircle, Calendar, Heart, Shirt];
     display: flex;
     align-items: center;
     gap: var(--space-2_5);
-    margin: 0;
-    font-size: var(--text-lg);
   }
-  .install-title svg,
-  .hardware-grid h3 svg {
+  .install-title :global(svg) {
     color: var(--color-brand);
     flex-shrink: 0;
   }
+  .install-title h4 {
+    margin: 0;
+    font-size: var(--text-lg);
+    line-height: 1.555556;
+    font-weight: 500;
+    letter-spacing: -0.025em;
+  }
   .install-card > p {
-    margin-top: var(--space-3);
+    margin: var(--space-3) 0 0;
+    font-size: var(--text-body);
+    line-height: 1.625;
     color: var(--color-text-secondary);
+    text-wrap: pretty;
   }
   .install-action {
-    padding-top: var(--space-6);
     margin-top: auto;
+    padding-top: var(--space-6);
   }
   .install-action p {
-    margin-top: var(--space-2_5);
+    margin: var(--space-2_5) 0 0;
+    font-size: var(--text-caption);
+    line-height: 1.5;
   }
   .install-action p span {
     display: block;
   }
+  .install-action .actions {
+    gap: var(--space-2);
+  }
   .install-note {
     margin-top: var(--space-6);
+    line-height: 1.625;
+    text-wrap: pretty;
   }
-  .hardware-grid {
-    display: grid;
-    gap: var(--space-6);
-    margin-top: var(--space-8);
-  }
-  .hardware-grid article {
-    border-top: 1px solid var(--color-border-strong);
-    padding-top: var(--space-4);
-    display: flex;
-    flex-direction: column;
-  }
-  .hardware-grid h3 {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2_5);
-    margin: 0;
-  }
-  .hardware-grid p {
-    margin: var(--space-3) 0;
-    color: var(--color-text-secondary);
-  }
-  .hardware-grid a {
-    margin-top: auto;
+  .patron-note {
+    margin: var(--space-4) 0 0;
+    font-size: var(--text-xs);
+    line-height: 1.333333;
+    color: var(--color-text-muted);
   }
   .community-grid {
     display: grid;
     gap: var(--space-4);
-    margin-top: var(--space-8);
+    margin-top: var(--space-6);
   }
   .community-grid > a {
     display: flex;
@@ -545,18 +709,30 @@ const communityIcons = [MessageCircle, Calendar, Heart, Shirt];
     background: var(--color-surface);
     box-shadow: var(--shadow-card);
     text-decoration: none;
+    transition:
+      box-shadow 150ms ease-out,
+      background-color 150ms ease-out;
   }
-  .community-grid svg {
+  .community-grid > a:hover {
+    box-shadow: var(--shadow-elevated);
+  }
+  .community-grid :global(svg) {
     color: var(--color-brand);
+    flex-shrink: 0;
   }
   .community-grid h3 {
     font-size: var(--text-body);
-    margin: var(--space-3_5) 0 var(--space-1_5);
+    font-weight: 500;
+    line-height: 1.5;
+    margin: var(--space-3_5) 0 0;
+    letter-spacing: normal;
   }
   .community-grid p {
     font-size: var(--text-caption);
+    line-height: 1.625;
     color: var(--color-text-secondary);
-    margin: 0;
+    margin: var(--space-1_5) 0 0;
+    text-wrap: pretty;
   }
   .community-grid span {
     display: flex;
@@ -566,51 +742,84 @@ const communityIcons = [MessageCircle, Calendar, Heart, Shirt];
     margin-top: auto;
     color: var(--color-brand);
     font-size: var(--text-caption);
+    font-weight: 500;
+    line-height: 1.5;
+  }
+  .community-grid span :global(svg) {
+    transition: transform 150ms ease-out;
+  }
+  .community-grid > a:hover span :global(svg) {
+    transform: translateX(2px);
+  }
+  .desktop-inline {
+    display: none;
+  }
+  kbd {
+    border: 1px solid var(--color-border-strong);
+    padding: 2px 6px;
+    font-size: 11px;
+    background: none;
+    color: var(--color-text-secondary);
+    box-shadow: none;
   }
   @media (min-width: 40rem) {
-    .intro-grid h2 {
-      font-size: var(--text-section-title);
-    }
     h1 {
       font-size: var(--text-3xl);
+      line-height: 1.2;
+    }
+    .hero-actions {
+      flex-direction: row;
+      max-width: none;
+      width: auto;
+    }
+    .intro-grid h2 {
+      font-size: var(--text-section-title);
+      line-height: 1.333333;
     }
     .community-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .desktop-inline {
+      display: inline;
     }
   }
   @media (min-width: 48rem) {
     .install-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
-    .hardware-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
   }
   @media (min-width: 64rem) {
     .intro-grid {
       grid-template-columns: 1.35fr 1fr;
       gap: var(--space-20);
-      align-items: center;
+      padding-block: var(--space-28);
     }
-    .community-grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+    .quote-wrap {
+      align-self: center;
+      justify-self: end;
     }
-    .hero-callout {
+    .quote {
+      margin-top: -3px;
+      padding: var(--space-7);
+    }
+    .hero-callout-wrap {
       margin-bottom: calc(var(--pxr) * 5);
     }
     .hero-copy {
       margin-top: calc(var(--pxr) * 5);
     }
-  }
-  @media (max-width: 40rem) {
     .hero-actions {
-      flex-direction: column;
-      width: min(100%, 20rem);
-      margin-inline: auto;
-      align-items: stretch;
+      gap: calc(var(--pxc) * 2);
     }
-    .hero-body {
-      padding-block: var(--space-12);
+    .watch-band {
+      padding-block: var(--space-24);
+    }
+    .install-grid,
+    .community-grid {
+      margin-top: var(--space-10);
+    }
+    .community-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
     }
   }
 </style>

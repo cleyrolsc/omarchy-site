@@ -1,6 +1,10 @@
+import { initHome } from "./home";
+import { initVideoCarousels } from "./video-carousel";
+import { initThemePicker } from "./theme-picker";
+import { initClusters } from "./clusters";
 import { navigate } from "astro:transitions/client";
 import {
-  applyTheme,
+  switchTheme,
   readTheme,
   SITE_THEMES,
   HINT_KEY,
@@ -14,12 +18,7 @@ import { MUSIC_EVENT, music, loadMusic } from "../lib/music";
 import { watchOutbound } from "../lib/outbound";
 import { EFFECTS, ETCH_EVENT, effectFromLocation } from "../lib/etch";
 
-type SearchEntry = {
-  title: string;
-  text: string;
-  url: string;
-  section: string;
-};
+import { searchAll, KIND_LABEL, type SearchEntry } from "../lib/search";
 let searchPromise: Promise<SearchEntry[]> | undefined;
 let dispose: (() => void) | undefined;
 const clock = (seconds: number) =>
@@ -29,6 +28,9 @@ export function initSite() {
   dispose?.();
   const controller = new AbortController();
   const { signal } = controller;
+  initClusters(signal);
+  initHome(signal);
+  initVideoCarousels(signal);
   const cleanups: (() => void)[] = [];
   const on = (target: EventTarget, event: string, handler: EventListener) =>
     target.addEventListener(event, handler, { signal });
@@ -39,6 +41,7 @@ export function initSite() {
   ];
   const searchDialog = q<HTMLDialogElement>("#site-search");
   const themeDialog = q<HTMLDialogElement>("#site-themes");
+  const prepareThemePicker = initThemePicker(themeDialog, signal);
   const mediaDialog = q<HTMLDialogElement>("#site-media");
   const mediaContent = q("[data-media-content]");
   const input = q<HTMLInputElement>("#site-search-input");
@@ -46,7 +49,6 @@ export function initSite() {
   const status = q("[data-search-status]");
   let searchVersion = 0;
   let selected = -1;
-  let timer: ReturnType<typeof setTimeout>;
   all(
     "[data-open-search], [data-open-theme], [data-copy], [data-carousel-prev], [data-carousel-next]",
   ).forEach((el) => (el.hidden = false));
@@ -57,7 +59,7 @@ export function initSite() {
     const hint = q<HTMLElement>("[data-theme-hint]");
     if (hint) hint.hidden = true;
     try {
-      localStorage.setItem(HINT_KEY, "1");
+      localStorage.setItem(HINT_KEY, "true");
     } catch {
       /* storage may be unavailable */
     }
@@ -67,7 +69,7 @@ export function initSite() {
       const hintTimer = setTimeout(() => {
         const hint = q<HTMLElement>("[data-theme-hint]");
         if (hint && !hintDismissed && !q("dialog[open]")) hint.hidden = false;
-      }, 2500);
+      }, 1600);
       cleanups.push(() => clearTimeout(hintTimer));
     }
   } catch {
@@ -75,10 +77,18 @@ export function initSite() {
   }
   const openDialog = (dialog: HTMLDialogElement | null) => {
     if (!dialog) return;
-    if (dialog === themeDialog) dismissHint();
+    if (dialog === themeDialog) {
+      dismissHint();
+      prepareThemePicker();
+    }
+    if (dialog === searchDialog && input) {
+      input.value = "";
+      void runSearch();
+    }
     for (const other of all<HTMLDialogElement>("dialog[open]"))
       if (other !== dialog) other.close();
     if (!dialog.open) dialog.showModal();
+    if (dialog === themeDialog) dialog.focus({ preventScroll: true });
     dialog.querySelector<HTMLInputElement>("input")?.focus();
     if (dialog === themeDialog)
       window.dispatchEvent(
@@ -132,9 +142,29 @@ export function initSite() {
     for (const label of all("[data-theme-name]"))
       label.textContent = theme.name;
     const preview = q<HTMLImageElement>("[data-theme-preview]");
-    if (preview) {
-      preview.src = `/assets/images/theme-previews/${id}.webp`;
-      preview.alt = `${theme.name} desktop preview`;
+    if (preview && !preview.src.endsWith(`/${id}.webp`)) {
+      const next = new Image();
+      next.src = `/assets/images/theme-previews/${id}.webp`;
+      next.alt = `${theme.name} desktop preview`;
+      next.width = 1800;
+      next.height = 1012;
+      next.dataset.themePreview = "";
+      void next
+        .decode()
+        .then(() => {
+          if (signal.aborted || document.documentElement.dataset.theme !== id)
+            return;
+          preview.removeAttribute("data-theme-preview");
+          preview.parentElement?.append(next);
+          next
+            .animate([{ opacity: 0 }, { opacity: 1 }], {
+              duration: matchMedia("(prefers-reduced-motion: reduce)").matches
+                ? 0
+                : 200,
+            })
+            .finished.then(() => preview.remove());
+        })
+        .catch(() => {});
     }
   };
   syncTheme();
@@ -142,14 +172,6 @@ export function initSite() {
   cleanups.push(watchChrome());
   on(window, THEME_EVENT, syncTheme);
   on(window, OPEN_PICKER_EVENT, () => openDialog(themeDialog));
-  on(q<HTMLInputElement>("#theme-filter") || document, "input", (event) => {
-    const needle =
-      (event.target as HTMLInputElement).value?.trim().toLowerCase() || "";
-    all("[data-theme-option]").forEach(
-      (button) =>
-        (button.hidden = !button.textContent?.toLowerCase().includes(needle)),
-    );
-  });
 
   const updateSelection = () => {
     const links = all<HTMLAnchorElement>("[data-search-results] a");
@@ -165,10 +187,13 @@ export function initSite() {
     selected = -1;
     if (!query) {
       results.replaceChildren();
-      status.textContent = "Start typing to search.";
+      status.hidden = false;
+      status.textContent =
+        "The manual, the news, every plugin and every theme.";
       return;
     }
-    status.textContent = "Searching…";
+    status.hidden = false;
+    status.textContent = "Reading…";
     searchPromise ??= fetch("/data/search-index.json")
       .then((response) => {
         if (!response.ok) throw new Error("Search unavailable");
@@ -181,40 +206,48 @@ export function initSite() {
     try {
       const entries = await searchPromise;
       if (signal.aborted || version !== searchVersion) return;
-      const words = query.split(/\s+/);
-      const matches = entries
-        .map((entry) => ({
-          entry,
-          score: words.every((word) =>
-            `${entry.title} ${entry.text}`.toLowerCase().includes(word),
-          )
-            ? (entry.title.toLowerCase().includes(query) ? 100 : 0) +
-              words.filter((w) => entry.title.toLowerCase().includes(w))
-                .length *
-                10 +
-              1
-            : 0,
-        }))
-        .filter((item) => item.score > 0)
-        .sort((a, b) => b.score - a.score)
-        .slice(0, 12);
+      const matches = searchAll(entries, query);
       results.replaceChildren(
-        ...matches.map(({ entry }) => {
-          const li = document.createElement("li");
-          const a = document.createElement("a");
+        ...matches.map((entry) => {
+          const li = document.createElement("li"),
+            a = document.createElement("a");
           a.href = entry.url;
+          a.tabIndex = -1;
+          const row = document.createElement("span");
+          row.className = "search-result-title";
           const title = document.createElement("strong");
-          title.textContent = entry.title;
-          const summary = document.createElement("span");
-          summary.textContent = `${entry.section} · ${entry.text.slice(0, 150)}`;
-          a.append(title, summary);
+          title.textContent = entry.heading || entry.title;
+          const meta = document.createElement("span");
+          meta.className = "search-result-meta";
+          meta.textContent =
+            entry.kind === "manual"
+              ? entry.heading
+                ? entry.title
+                : ""
+              : entry.meta || "";
+          const kind = document.createElement("span");
+          kind.className = "search-result-kind";
+          kind.textContent = KIND_LABEL[entry.kind];
+          row.append(title, meta, kind);
+          a.append(row);
+          if (entry.snippet) {
+            const summary = document.createElement("span");
+            summary.className = "search-snippet";
+            const mark = document.createElement("mark");
+            mark.textContent = entry.snippet.match;
+            summary.append(entry.snippet.before, mark, entry.snippet.after);
+            a.append(summary);
+          }
           li.append(a);
           return li;
         }),
       );
+      status.hidden = matches.length > 0;
       status.textContent = matches.length
-        ? `${matches.length} results`
-        : `No results for “${input.value.trim()}”.`;
+        ? ""
+        : `Nothing matches ${input.value.trim()}.`;
+      selected = 0;
+      updateSelection();
     } catch {
       if (!signal.aborted)
         status.textContent =
@@ -223,8 +256,7 @@ export function initSite() {
   }
   if (input) {
     on(input, "input", () => {
-      clearTimeout(timer);
-      timer = setTimeout(() => void runSearch(), 100);
+      void runSearch();
     });
     on(input, "keydown", (event) => {
       const e = event as KeyboardEvent;
@@ -277,17 +309,19 @@ export function initSite() {
       return;
     }
     if (element.closest("[data-open-search]")) {
+      q(".mobile-menu")?.removeAttribute("open");
       openDialog(searchDialog);
       return;
     }
     if (element.closest("[data-open-theme]")) {
+      q(".mobile-menu")?.removeAttribute("open");
       openDialog(themeDialog);
       return;
     }
     const theme =
       element.closest<HTMLElement>("[data-set-theme]")?.dataset.setTheme;
     if (theme) {
-      applyTheme(theme);
+      switchTheme(theme);
       return;
     }
     const effect =
@@ -347,39 +381,6 @@ export function initSite() {
       openDialog(mediaDialog);
       return;
     }
-    const railButton = element.closest(
-      "[data-carousel-prev],[data-carousel-next]",
-    );
-    if (railButton) {
-      const rail = railButton
-        .closest("[data-carousel]")
-        ?.querySelector("[data-carousel-rail]");
-      rail?.scrollBy({
-        left:
-          rail.clientWidth *
-          (railButton.hasAttribute("data-carousel-next") ? 1 : -1) *
-          0.8,
-        behavior: matchMedia("(prefers-reduced-motion: reduce)").matches
-          ? "instant"
-          : "smooth",
-      });
-      return;
-    }
-    const cluster = element.closest("[data-cluster-toggle]");
-    if (cluster) {
-      const root = cluster.closest("[data-team-cluster]");
-      const expanded = root?.toggleAttribute("data-open");
-      cluster.setAttribute("aria-expanded", String(Boolean(expanded)));
-      return;
-    }
-    const voices = element.closest("[data-voices-toggle]");
-    if (voices) {
-      const wall = q("[data-voices-wall]");
-      const collapsed = wall?.toggleAttribute("data-collapsed");
-      voices.setAttribute("aria-expanded", String(!collapsed));
-      voices.textContent = collapsed ? "Show more voices" : "Show fewer voices";
-      return;
-    }
     if (link?.closest("dialog") && !modified) {
       link.closest("dialog")?.close();
     }
@@ -399,14 +400,24 @@ export function initSite() {
       openDialog(searchDialog);
       return;
     }
+    if (e.code === "Space" && e.metaKey && e.ctrlKey && e.shiftKey) {
+      e.preventDefault();
+      if (themeDialog?.open) themeDialog.close();
+      else openDialog(themeDialog);
+      return;
+    }
     if (editing || e.metaKey || e.ctrlKey || e.altKey) return;
     if (e.key === "/" && !q("dialog[open]")) {
       e.preventDefault();
       openDialog(searchDialog);
     }
-    if (e.key.toLowerCase() === "t" && !q("dialog[open]")) {
+    if (
+      e.key.toLowerCase() === "t" &&
+      (!q("dialog[open]") || themeDialog?.open)
+    ) {
       e.preventDefault();
-      openDialog(themeDialog);
+      if (themeDialog?.open) themeDialog.close();
+      else openDialog(themeDialog);
     }
     if (
       !q("dialog[open]") &&
@@ -444,23 +455,133 @@ export function initSite() {
     observer.observe(sentinel);
     cleanups.push(() => observer.disconnect());
   }
+  const header = q<HTMLElement>(".site-header");
+  if (header) {
+    const menu = q<HTMLDetailsElement>(".mobile-menu");
+    const heroHost = q<HTMLElement>("[data-hero-sentinel]");
+    const ghost = heroHost ? document.createElement("div") : null;
+    if (ghost && heroHost) {
+      const copy = header
+        .querySelector(".header-inner")!
+        .cloneNode(true) as HTMLElement;
+      ghost.dataset.navGhost = "";
+      ghost.inert = true;
+      ghost.setAttribute("aria-hidden", "true");
+      Object.assign(ghost.style, {
+        position: "fixed",
+        inset: "0 0 auto",
+        zIndex: "var(--z-nav)",
+        mixBlendMode: "difference",
+        pointerEvents: "none",
+        paddingTop: "env(safe-area-inset-top,0px)",
+      });
+      for (const el of [copy, ...copy.querySelectorAll<HTMLElement>("*")]) {
+        for (const name of el.getAttributeNames())
+          if (
+            name === "id" ||
+            name === "aria-label" ||
+            (name.startsWith("data-") && !name.startsWith("data-astro-"))
+          )
+            el.removeAttribute(name);
+      }
+      copy
+        .querySelectorAll<HTMLElement>(".home-mark,.install-link")
+        .forEach((el) => (el.style.visibility = "hidden"));
+      copy
+        .querySelectorAll<HTMLElement>(".desktop-nav a,.icon-button,summary")
+        .forEach((el) => (el.style.color = "var(--t-hdr-text-2)"));
+      ghost.append(copy);
+      heroHost.append(ghost);
+      cleanups.push(() => ghost.remove());
+    }
+    const labels = [
+      ...header.querySelectorAll<HTMLElement>(
+        ".desktop-nav a,.icon-button,summary",
+      ),
+    ];
+    const surface = () => {
+      const hero = q<HTMLElement>("[data-hero-sentinel]");
+      const grounds = all<HTMLElement>(
+        "main>section,main [data-ground],.site-footer",
+      ).filter((el) => !el.hasAttribute("data-hero-sentinel"));
+      const at = (y: number) =>
+        [...grounds].reverse().find((el) => {
+          const r = el.getBoundingClientRect();
+          return r.top <= y && r.bottom > y;
+        });
+      const top = at(0),
+        ground = top && top === at(header.offsetHeight) ? top : null;
+      const value =
+        innerWidth < 640 && !menu?.open ? 0 : ground || !hero ? 1 : 0;
+      header.style.setProperty("--nav-surface", String(value));
+      const blend = Boolean(
+        ghost &&
+        hero &&
+        hero.getBoundingClientRect().bottom > header.offsetHeight &&
+        !header.matches(":hover") &&
+        !menu?.open,
+      );
+      if (ghost) ghost.style.opacity = blend ? "1" : "0";
+      labels.forEach((el) => (el.style.color = blend ? "transparent" : ""));
+      if (ground) {
+        const color = getComputedStyle(ground).backgroundColor;
+        header.style.setProperty(
+          "--nav-ground",
+          color === "rgba(0, 0, 0, 0)" ? "var(--color-bg)" : color,
+        );
+      }
+    };
+    on(header, "pointerenter", surface);
+    on(header, "pointerleave", surface);
+    on(window, "scroll", surface);
+    on(window, "resize", surface);
+    on(window, THEME_EVENT, surface);
+    surface();
+    if (menu) {
+      on(menu, "toggle", () => {
+        surface();
+        menu
+          .querySelector("summary")
+          ?.setAttribute("aria-label", menu.open ? "Close menu" : "Menu");
+      });
+      on(q("[data-menu-scrim]") || document, "click", (e) => {
+        if ((e.target as Element).hasAttribute("data-menu-scrim"))
+          menu.open = false;
+      });
+      on(document, "keydown", (e) => {
+        if ((e as KeyboardEvent).key === "Escape") menu.open = false;
+      });
+    }
+  }
   const gallerySearch = q<HTMLInputElement>("[data-gallery-search]");
-  if (gallerySearch)
-    on(gallerySearch, "input", () => {
+  if (gallerySearch) {
+    const filter = () => {
       let count = 0;
       const needle = gallerySearch.value.trim().toLowerCase();
-      all("[data-theme-card]").forEach((card) => {
+      const cards = all("[data-theme-card]");
+      cards.forEach((card) => {
         card.hidden = !card.dataset.searchText?.includes(needle);
         if (!card.hidden) count++;
       });
       const label = q("[data-gallery-count]");
-      if (label) label.textContent = `${count} themes`;
-    });
-  const wall = q("[data-voices-wall]");
-  if (wall) {
-    wall.setAttribute("data-collapsed", "");
-    const toggle = q("[data-voices-toggle]");
-    if (toggle) toggle.hidden = false;
+      if (label) label.textContent = `${count} / ${cards.length} themes`;
+      const empty = q<HTMLElement>("[data-gallery-empty]");
+      if (empty) empty.hidden = count > 0;
+      const grid = q<HTMLElement>("[data-themes-grid]");
+      if (grid) grid.hidden = count === 0;
+      const query = q("[data-gallery-query]");
+      if (query) query.textContent = gallerySearch.value.trim();
+      const clear = q<HTMLElement>(".theme-search [data-gallery-clear]");
+      if (clear) clear.hidden = !needle;
+    };
+    on(gallerySearch, "input", filter);
+    all("[data-gallery-clear]").forEach((button) =>
+      on(button, "click", () => {
+        gallerySearch.value = "";
+        filter();
+        gallerySearch.focus();
+      }),
+    );
   }
   const ua = navigator.userAgent;
   const device = /iPhone|iPad/.test(ua)
@@ -474,11 +595,20 @@ export function initSite() {
   const syncMusic = () => {
     const control = q("[data-music-control]");
     if (control) control.hidden = location.pathname !== "/" && !music.touched;
+    all("[data-music-toggle]").forEach((button) => {
+      button.setAttribute("aria-pressed", String(music.sounding));
+      button.setAttribute(
+        "aria-label",
+        music.sounding ? "Turn the sound off" : "Turn the sound on",
+      );
+    });
+    const ring = q<HTMLElement>("[data-music-ring]");
+    if (ring) ring.hidden = music.touched;
     const toggle = q("[data-music-toggle]");
     toggle?.setAttribute("aria-pressed", String(music.sounding));
     toggle?.setAttribute(
       "aria-label",
-      music.sounding ? "Mute background music" : "Play background music",
+      music.sounding ? "Turn the sound off" : "Turn the sound on",
     );
     const state = q("[data-music-state]");
     if (state)
@@ -498,7 +628,18 @@ export function initSite() {
     on(seek, "input", () =>
       music.seek((Number(seek.value) / 100) * music.duration),
     );
+  const levels = new Float32Array(4);
   const tick = setInterval(() => {
+    const line = q<HTMLElement>("[data-music-progress]");
+    if (line) line.style.transform = `scaleX(${music.progress})`;
+    const readout = q("[data-music-readout]");
+    if (readout)
+      readout.textContent = `${clock(music.time)} / ${clock(music.duration)}`;
+    music.meter(levels);
+    all<HTMLElement>("[data-music-bar]").forEach(
+      (bar, i) =>
+        (bar.style.height = `${Math.max(1, Math.round(levels[i] * 5)) * 2}px`),
+    );
     if (seek && document.activeElement !== seek) {
       seek.value = String(music.progress * 100);
       seek.setAttribute(
@@ -506,7 +647,7 @@ export function initSite() {
         `${clock(music.time)} of ${clock(music.duration)}`,
       );
     }
-  }, 400);
+  }, 80);
   cleanups.push(() => clearInterval(tick));
   if (location.pathname === "/" || music.touched) void loadMusic();
   // The same engine powers the hero and footer; mount only after fonts settle.
@@ -548,38 +689,8 @@ export function initSite() {
       /* The static wordmark stays visible if the optional renderer cannot load. */
     });
   cleanups.push(watchOutbound());
-  const typed = q("[data-typewriter]");
-  if (typed && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    const words = [
-      "thing.",
-      " missing app.",
-      " incompatibility.",
-      " paper cut.",
-    ];
-    let word = 0;
-    let position = words[0].length;
-    let erasing = true;
-    let pause = 20;
-    const interval = setInterval(() => {
-      if (!typed.isConnected) return;
-      if (pause-- > 0) return;
-      const phrase = words[word];
-      position += erasing ? -1 : 1;
-      typed.textContent = phrase.slice(0, Math.max(0, position));
-      if (position <= 0) {
-        erasing = false;
-        word = (word + 1) % words.length;
-        pause = 2;
-      } else if (position >= phrase.length && !erasing) {
-        erasing = true;
-        pause = 26;
-      }
-    }, 85);
-    cleanups.push(() => clearInterval(interval));
-  }
   dispose = () => {
     controller.abort();
-    clearTimeout(timer);
     for (const cleanup of cleanups) cleanup();
     for (const dialog of all<HTMLDialogElement>("dialog[open]")) dialog.close();
   };

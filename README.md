@@ -2,7 +2,7 @@
 
 The Omarchy redesign, migrated to [ThinkOodle’s Astro starter framework](https://github.com/ThinkOodle/astro-starter-framework). Astro 6 builds a static site from native Astro components, typed content collections, and committed data snapshots. TypeScript handles the interactive controls and the original canvas/audio engines. Styling uses native CSS layers and semantic tokens. The site has no React runtime, TanStack router, or Tailwind dependency.
 
-The migration source is `barisgirismen/omarchy-site`, branch `redesign`, commit `a91c42895cc5fe29dc3e92955d547d419e9c1ff2`. The original content, URLs, images, installers, fonts, themes, music, and WebAssembly effects are retained. Production identity is `https://omarchy.org`.
+The migration source is `barisgirismen/omarchy-site`, branch `redesign`, commit `8419a5a3e9af72c611584e9c170363073ae6519f`. The original content, URLs, images, installers, fonts, themes, music, and WebAssembly effects are retained. Production identity is `https://omarchy.org`.
 
 ## Development
 
@@ -19,19 +19,19 @@ npm run dev             # both servers
 
 ## Editing the site
 
-| Content | Source |
-| --- | --- |
-| Manual chapters | `src/content/manual/*.md` |
-| News posts | `src/content/news/YYYY/MM/*.md` |
-| Foundation, patrons, security, and other pages | `src/content/pages/**/*.md` |
-| Homepage introduction | `src/content/marketing/home.md` |
-| Homepage cards, videos, and featured plugin IDs | `src/data/home.json` |
-| Themes, teams, patrons, voices, and other datasets | `src/data/*.json` |
-| Images, fonts, installers, audio, WebAssembly | `public/` (served at the root) |
-| Identity, metadata, and curated LLM links | `src/config/site.ts` |
-| Palettes and project tokens | `src/styles/brand.css` |
+| Content                                            | Source                          |
+| -------------------------------------------------- | ------------------------------- |
+| Manual chapters                                    | `src/content/manual/*.md`       |
+| News posts                                         | `src/content/news/YYYY/MM/*.md` |
+| Foundation, patrons, security, and other pages     | `src/content/pages/**/*.md`     |
+| Homepage introduction                              | `src/content/marketing/home.md` |
+| Homepage cards, videos, and featured plugin IDs    | `src/data/home.json`            |
+| Themes, teams, patrons, voices, and other datasets | `src/data/*.json`               |
+| Images, fonts, installers, audio, WebAssembly      | `public/` (served at the root)  |
+| Identity, metadata, and curated LLM links          | `src/config/site.ts`            |
+| Palettes and project tokens                        | `src/styles/brand.css`          |
 
-Collection schemas are in `src/content.config.ts`. Imported manual and standalone documents use semantic HTML inside Markdown to preserve existing heading IDs and formatting. New content can use Markdown. News retains its Markdown source. Keep existing routes and heading IDs when editing published pages.
+Collection schemas are in `src/content.config.ts`. Imported manual and standalone documents declare `format: html` in frontmatter and render their trusted HTML bodies directly, preserving indented elements, existing heading IDs, and formatting. New content defaults to `format: markdown` and uses Astro’s Markdown renderer. News retains its Markdown source. Keep existing routes and heading IDs when editing published pages.
 
 Shared layouts own metadata, canonical URLs, JSON-LD, and Markdown alternates. Important routes have `.md` twins built from the same content; `/llms.txt` is a curated map and `/llms-full.txt` a digest. News also publishes complete articles at `/news/rss.xml`.
 
@@ -44,9 +44,9 @@ npm run refresh-data
 node scripts/add-voice.mjs https://x.com/HANDLE/status/POST_ID --dry
 ```
 
-The scheduled workflow refreshes the plugin catalogue, release, meetup and momentum snapshots, commits changes, and triggers the static deployment. Refreshing is separate from building: a normal build does not fetch content. Plugin redirects are derived from the catalogue automatically; the marketplace remains at `https://plugins.omarchy.org`.
+The scheduled workflow refreshes the plugin catalogue, release, meetup, featured-plugin hearts, and momentum snapshots, commits changes, and triggers the static deployment. Refreshing is separate from building: a normal build does not fetch content. Plugin redirects are derived from the catalogue automatically; the marketplace remains at `https://plugins.omarchy.org`.
 
-The refresh script supports `GITHUB_TOKEN`, `LUMA_API_KEY`, `CLOUDFLARE_API_TOKEN`, and `CLOUDFLARE_ZONE_ID` for the corresponding providers. Existing snapshots remain available when optional providers cannot be read. The voice helper writes images under `public/assets/images/voices/`.
+The refresh script supports `GITHUB_TOKEN`, `LUMA_API_KEY`, `CLOUDFLARE_API_TOKEN`, and `CLOUDFLARE_ZONE_ID` for the corresponding providers. Existing snapshots remain available when optional providers cannot be read. The checked-in data makes builds reproducible; counts and meetups can differ from the source’s live services between refreshes. Upcoming meetups are also filtered against the visitor’s date in the browser. The voice helper writes images under `public/assets/images/voices/`.
 
 ## Validation and deployment
 
@@ -60,7 +60,16 @@ npm run test:browser
 npm run preview
 ```
 
-Parity checks compare built pages and assets with a captured reference from the original redesign, then check local links, redirects, metadata, Markdown twins, feeds, and framework structure. Browser checks cover static content without JavaScript, keyboard navigation, search, themes, mobile layouts, media, music, accessibility, and Storybook rendering. Refresh the migration reference deliberately with `node tests/capture-reference.mjs /path/to/original-redesign`; do not regenerate it from the migrated site to hide a regression.
+Content parity checks compare built pages and assets with a captured reference from the original redesign, then check local links, redirects, metadata, Markdown twins, feeds, and framework structure. Browser checks compare source layout metrics on 14 routes at desktop and mobile sizes, and cover static content without JavaScript, keyboard navigation, search, the theme deck and frosted wipe, mobile rails, media, music, accessibility, and every Storybook state. Geometry fixtures use Tokyo Night, a fixed date, loaded fonts, and reduced motion; motion interactions run separately. Screenshot review complements these checks: content or geometry assertions alone do not prove pixel parity.
+
+Refresh references deliberately from the original redesign checkout and its running Vite server:
+
+```sh
+node tests/capture-reference.mjs /path/to/original-redesign
+node tests/capture-layout-reference.mjs http://127.0.0.1:3114 /path/to/original-redesign
+```
+
+The source commit is recorded in the fixtures. Never regenerate them from the migrated site to hide a regression.
 
 Astro writes the complete deployable site to `dist/`. GitHub Pages deploys this folder on pushes to `master` or manual workflow dispatch. Storybook builds separately to `storybook-static/`; neither output is committed. No application server or database is required at runtime.
 
@@ -68,17 +77,17 @@ Cloudflare Workers Builds is connected to `omacom/omarchy-site` and serves the `
 
 In the Worker's **Settings → Builds**, use these settings for this Astro branch:
 
-| Setting | Value |
-| --- | --- |
-| Root directory | Repository root |
-| Production branch | `master` |
-| Build command | `npm run check` (Wrangler runs the Astro build) |
-| Deploy command | `npx wrangler deploy` |
-| Non-production branches | Enabled, all branches except `master` |
-| Non-production deploy command | `npx wrangler versions upload` |
+| Setting                       | Value                                           |
+| ----------------------------- | ----------------------------------------------- |
+| Root directory                | Repository root                                 |
+| Production branch             | `master`                                        |
+| Build command                 | `npm run check` (Wrangler runs the Astro build) |
+| Deploy command                | `npx wrangler deploy`                           |
+| Non-production branches       | Enabled, all branches except `master`           |
+| Non-production deploy command | `npx wrangler versions upload`                  |
 
 Remove any old `--assets .` argument from the deploy commands: it overrides the configured `dist/` directory. Keep the current production build settings until the Astro migration is merged; the existing `master` site does not have npm scripts. Non-production branch builds require dashboard configuration in addition to the checked-in Wrangler file. Version uploads create a preview without promoting it to production.
 
-`npm run check:cloudflare` builds and validates Wrangler packaging without uploading anything. `npm run preview:cloudflare` runs the built site locally with Cloudflare's asset routing. `npm run deploy:preview` uploads a preview when authenticated to the site's Cloudflare account. Pull requests run Astro checks, Cloudflare packaging validation, and content/asset parity independently of Cloudflare's Git integration.
+`npm run check:cloudflare` builds and validates Wrangler packaging without uploading anything. `npm run preview:cloudflare` runs the built site locally with Cloudflare's asset routing. `npm run deploy:preview` uploads a preview when authenticated to the site's Cloudflare account. Pull requests run Astro checks, Cloudflare packaging validation, content/asset parity, Storybook builds, and browser regression tests independently of Cloudflare’s Git integration.
 
 The Astro 6 starter dependency tree currently has five upstream npm audit advisories (including two high severity). The available Astro fix requires a framework major upgrade; this migration retains the requested framework major. Storybook development binds to localhost.

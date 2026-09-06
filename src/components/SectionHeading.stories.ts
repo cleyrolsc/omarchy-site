@@ -23,3 +23,10 @@ export const WithoutAction = {
     description: "Every chapter in one place.",
   },
 };
+export const SocialAction = {
+  args: {
+    title: "People love Omarchy",
+    href: "https://x.com/search?q=omarchy&f=live",
+    socialLink: true,
+  },
+};

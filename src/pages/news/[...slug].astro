@@ -1,5 +1,7 @@
 ---
 import { render } from "astro:content";
+import Brand from "../../components/Brand.astro";
+import SiteIcon from "../../components/SiteIcon.astro";
 import SiteLayout from "../../layouts/SiteLayout.astro";
 import { newsEntries, newsPath, excerpt } from "../../lib/content";
 import { site } from "../../config/site";
@@ -35,37 +37,66 @@ const published = post.data.date.toISOString();
   }}
 >
   <main id="main" class="page page--reading">
+    <Brand hero class="news-wordmark" />
     <article>
-      <a class="muted text-link" href="/news/">← All news</a><h1
-        class="article-title"
-      >
-        {post.data.title}
-      </h1><p class="muted">
-        <time datetime={published}
-          >{
-            post.data.date.toLocaleDateString("en-US", {
-              timeZone: "America/New_York",
-              month: "long",
-              day: "numeric",
-              year: "numeric",
-            })
-          }</time
-        > · {
-          post.data.author_url ? (
-            <a href={post.data.author_url}>{post.data.author}</a>
-          ) : (
-            post.data.author
-          )
-        }
-      </p><div class="prose article-content"><Content /></div>
-    </article>
+      <header>
+        <p class="article-byline">
+          By <a href={post.data.author_url || "https://dhh.dk"} rel="author"
+            >{post.data.author}</a
+          > on <time datetime={published}
+            >{
+              post.data.date.toLocaleDateString("en-US", {
+                timeZone: "America/New_York",
+                month: "long",
+                day: "numeric",
+                year: "numeric",
+              })
+            }</time>
+        </p><h1 class="article-title">{post.data.title}</h1>
+      </header><div class="prose article-content"><Content /></div>
+    </article><a class="all-news" href="/news/"
+      ><SiteIcon name="ArrowLeft" size={20} />All news</a
+    >
   </main>
 </SiteLayout>
 <style>
+  .page {
+    padding-block: var(--space-8);
+  }
+  .page :global(.news-wordmark) {
+    width: 100%;
+    max-width: 24rem;
+    margin: 0 auto 2.6rem;
+  }
   .article-title {
-    margin: var(--space-6) 0 var(--space-3);
+    margin: var(--space-2) 0 0;
+    font-size: var(--text-3xl);
+    line-height: 1.2;
+    font-weight: 600;
+  }
+  .article-byline {
+    margin: 0;
+    font-size: var(--text-xs);
+    line-height: 1.333333;
+    color: var(--color-text-muted);
+  }
+  .article-byline a {
+    color: var(--color-text-secondary);
+    text-decoration: none;
   }
   .article-content {
     margin-top: var(--space-8);
+  }
+  .all-news {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1_5);
+    margin-top: var(--space-10);
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+  }
+  .all-news:hover {
+    color: var(--color-text);
   }
 </style>

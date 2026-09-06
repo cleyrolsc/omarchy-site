@@ -3,7 +3,8 @@
   "title": "Keyboard, Mouse, Trackpad",
   "description": "Hyprland lets you configure all your inputs in great detail. You can change the keyboard repeat to be supersonically fast or make the trackpad use natural scrol",
   "order": 33,
-  "path": "/manual/keyboard-mouse-trackpad/"
+  "path": "/manual/keyboard-mouse-trackpad/",
+  "format": "html"
 }
 ---
 
@@ -52,7 +53,7 @@ o.window("(Alacritty|kitty|foot)", { scroll_touchpad = 1.5 })
 })
 </code></pre>
 
-<h3 id="trackpad-gestures">Trackpad gestures <a class="manual__heading-link" href="#trackpad-gestures" aria-label="Link to this section">#</a></h3>
+<h3 id="trackpad-gestures"><a class="manual__heading-link" href="#trackpad-gestures" aria-label="Link to this section">Trackpad gestures<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>You can also turn on <a href="https://wiki.hypr.land/Configuring/Advanced-and-Cool/Gestures/">touchpad gestures</a>, like swiping with three fingers to change workspaces:</p>
 
@@ -61,11 +62,11 @@ o.window("(Alacritty|kitty|foot)", { scroll_touchpad = 1.5 })
 
 <p>On Dell XPS laptops with a haptic touchpad, you can also set the click strength to low, mid, or high under <em>Trigger &gt; Hardware &gt; Touchpad Haptics</em>.</p>
 
-<h3 id="typing-in-chinese-japanese-and-other-languages">Typing in Chinese, Japanese, and other languages <a class="manual__heading-link" href="#typing-in-chinese-japanese-and-other-languages" aria-label="Link to this section">#</a></h3>
+<h3 id="typing-in-chinese-japanese-and-other-languages"><a class="manual__heading-link" href="#typing-in-chinese-japanese-and-other-languages" aria-label="Link to this section">Typing in Chinese, Japanese, and other languages<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>Omarchy runs the <a href="https://fcitx-im.org/">fcitx5</a> input method framework as part of every session - it’s what powers the CapsLock compose sequences. That means the plumbing for non-Latin input is already in place: install an input engine like <code>fcitx5-mozc</code> (Japanese) or <code>fcitx5-chinese-addons</code> (Chinese) with <code>omarchy pkg add</code>, plus <code>fcitx5-configtool</code> to add the engine to your input methods and set the key that switches between them.</p>
 
-<h3 id="use-alt-as-super">Use ALT as SUPER <a class="manual__heading-link" href="#use-alt-as-super" aria-label="Link to this section">#</a></h3>
+<h3 id="use-alt-as-super"><a class="manual__heading-link" href="#use-alt-as-super" aria-label="Link to this section">Use ALT as SUPER<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>On some keyboards, it’s not convenient to use the primary meta key (Windows/cmd key) as SUPER. You can change this to be ALT instead using this change:</p>
 

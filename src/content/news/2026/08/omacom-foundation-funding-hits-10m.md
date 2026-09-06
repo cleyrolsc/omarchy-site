@@ -3,7 +3,7 @@ title: Omacom Foundation funding hits $10m
 date: 2026-08-24 12:29 +0200
 author: DHH
 author_url: https://dhh.dk
-description: Drew Houston and Peter Steinberger join the Omacom Foundation as Founding Patrons, taking total funding to $10 million.
+description: "The Omacom Foundation’s funding has just hit $10 million with two new Founding Patrons joining the mission: Drew Houston, cofounder and co-CEO of Dropbox, and Peter Steinberger, creator of OpenClaw."
 ---
 
 The Omacom Foundation's funding has just hit $10 million with two new [Founding Patrons](/patrons/) joining the mission: [Drew Houston](https://x.com/drewhouston), cofounder and co-CEO of [Dropbox](https://www.dropbox.com), and [Peter Steinberger](https://x.com/steipete), creator of [OpenClaw](https://openclaw.ai).

@@ -3,7 +3,8 @@
   "title": "Reminders",
   "description": "Omarchy has a built-in way to set simple reminders based on a countdown timer and with a message. You can do this via Super + Ctrl + R , seeing all the ones set",
   "order": 8,
-  "path": "/manual/reminders/"
+  "path": "/manual/reminders/",
+  "format": "html"
 }
 ---
 

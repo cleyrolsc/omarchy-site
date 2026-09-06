@@ -3,7 +3,8 @@
   "title": "Neovim",
   "description": "Neovim is a modern implementation of the vi editor created by Bill Joy all the way back in 1976. It’s a modal editor where insert mode and command mode are sepa",
   "order": 15,
-  "path": "/manual/neovim/"
+  "path": "/manual/neovim/",
+  "format": "html"
 }
 ---
 
@@ -15,7 +16,7 @@
 
 <p>But Omarchy ships with a complete Neovim setup - the <code>omarchy-nvim</code> package - that’s been lovingly tuned to showcase the best of what’s possible out of the box. Without you having to write a single line of configuration! It’s built on <a href="https://www.lazyvim.org/">LazyVim</a>, a distribution of Neovim plugins and configurations. It’s awesome.</p>
 
-<h2 id="lazyvim-basics">LazyVim Basics <a class="manual__heading-link" href="#lazyvim-basics" aria-label="Link to this section">#</a></h2>
+<h2 id="lazyvim-basics"><a class="manual__heading-link" href="#lazyvim-basics" aria-label="Link to this section">LazyVim Basics<span class="manual__hash" aria-hidden="true">#</span></a></h2>
 
 <p>As mentioned, I’m not going to teach you vim in this short introduction, but I can show you a few basics of LazyVim, and how to get around.</p>
 
@@ -42,10 +43,10 @@
 
 <p>You can see all the possible commands on <a href="https://www.lazyvim.org/keymaps">the LazyVim Keymaps page</a>.</p>
 
-<h2 id="starting-neovim">Starting Neovim <a class="manual__heading-link" href="#starting-neovim" aria-label="Link to this section">#</a></h2>
+<h2 id="starting-neovim"><a class="manual__heading-link" href="#starting-neovim" aria-label="Link to this section">Starting Neovim<span class="manual__hash" aria-hidden="true">#</span></a></h2>
 
 <p>You can start Neovim using <code>Super + Shift + N</code> (the binding launches your default editor, which is Neovim out of the box), but it’s usually easier to drive it from the terminal by navigating to the directory you wish to work in and typing <code>n</code>. The <code>n</code> is the alias for <code>nvim</code>, which will use the the present directory to open by default. You can open a single file with <code>n myfile.txt</code>.</p>
 
-<h2 id="using-neovim-for-sudo-edits">Using Neovim for sudo edits <a class="manual__heading-link" href="#using-neovim-for-sudo-edits" aria-label="Link to this section">#</a></h2>
+<h2 id="using-neovim-for-sudo-edits"><a class="manual__heading-link" href="#using-neovim-for-sudo-edits" aria-label="Link to this section">Using Neovim for sudo edits<span class="manual__hash" aria-hidden="true">#</span></a></h2>
 
 <p>If you need to edit files that you can only change as a super user, you can use neovim with all your plugins setup by running <code>sudoedit /etc/sudoers.d/00-sudo-only-file</code>.</p>

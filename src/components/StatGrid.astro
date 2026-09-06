@@ -1,155 +1,300 @@
 ---
 import momentum from "../data/momentum.json";
+import SiteIcon from "./SiteIcon.astro";
 export interface Props {}
+const { foundation, downloads, github } = momentum;
 const n = (value: number) => value.toLocaleString("en-US");
-const max = Math.max(...momentum.github.weeks);
+const shortDate = (iso: string) =>
+  new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    timeZone: "UTC",
+  });
+const weekOf = (back: number) => {
+  const d = new Date(`${momentum.checked}T00:00:00Z`);
+  d.setUTCDate(d.getUTCDate() - back * 7);
+  return d.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+};
+const top = Math.max(1, ...github.weeks);
+const chart = Array.from({ length: 8 }, (_, row) =>
+  github.weeks
+    .map((v) => {
+      const eighths = Math.round((v / top) * 64) - (7 - row) * 8;
+      return eighths >= 8 ? "█" : " ▁▂▃▄▅▆▇"[Math.max(0, eighths)];
+    })
+    .join(""),
+).join("\n");
 ---
 
 <div class="stat-grid">
-  <article>
-    <a href="/foundation/"
-      ><h3>Omacom Foundation</h3><strong>${momentum.foundation.total}M</strong
-      ><p>Backing the people building better Linux.</p></a
-    ><ol class="funding-history">
-      {
-        momentum.foundation.steps.map((step) => (
-          <li>
-            <a href={step.post}>
-              <>
-                <time datetime={step.date}>{step.date}</time>
-                <span>${step.amount}M</span>
-              </>
-            </a>
-          </li>
-        ))
-      }
-    </ol>
-  </article>
-  <article>
-    <a href={momentum.downloads.post}
-      ><h3>ISO downloads</h3><strong>{n(momentum.downloads.total)}</strong><p>
-        Across {momentum.downloads.countries} countries.
-      </p></a
-    ><dl>
-      {
-        momentum.downloads.periods.map((period) => (
-          <div>
-            <>
-              <dt>{period.label}</dt>
-              <dd>{n(period.count)}</dd>
-            </>
-          </div>
-        ))
-      }
-    </dl>
-  </article>
-  <article>
-    <a href="https://github.com/omacom/omarchy"
-      ><h3>Built in the open</h3><strong>{n(momentum.github.stars)}</strong><p>
-        GitHub stars
-      </p></a
-    ><div
-      class="commit-bars"
-      role="img"
-      aria-label={`${n(momentum.github.commitsYear)} commits over the last year`}
+  <div class="stat-card" data-figure>
+    <div class="stat-icon"><SiteIcon name="Bank" size={20} /></div><span
+      class="stat-number"
+      ><span data-count={foundation.total * 1000000} data-prefix="$"
+        >${n(foundation.total * 1000000)}</span
+      ><SiteIcon class="mobile-icon" name="Bank" size={20} /></span
+    ><span class="stat-label">pledged to the Omacom Foundation</span><div
+      class="funding-chart figure-chart"
     >
       {
-        momentum.github.weeks.map((count, index) => (
-          <span
-            style={`--bar-height:${Math.max(2, (count / max) * 100)}%`}
-            title={`Week ${index + 1}: ${count} commits`}
-          />
+        [...foundation.steps].reverse().map((step) => (
+          <a href={step.post}>
+            <>
+              <span>{shortDate(step.date).padEnd(7)}</span>
+              <span class="funding-bar">
+                {"█".repeat(Math.round((22 * step.amount) / foundation.total))}
+              </span>
+              <span>{`  $${step.amount}M`}</span>
+            </>
+          </a>
         ))
       }
-    </div><dl>
-      <div>
-        <dt>Contributors</dt><dd>{n(momentum.github.contributors)}</dd>
-      </div><div>
-        <dt>Pull requests</dt><dd>{n(momentum.github.pullRequests)}</dd>
-      </div><div>
-        <dt>Commits this year</dt><dd>{n(momentum.github.commitsYear)}</dd>
+    </div><a class="stat-more" href="/foundation/">About the foundation</a>
+  </div>
+  <div class="stat-card" data-figure>
+    <div class="stat-icon"><SiteIcon name="Download" size={20} /></div><span
+      class="stat-number"
+      ><span data-count={downloads.total}>{n(downloads.total)}</span><SiteIcon
+        class="mobile-icon"
+        name="Download"
+        size={20}
+      /></span
+    ><span class="stat-label">ISO downloads in year one</span><div
+      class="download-history"
+    >
+      <table>
+        <caption class="sr-only">Recent ISO downloads</caption><tbody
+          >{
+            downloads.periods.map((period) => (
+              <tr>
+                <>
+                  <th scope="row">{period.label}</th>
+                  <td>{n(period.count)}</td>
+                </>
+              </tr>
+            ))
+          }</tbody
+        >
+      </table>
+    </div><a class="stat-more" href={downloads.post}>The numbers</a>
+  </div>
+  <div class="stat-card" data-figure>
+    <div class="stat-icon"><SiteIcon name="Github" size={20} /></div><span
+      class="stat-number"
+      ><span data-count={github.stars}>{n(github.stars)}</span><SiteIcon
+        class="mobile-icon"
+        name="Github"
+        size={20}
+      /></span
+    ><span class="stat-label">stars on GitHub</span><div class="commit-chart">
+      <pre class="figure-chart" aria-hidden="true">{chart}</pre><div
+        class="week-targets"
+        data-week-chart
+      >
+        {
+          github.weeks.map((count, i) => (
+            <span
+              data-week-label={`${n(count)} commit${count === 1 ? "" : "s"}`}
+              data-week-date={`week of ${weekOf(github.weeks.length - 1 - i)}`}
+            />
+          ))
+        }<div class="week-tooltip" data-week-tooltip hidden>
+          <span data-week-count></span><span data-week-time></span>
+        </div>
       </div>
-    </dl>
-  </article>
+    </div><p class="stat-meta">
+      {n(github.pullRequests)} pull requests · {github.contributors} contributors
+    </p><a class="stat-more" href="https://github.com/omacom/omarchy"
+      >The repo</a
+    >
+  </div>
 </div>
-<p class="muted checked">Figures checked {momentum.checked}.</p>
 <style>
   .stat-grid {
-    margin-top: var(--space-8);
     display: grid;
-    gap: var(--space-5);
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    gap: var(--space-4);
+    margin-top: var(--space-6);
   }
-  article {
-    padding: var(--space-6);
+  .stat-card {
+    container-type: inline-size;
+    display: flex;
+    flex-direction: column;
     background: var(--color-surface);
+    padding: var(--space-6);
     box-shadow: var(--shadow-card);
   }
-  article > a {
-    text-decoration: none;
-  }
-  h3 {
-    font-size: var(--text-sm);
-    margin: 0 0 var(--space-4);
-  }
-  strong {
-    font-size: var(--text-4xl);
-    font-family: var(--font-sans);
-    font-weight: var(--font-semibold);
+  .stat-icon {
+    display: none;
     color: var(--color-brand);
   }
-  p {
-    color: var(--color-text-muted);
-    font-size: var(--text-xs);
-  }
-  dl {
-    margin-top: var(--space-6);
-    display: grid;
-    gap: var(--space-2);
-    font-size: var(--text-xs);
-  }
-  dl > div {
+  .stat-number {
     display: flex;
-    justify-content: space-between;
-    gap: var(--space-4);
-  }
-  dd {
-    margin: 0;
-  }
-  dt {
-    color: var(--color-text-muted);
-  }
-  .funding-history {
-    list-style: none;
-    padding: 0;
-    margin: var(--space-6) 0 0;
-    display: grid;
-    gap: var(--space-1);
-    font-size: var(--text-xs);
-  }
-  li a {
-    display: flex;
-    justify-content: space-between;
+    align-items: center;
     gap: var(--space-3);
+    font-family: var(--font-sans);
+    font-size: var(--text-3xl);
+    line-height: 1.2;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    color: var(--color-text);
+    font-variant-numeric: tabular-nums;
+  }
+  .stat-number :global(svg) {
+    flex-shrink: 0;
+    color: var(--color-brand);
+  }
+  .stat-label {
+    margin-top: var(--space-1);
+    display: block;
+    font-size: var(--text-sm);
+    line-height: 1.428571;
+    color: var(--color-text-secondary);
+  }
+  .stat-more {
+    align-self: flex-start;
+    padding-top: var(--space-4);
+    margin-top: auto;
+    font-size: var(--text-caption);
+    line-height: 1.5;
+    font-weight: 500;
+    color: var(--color-brand);
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 3px;
+    transition: color 150ms ease-out;
+  }
+  .stat-more:hover {
+    text-decoration-color: var(--color-brand);
+  }
+  .funding-chart {
+    display: flex;
+    flex-direction: column;
+    margin-top: var(--space-4);
+    font-family: var(--font-mono);
+    font-size: min(0.75rem, 4.4cqw);
+    line-height: 1.625;
+    white-space: pre;
+  }
+  .funding-chart a {
+    display: flex;
     text-decoration: none;
   }
-  time {
+  .funding-chart span {
     color: var(--color-text-muted);
   }
-  .commit-bars {
+  .funding-chart .funding-bar {
+    color: var(--color-brand);
+  }
+  .funding-chart a:hover span:last-child {
+    color: var(--color-text);
+  }
+  .download-history {
     display: flex;
-    align-items: end;
-    gap: 2px;
-    height: var(--space-16);
-    margin-top: var(--space-5);
-  }
-  .commit-bars span {
     flex: 1;
-    height: var(--bar-height);
-    background: var(--color-brand);
-    min-width: 0;
+    align-items: center;
+    padding-top: var(--space-4);
   }
-  .checked {
-    margin-top: var(--space-3);
+  table {
+    width: 100%;
+    font-size: var(--text-xs);
+    line-height: 1.625;
+    border-collapse: collapse;
+  }
+  tr + tr {
+    border-top: 2px solid var(--color-border-strong);
+  }
+  th {
+    padding: var(--space-2) 0;
+    text-align: left;
+    font-weight: 400;
+    color: var(--color-text-muted);
+  }
+  td {
+    padding: var(--space-2) 0;
+    text-align: right;
+    color: var(--color-text-secondary);
+    font-variant-numeric: tabular-nums;
+  }
+  .commit-chart {
+    position: relative;
+    margin-top: var(--space-4);
+  }
+  pre {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    overflow: hidden;
+    font-family: var(--font-mono);
+    font-size: min(0.875rem, 3.15cqw);
+    line-height: 0.92;
+    color: var(--color-brand);
+  }
+  .week-targets {
+    position: absolute;
+    inset: 0;
+    display: flex;
+  }
+  .week-targets > span {
+    flex: 1;
+    transition: background-color 100ms ease-out;
+  }
+  .week-targets > span:hover {
+    background: color-mix(in oklch, var(--color-text) 10%, transparent);
+  }
+  .week-tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    margin-bottom: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    width: max-content;
+    pointer-events: none;
+    background: var(--color-surface);
+    box-shadow: var(--shadow-card);
+    transform: translateX(-50%);
+    transition:
+      left 350ms cubic-bezier(0.33, 1, 0.68, 1),
+      opacity 120ms ease-out;
+  }
+  .week-tooltip span {
+    display: block;
+    font-size: var(--text-caption);
+    line-height: 1.5;
+    color: var(--color-text);
+  }
+  .week-tooltip span + span {
+    font-size: 11px;
+    color: var(--color-text-muted);
+  }
+  .stat-meta {
+    margin: var(--space-3_5) 0 0;
+    font-size: var(--text-xs);
+    line-height: 1.333333;
+    color: var(--color-text-muted);
+  }
+  @media (min-width: 48rem) {
+    .stat-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .stat-icon {
+      display: block;
+    }
+    .stat-number {
+      margin-top: var(--space-4);
+    }
+    .stat-number :global(.mobile-icon) {
+      display: none;
+    }
+  }
+  @media (min-width: 64rem) {
+    .stat-grid {
+      margin-top: var(--space-10);
+    }
   }
 </style>

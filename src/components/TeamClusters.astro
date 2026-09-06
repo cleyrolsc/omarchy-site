@@ -1,145 +1,232 @@
 ---
 import teams from "../data/teams.json";
+import SiteIcon from "./SiteIcon.astro";
 export interface Props {
-  groups?: {
-    id: string;
-    name: string;
-    description: string;
-    members: {
-      name: string;
-      meta: string;
-      href: string | null;
-      avatar: string | null;
-    }[];
-  }[];
+  groups?: typeof teams;
   maxFaces?: number;
   basePath?: string;
+  patrons?: boolean;
 }
-const { groups = teams, maxFaces = 8, basePath = "/teams/" } = Astro.props;
+const {
+  groups = teams,
+  maxFaces = 8,
+  basePath = "/teams/",
+  patrons = false,
+} = Astro.props;
 ---
 
-<ul class="team-clusters">
+<ul
+  class:list={["team-clusters", { "patron-clusters": patrons }]}
+  data-team-clusters
+>
   {
-    groups.map((team) => (
-      <li class="team-cluster" data-team-cluster>
-        <>
+    groups.map((team) => {
+      const shown = team.members.slice(0, maxFaces);
+      const rest = team.members.length - shown.length;
+      return (
+        <li class="team-cluster" data-team-cluster>
           <button
             type="button"
-            class="cluster-label"
             data-cluster-toggle
             aria-expanded="false"
+            class="cluster-label"
           >
             <>
-              <strong>{team.name}</strong>
+              <span>{team.name.replace(/^Omarchy /, "")}</span>
               <span>{team.description}</span>
             </>
           </button>
-          <div class="cluster-faces">
-            {team.members.slice(0, maxFaces).map((member) => (
-              <a
-                href={member.href || `${basePath}#${team.id}`}
-                aria-label={`${member.name}, ${member.meta}`}
-                title={`${member.name} · ${member.meta}`}
+          <ul
+            class="team-faces"
+            style={`--n:${shown.length + (rest > 0 ? 1 : 0)}`}
+          >
+            {shown.map((member, i) => (
+              <li
+                class="team-face"
+                data-team-face={i}
+                style={`--z:${shown.length + 1 - i};--i:${i}`}
               >
-                {member.avatar && (
-                  <img
-                    src={member.avatar}
-                    alt=""
-                    width="80"
-                    height="80"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                )}
-                <span>{member.name}</span>
-              </a>
+                <a href={member.href || undefined} aria-label={member.name}>
+                  {member.avatar && (
+                    <img
+                      src={member.avatar}
+                      alt={member.name}
+                      width="88"
+                      height="88"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  )}
+                </a>
+              </li>
             ))}
-            {team.members.length > maxFaces && (
-              <a href={`${basePath}#${team.id}`} class="more-faces">
-                +{team.members.length - maxFaces}
-              </a>
+            {rest > 0 && (
+              <li class="team-face" style={`--z:0;--i:${shown.length}`}>
+                <a
+                  class="more-faces"
+                  href={basePath}
+                  aria-label={`${rest} more on the teams page`}
+                >
+                  +{rest}
+                </a>
+              </li>
             )}
-          </div>
-        </>
-      </li>
-    ))
+          </ul>
+          <p class="cluster-named">
+            {shown.map((member, i) => (
+              <span class="team-named" data-member-label={i} hidden>
+                {member.href ? (
+                  <a href={member.href}>
+                    {member.name}
+                    <SiteIcon name="ArrowUpRight" size={14} />
+                  </a>
+                ) : (
+                  <span>{member.name}</span>
+                )}
+                {member.meta ? ` - ${member.meta}` : ""}
+              </span>
+            ))}
+          </p>
+        </li>
+      );
+    })
   }
 </ul>
 <style>
   .team-clusters {
-    list-style: none;
-    padding: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
-    gap: var(--space-8) var(--space-6);
-    margin: var(--space-8) 0 0;
+    align-items: start;
+    column-gap: var(--space-6);
+    row-gap: var(--space-2);
+    overflow-x: clip;
+    padding: 0;
+    margin: var(--space-6) 0 0;
+    list-style: none;
+  }
+  .team-cluster {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    min-width: 0;
   }
   .cluster-label {
-    display: grid;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     gap: var(--space-1);
-    text-align: left;
-    border: 0;
     padding: 0;
+    border: 0;
     background: none;
-    color: var(--color-text);
+    text-align: left;
   }
-  .cluster-label strong {
+  .cluster-label span:first-child {
     font-family: var(--font-sans);
     font-size: var(--text-sm);
+    font-weight: 500;
+    line-height: 1.428571;
+    color: var(--color-text);
   }
-  .cluster-label span {
+  .cluster-label span:last-child {
+    font-family: var(--font-mono);
     font-size: var(--text-xs);
+    line-height: 1.333333;
     color: var(--color-text-muted);
   }
-  .cluster-faces {
+  .team-faces {
     display: flex;
-    flex-wrap: wrap;
-    padding-block: var(--space-4) var(--space-6);
-    padding-left: var(--space-2);
+    gap: var(--team-gap);
+    padding: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    list-style: none;
   }
-  .cluster-faces a {
+  .team-face {
     position: relative;
-    margin-left: calc(-1 * var(--space-2));
-    width: var(--space-12);
-    height: var(--space-12);
-    border: 2px solid var(--color-bg);
-    transition:
-      transform var(--duration-base),
-      margin var(--duration-base);
+    flex-shrink: 0;
   }
-  .cluster-faces a:hover,
-  .cluster-faces a:focus-visible {
-    z-index: var(--z-base);
-    transform: translateY(calc(-1 * var(--space-2)));
+  .team-face a {
+    display: block;
+    width: var(--team-face);
+    height: var(--team-face);
+    overflow: hidden;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px var(--color-bg-deep);
   }
-  .cluster-faces img {
+  .team-face a:hover,
+  .team-face[data-picked] a {
+    outline: 2px solid var(--color-brand);
+    outline-offset: -2px;
+  }
+  .team-face img {
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    border-radius: 50%;
   }
-  .cluster-faces span {
-    display: none;
+  .team-face .more-faces {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--text-xs);
+    line-height: 1.333333;
+    background: var(--color-surface-2);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+  }
+  .cluster-named {
+    position: relative;
+    height: var(--space-8);
+    flex-shrink: 0;
+    font-size: var(--text-xs);
+    line-height: 1.333333;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+  .team-named {
     position: absolute;
-    top: 100%;
-    left: 0;
-    padding: var(--space-1);
-    background: var(--color-bg);
-    white-space: nowrap;
-    font-size: var(--text-xs);
+    inset: 0 0 auto;
+    overflow-wrap: break-word;
   }
-  .cluster-faces a:hover span,
-  .cluster-faces a:focus-visible span {
-    display: block;
+  .team-named a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    color: var(--color-text);
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 3px;
   }
-  [data-open] .cluster-faces a {
-    margin-right: var(--space-2);
-    margin-left: 0;
+  .team-named a:hover {
+    text-decoration-color: var(--color-brand);
   }
-  .more-faces {
-    display: grid;
-    place-items: center;
-    font-size: var(--text-xs);
-    background: var(--color-surface);
+  .team-named > span {
+    color: var(--color-text);
+  }
+  @media (min-width: 40rem) {
+    .team-clusters {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .patron-clusters {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (min-width: 64rem) {
+    .team-clusters {
+      margin-top: var(--space-10);
+      row-gap: var(--space-8);
+      grid-template-columns: repeat(4, auto);
+    }
+    .cluster-named {
+      height: var(--space-12);
+    }
+    .patron-clusters {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      row-gap: var(--space-2);
+    }
+    .patron-clusters .cluster-named {
+      height: var(--space-8);
+    }
   }
 </style>

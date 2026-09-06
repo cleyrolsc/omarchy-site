@@ -1,0 +1,8 @@
+<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M19.25 13.75V2.75H11.5L10 4.75L8.5 2.75H4.75V13.75H9.75L9.42705 18.7557C9.33117 20.2419 10.5107 21.5 12 21.5C13.4893 21.5 14.6688 20.2419 14.5729 18.7557L14.25 13.75H19.25Z"
+        stroke="currentColor"
+        stroke-width="1.5"
+      />
+      <path d="M4.75 10.25H19.25" stroke="currentColor" stroke-width="1.5" />
+    </svg>

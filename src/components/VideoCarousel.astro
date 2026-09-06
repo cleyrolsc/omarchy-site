@@ -1,111 +1,268 @@
 ---
-import { Play, ArrowLeft, ArrowRight } from "@lucide/astro";
+import SiteIcon from "./SiteIcon.astro";
+import Brand from "./Brand.astro";
+import SectionHeading from "./SectionHeading.astro";
 export interface Props {
   videos: { id: string; title: string; channel: string; thumb: string }[];
+  title?: string;
+  description?: string;
 }
-const { videos } = Astro.props;
+const {
+  videos,
+  title = "See it in action",
+  description = "Experience a transfer of enthusiasm.",
+} = Astro.props;
 ---
 
 <div class="video-gallery" data-carousel>
+  <div class="video-column">
+    <div class="video-heading">
+      <SectionHeading
+        anchor="watch"
+        title={title}
+        description={description}
+        level={3}
+      /><div class="carousel-arrows">
+        <button
+          class="btn"
+          data-carousel-prev
+          hidden
+          aria-label="Previous video"
+          ><SiteIcon name="ChevronLeft" size={20} /></button
+        ><button class="btn" data-carousel-next hidden aria-label="Next video"
+          ><SiteIcon name="ChevronRight" size={20} /></button>
+      </div>
+    </div>
+  </div>
   <div
     class="video-rail"
     data-carousel-rail
     tabindex="0"
     role="region"
-    aria-label="Videos about Omarchy"
+    aria-roledescription="carousel"
+    aria-label={title}
   >
     {
-      videos.map((video) => (
-        <figure>
-          <>
-            <a
-              href={`https://www.youtube.com/watch?v=${video.id}`}
-              data-video={video.id}
-              data-video-title={video.title}
-              aria-label={`Play ${video.title}`}
-            >
-              <>
-                <img
-                  src={video.thumb}
-                  alt={video.title}
-                  width="1280"
-                  height="720"
-                  loading="lazy"
-                  decoding="async"
-                />
-                <span class="play">
-                  <Play size={32} />
+      videos.map((video, i) => (
+        <div
+          class:list={["video-slide", { "is-current": i === 0 }]}
+          data-slide={i}
+          aria-roledescription="slide"
+          aria-label={`${i + 1} of ${videos.length}: ${video.title}`}
+        >
+          <a
+            href={`https://www.youtube.com/watch?v=${video.id}`}
+            data-carousel-video={video.id}
+            data-video-title={`${video.title} by ${video.channel}`}
+            aria-label={`${i === 0 ? "Play" : "Show"}: ${video.title} by ${video.channel}`}
+          >
+            <>
+              <img
+                src={video.thumb}
+                alt=""
+                width="1280"
+                height="720"
+                loading="lazy"
+                decoding="async"
+                draggable="false"
+              />
+              <span class="play">
+                <span>
+                  <>
+                    <Brand variant="mark" />
+                    <SiteIcon name="Play" size={25} />
+                  </>
                 </span>
-              </>
-            </a>
-            <figcaption>
-              <>
-                <strong>{video.title}</strong>
-                <span>{video.channel}</span>
-              </>
-            </figcaption>
-          </>
-        </figure>
+              </span>
+              <span class="video-caption">
+                <>
+                  <strong>{video.title}</strong>
+                  <span>{video.channel}</span>
+                </>
+              </span>
+            </>
+          </a>
+        </div>
       ))
     }
   </div>
-  <div class="carousel-controls">
-    <button class="btn" data-carousel-prev hidden aria-label="Previous video"
-      ><ArrowLeft size={20} /></button
-    ><button class="btn" data-carousel-next hidden aria-label="Next video"
-      ><ArrowRight size={20} /></button>
+  <div class="video-column">
+    <div class="video-track" aria-hidden="true">
+      <div data-video-thumb></div>
+    </div><div class="carousel-arrows carousel-arrows--mobile">
+      <button class="btn" data-carousel-prev hidden aria-label="Previous video"
+        ><SiteIcon name="ChevronLeft" size={20} /></button
+      ><button class="btn" data-carousel-next hidden aria-label="Next video"
+        ><SiteIcon name="ChevronRight" size={20} /></button>
+    </div>
   </div>
 </div>
 <style>
+  .video-column {
+    max-width: var(--container-max);
+    padding-inline: var(--space-4);
+    margin-inline: auto;
+  }
+  .video-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-4);
+  }
+  .carousel-arrows {
+    display: none;
+    gap: var(--space-2);
+  }
+  .carousel-arrows .btn {
+    width: var(--space-10);
+    padding: 0;
+  }
+  .carousel-arrows--mobile {
+    display: flex;
+    margin-top: var(--space-6);
+  }
   .video-rail {
     display: flex;
-    gap: var(--space-6);
+    gap: var(--space-4);
     overflow-x: auto;
     scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    user-select: none;
+    cursor: grab;
+    margin-top: var(--space-6);
+    padding-inline: max(1rem, calc((100% - min(100% - 2rem, 69rem)) / 2));
   }
-  figure {
-    margin: 0;
+  .video-rail::-webkit-scrollbar {
+    display: none;
+  }
+  .video-rail:active {
+    cursor: grabbing;
+  }
+  .video-slide {
     flex: 0 0 100%;
+    min-width: 0;
     scroll-snap-align: center;
+    transition:
+      opacity 300ms ease-out,
+      filter 300ms ease-out;
+    opacity: 0.4;
+    filter: brightness(0.75);
   }
-  figure a {
-    display: block;
+  .video-slide.is-current {
+    opacity: 1;
+    filter: none;
+  }
+  .video-slide > a {
     position: relative;
-  }
-  img {
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
     display: block;
+    cursor: inherit;
+  }
+  .video-slide img,
+  .video-slide :global(iframe) {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    border: 0;
   }
   .play {
+    display: none;
     position: absolute;
     inset: 0;
+    align-items: center;
+    justify-content: center;
+  }
+  .is-current .play {
+    display: flex;
+  }
+  .play > span {
+    position: relative;
+    width: 75px;
+    height: 75px;
     display: grid;
     place-items: center;
-    color: var(--color-text);
-    background: color-mix(in srgb, var(--color-black), transparent 75%);
+    color: var(--color-brand);
+    filter: drop-shadow(
+      0 1px 6px color-mix(in srgb, var(--color-black) 70%, transparent)
+    );
+    transition: opacity 200ms ease-out;
+    cursor: pointer;
   }
-  .play svg {
-    filter: drop-shadow(0 1px 4px var(--color-black));
+  .play :global(.brand-mark) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
   }
-  figcaption {
-    display: grid;
-    gap: var(--space-1);
-    margin-top: var(--space-3);
+  .play :global(svg:not(.brand-mark)) {
+    position: relative;
   }
-  strong {
+  .video-caption {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    background: linear-gradient(
+      to top,
+      color-mix(in srgb, var(--color-black) 70%, transparent),
+      transparent
+    );
+    padding: var(--space-12) var(--space-5) var(--space-5);
+  }
+  .video-caption strong {
+    display: block;
     font-family: var(--font-sans);
-    font-weight: var(--font-medium);
+    font-size: var(--text-base);
+    line-height: 1.5;
+    font-weight: 500;
+    color: var(--color-white);
   }
-  figcaption span {
-    font-size: var(--text-xs);
-    color: var(--color-text-muted);
+  .video-caption > span {
+    display: block;
+    margin-top: 2px;
+    font-size: var(--text-caption);
+    color: color-mix(in srgb, var(--color-white) 70%, transparent);
   }
-  .carousel-controls {
-    margin-top: var(--space-4);
-    display: flex;
-    justify-content: flex-end;
-    gap: var(--space-2);
+  .video-track {
+    margin-top: var(--space-5);
+    height: var(--space-2);
+    background: color-mix(
+      in oklch,
+      var(--color-border-subtle) 50%,
+      transparent
+    );
+  }
+  .video-track > div {
+    height: 100%;
+    background: var(--color-brand);
+    cursor: grab;
+    touch-action: none;
+  }
+  @media (hover: hover) {
+    .play > span {
+      opacity: 0.6;
+    }
+    a:hover .play > span,
+    a:focus-visible .play > span {
+      opacity: 1;
+    }
+  }
+  @media (min-width: 40rem) {
+    .video-column {
+      padding-inline: var(--space-6);
+    }
+    .video-rail {
+      padding-inline: max(1.5rem, calc((100% - min(100% - 3rem, 69rem)) / 2));
+    }
+    .carousel-arrows {
+      display: flex;
+    }
+    .carousel-arrows--mobile {
+      display: none;
+    }
+  }
+  @media (min-width: 64rem) {
+    .video-rail {
+      margin-top: var(--space-10);
+    }
   }
 </style>

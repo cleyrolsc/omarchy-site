@@ -1,0 +1,12 @@
+---
+import * as icons from "../icons/redesign";
+import type { HTMLAttributes } from "astro/types";
+export interface Props extends HTMLAttributes<"svg"> {
+  name: keyof typeof icons;
+  size?: number;
+}
+const { name, size = 24, ...attributes } = Astro.props;
+const Icon = icons[name];
+---
+
+<Icon width={size} height={size} {...attributes} />

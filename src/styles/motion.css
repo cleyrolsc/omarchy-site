@@ -1,0 +1,237 @@
+@layer components {
+  .typed-caret {
+    display: inline-block;
+    /* A bar, the width a caret is at any size, rather than a half-character
+     block: at a heading's weight the block read as another letter. Tall
+     enough to clear the cap line and dip under the baseline, which is where a
+     text cursor actually sits - but still inside the font's own ascent and
+     descent, so it cannot open up the line it is on. */
+    width: 0.1em;
+    height: 1em;
+    margin-left: 0.1em;
+    vertical-align: -0.16em;
+    background: var(--color-brand);
+    animation: typed-blink 1.06s step-end infinite;
+  }
+  [data-typing="1"] .typed-caret {
+    animation: none;
+  }
+  @keyframes typed-blink {
+    0%,
+    50% {
+      opacity: 1;
+    }
+    50.01%,
+    100% {
+      opacity: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .typed-caret {
+      display: none;
+    }
+  }
+
+  .team-cluster {
+    --team-time: 320ms;
+    --team-ease: cubic-bezier(0.33, 1, 0.68, 1);
+    /* Face and gap: seven faces at their open spacing have to fit the content
+     column, since that is the row's layout width even while it is pulled
+     together. 44px faces need 356px; a 360px phone has 328px, a 320px one
+     288px. */
+    --team-face: 44px;
+    --team-gap: 8px;
+  }
+  @media (max-width: 399px) {
+    .team-cluster {
+      --team-face: 40px;
+      --team-gap: 6px;
+    }
+  }
+  @media (max-width: 349px) {
+    .team-cluster {
+      --team-face: 36px;
+      --team-gap: 6px;
+    }
+  }
+  .team-faces {
+    margin-right: calc((var(--n) - 1) * -20px);
+    transition: margin-right var(--team-time) var(--team-ease);
+  }
+  .team-face {
+    --shift: 0px;
+    z-index: var(--z);
+    transform: translateX(calc(var(--i) * -20px + var(--shift)));
+    transition: transform var(--team-time) var(--team-ease);
+  }
+  .team-face a {
+    transition:
+      scale var(--team-time) var(--team-ease),
+      box-shadow 150ms ease-out,
+      color 150ms ease-out;
+  }
+  .team-face[data-picked] {
+    z-index: 60;
+  }
+  .team-face[data-picked] a {
+    scale: 1.15;
+  }
+  .team-face[data-picked] ~ .team-face {
+    --shift: 14px;
+  }
+  .team-face:has(~ .team-face[data-picked]) {
+    --shift: -14px;
+  }
+  @media (hover: hover) {
+    .team-face:hover {
+      z-index: 60;
+    }
+    .team-face:hover a {
+      scale: 1.15;
+    }
+    .team-face:hover ~ .team-face {
+      --shift: 14px;
+    }
+    .team-face:has(~ .team-face:hover) {
+      --shift: -14px;
+    }
+  }
+  /* The first face stays put, so the row keeps its left edge. Listed after
+   the parting rules, which it has to outrank. */
+  .team-faces > .team-face:first-child {
+    --shift: 0px;
+  }
+  .team-cluster[data-open] .team-faces {
+    margin-right: 0;
+  }
+  .team-cluster[data-open] .team-face {
+    transform: none;
+  }
+  /* The name under the cluster fades in, and again when it changes hands. */
+  .team-named {
+    animation: team-named 200ms ease-out both;
+  }
+  @keyframes team-named {
+    from {
+      opacity: 0;
+      translate: 0 2px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .team-faces,
+    .team-face,
+    .team-face a {
+      transition: none;
+    }
+    .team-named {
+      animation: none;
+    }
+  }
+
+  /* -------------------------------------------------------------- hero intro */
+
+  @keyframes hero-rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .hero-intro [data-hero-stagger] {
+    animation: hero-rise 550ms cubic-bezier(0.21, 0.47, 0.32, 0.98) both;
+    animation-delay: calc(var(--stagger, 0) * 90ms);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-intro [data-hero-stagger] {
+      animation: none;
+    }
+  }
+}
+
+@layer components {
+  @property --voices-band {
+    syntax: "<length>";
+    inherits: false;
+    initial-value: 260px;
+  }
+  @media (min-width: 640px) {
+    .voices {
+      --voices-band: 260px;
+      overflow: hidden;
+      /* The clip would take the cards' rings and shadows at the two sides,
+       where the first and last columns meet the edge; a few pixels of room
+       inside the clip, pulled back so the columns do not move. */
+      margin-inline: -12px;
+      padding-inline: 12px;
+      max-height: var(--voices-fold);
+      mask-image: linear-gradient(
+        to bottom,
+        var(--color-black) calc(100% - var(--voices-band)),
+        transparent
+      );
+      transition:
+        max-height 400ms ease-in-out,
+        --voices-band 400ms ease-in-out;
+    }
+    .voices-open {
+      --voices-band: 0px;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .voices {
+        transition: none;
+      }
+    }
+  }
+}
+
+@layer components {
+  .mark-draw path {
+    stroke-dasharray: 1;
+  }
+  @keyframes mark-draw {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  @keyframes mark-draw-back {
+    from {
+      stroke-dashoffset: -1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  .mark-draw-trigger:is(:hover, :focus-visible) .mark-draw path {
+    animation: mark-draw 650ms cubic-bezier(0.45, 0, 0.25, 1) both;
+  }
+  .mark-draw-trigger:is(:hover, :focus-visible) .mark-draw path:nth-child(2) {
+    animation-duration: 110ms;
+    animation-delay: 250ms;
+    animation-timing-function: ease-out;
+  }
+  .mark-draw-trigger:is(:hover, :focus-visible) .mark-draw path:nth-child(3) {
+    animation-duration: 470ms;
+    animation-delay: 360ms;
+  }
+  .mark-draw-trigger:is(:hover, :focus-visible) .mark-draw path:nth-child(4) {
+    animation-name: mark-draw-back;
+    animation-duration: 70ms;
+    animation-delay: 540ms;
+  }
+  .mark-draw-trigger:is(:hover, :focus-visible) .mark-draw path:nth-child(5) {
+    animation-name: mark-draw-back;
+    animation-duration: 70ms;
+    animation-delay: 600ms;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mark-draw path {
+      animation: none !important;
+    }
+  }
+}

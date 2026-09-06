@@ -3,7 +3,8 @@
   "title": "Common tweaks",
   "description": "This is a collection of common tailorings to the Omarchy setup. Know that it might occasionally be necessary for system updates to restore certain configs to th",
   "order": 41,
-  "path": "/manual/common-tweaks/"
+  "path": "/manual/common-tweaks/",
+  "format": "html"
 }
 ---
 
@@ -11,11 +12,11 @@
 
 <p>If you screw something up, you can restore individual configs to their original setup via <em>Update &gt; Config</em> in the Omarchy menu. If you <em>really</em> screw everything up, you can reset all configs via <code>omarchy-reinstall</code>.</p>
 
-<h3 id="reveal-all-tray-icons-all-the-time">Reveal all tray icons all the time <a class="manual__heading-link" href="#reveal-all-tray-icons-all-the-time" aria-label="Link to this section">#</a></h3>
+<h3 id="reveal-all-tray-icons-all-the-time"><a class="manual__heading-link" href="#reveal-all-tray-icons-all-the-time" aria-label="Link to this section">Reveal all tray icons all the time<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>By default, tray icons, like Dropbox, 1password, or Steam, are hidden behind the tray expander arrow, which reveals them when you hover it. If you’d like to have them exposed all the time, right-click the expander arrow to open the tray icon manager, then pin the icons you want to keep visible (you can also hide the ones you never want to see).</p>
 
-<h3 id="rounded-window-corners">Rounded window corners <a class="manual__heading-link" href="#rounded-window-corners" aria-label="Link to this section">#</a></h3>
+<h3 id="rounded-window-corners"><a class="manual__heading-link" href="#rounded-window-corners" aria-label="Link to this section">Rounded window corners<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>Omarchy’s default design is one of square corners, but if you like to soften that up a bit, you can change <code>~/.config/hypr/looknfeel.lua</code> so rounding is no longer commented out:</p>
 
@@ -27,7 +28,7 @@
 })
 </code></pre>
 
-<h3 id="remove-window-gaps">Remove window gaps <a class="manual__heading-link" href="#remove-window-gaps" aria-label="Link to this section">#</a></h3>
+<h3 id="remove-window-gaps"><a class="manual__heading-link" href="#remove-window-gaps" aria-label="Link to this section">Remove window gaps<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>On laptop displays, some people prefer not to waste any pixels on window gaps (or even a top bar, which you can toggle off with <code>Super + Shift + Space</code>). You can toggle all gaps and borders off with <code>Super + Shift + Backspace</code>, or remove them permanently by removing the comments in this section of <code>~/.config/hypr/looknfeel.lua</code>:</p>
 

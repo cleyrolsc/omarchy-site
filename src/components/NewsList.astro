@@ -20,7 +20,7 @@ const date = (v: string) =>
         <a href={post.path}>
           <>
             <time datetime={post.date}>{date(post.date)}</time>
-            <h2>{post.title}</h2>
+            <span class="news-title">{post.title}</span>
             <p>{post.excerpt}</p>
           </>
         </a>
@@ -31,36 +31,44 @@ const date = (v: string) =>
 <style>
   .news-list {
     padding: 0;
-    margin: var(--space-8) 0 0;
+    margin: var(--space-6) 0 0;
     list-style: none;
-    border-top: 1px solid var(--color-border);
+    border-top: 1px solid var(--color-border-subtle);
   }
   li {
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border-subtle);
   }
   a {
     display: block;
     height: 100%;
     padding: var(--space-5) 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1_5);
     color: inherit;
     text-decoration: none;
   }
   time {
+    line-height: 1.333333;
     font-size: var(--text-xs);
     color: var(--color-text-muted);
   }
-  h2 {
+  .news-title {
     font-family: var(--font-sans);
     font-size: var(--text-base);
-    margin: var(--space-1_5) 0;
+    margin: 0;
+    font-weight: 500;
+    line-height: 1.5;
   }
-  a:hover h2 {
+  a:hover .news-title {
     color: var(--color-brand);
   }
   p {
     color: var(--color-text-secondary);
     font-size: var(--text-caption);
     margin: 0;
+    line-height: 1.625;
+    text-wrap: pretty;
   }
   .news-list--compact p {
     display: -webkit-box;
@@ -68,7 +76,18 @@ const date = (v: string) =>
     -webkit-line-clamp: 2;
     overflow: hidden;
   }
+  .news-list--compact li:nth-child(n + 4) {
+    display: none;
+  }
+  @media (min-width: 64rem) {
+    .news-list {
+      margin-top: var(--space-8);
+    }
+  }
   @media (min-width: 40rem) {
+    .news-list--compact li:nth-child(n + 4) {
+      display: block;
+    }
     .news-list--compact {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));

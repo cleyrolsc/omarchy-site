@@ -3,7 +3,8 @@
   "title": "Themes",
   "description": "Omarchy comes with twenty-two beautiful themes. You can select between them via Style > Theme in the Omarchy Menu ( Super + Space ) or hop directly to the th",
   "order": 5,
-  "path": "/manual/themes/"
+  "path": "/manual/themes/",
+  "format": "html"
 }
 ---
 
@@ -72,7 +73,7 @@
 <p><img src="/manual/images/white-preview.webp" alt="white" />
 <em>White</em></p>
 
-<h3 id="unlocks">Unlocks <a class="manual__heading-link" href="#unlocks" aria-label="Link to this section">#</a></h3>
+<h3 id="unlocks"><a class="manual__heading-link" href="#unlocks" aria-label="Link to this section">Unlocks<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>Themes can also have a custom unlock design, which is used for the boot decryption process. You can select one of these under <em>Style &gt; Unlock</em>. They look like this:</p>
 

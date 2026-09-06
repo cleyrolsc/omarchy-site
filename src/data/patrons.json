@@ -2,7 +2,7 @@
  {
   "id": "founding-patrons",
   "name": "Founding Patrons",
-  "description": "Each contributing $1,000,000 to the mission.",
+  "description": "Each contributing $1,000,000.",
   "members": [
    {
     "name": "Tobi L\u00fctke",
@@ -96,7 +96,7 @@
  {
   "id": "distinguished-patrons",
   "name": "Distinguished Patrons",
-  "description": "Each contributing $100,000 to the mission.",
+  "description": "Each contributing $100,000.",
   "members": [
    {
     "name": "Ryan R. Hughes",

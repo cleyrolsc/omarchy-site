@@ -1,40 +1,203 @@
 ---
 import SiteLayout from "../layouts/SiteLayout.astro";
-import ThemeCard from "../components/ThemeCard.astro";
+import SiteIcon from "../components/SiteIcon.astro";
 import themes from "../data/themes.json";
 ---
 
 <SiteLayout
-  title="Community themes - Omarchy"
-  description="Themes made by the Omarchy community. Find a desktop that feels like yours."
-  ><main id="main" class="page">
-    <h1>Community themes</h1><p>
-      {themes.length} themes made by the community. <a
-        href="https://github.com/omacom/omarchy-site"
-        class="text-link">Add yours</a
-      >.
-    </p><label for="theme-search" class="filter-label">Find a theme</label
-    ><input
-      class="search-field"
-      id="theme-search"
-      type="search"
-      placeholder="Search by theme or author…"
-      data-gallery-search
-    /><p class="muted" data-gallery-count role="status">
-      {themes.length} themes
-    </p><div class="collection-grid">
-      {themes.map((theme) => <ThemeCard theme={theme} />)}
+  title="Themes - Omarchy"
+  description="Community themes for Omarchy. Install them via Install > Style > Themes in Omarchy."
+  ><main id="main" class="page themes-page">
+    <header>
+      <h1>Community themes</h1><p>
+        A theme restyles the whole system at once. Install these community
+        themes via <strong>Install &gt; Style &gt; Themes</strong> in Omarchy. Want
+        yours listed? Open a pull request on the site repository.
+      </p>
+    </header><div class="theme-filter">
+      <label class="theme-search"
+        ><SiteIcon name="Search" size={20} /><span class="sr-only"
+          >Filter themes</span
+        ><input
+          type="search"
+          placeholder="Filter themes…"
+          data-gallery-search
+        /><button
+          type="button"
+          data-gallery-clear
+          aria-label="Clear search"
+          hidden><SiteIcon name="Cross" size={16} /></button
+        ></label
+      ><p data-gallery-count data-total={themes.length} aria-live="polite">
+        {themes.length} / {themes.length} themes
+      </p>
+    </div><ul class="themes-grid" data-themes-grid>
+      {
+        themes.map((theme) => (
+          <li data-theme-card data-search-text={theme.name.toLowerCase()}>
+            <a href={theme.repo}>
+              <>
+                <img
+                  src={theme.image}
+                  alt={`${theme.name} theme screenshot`}
+                  width="1200"
+                  height="675"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <span>{theme.name}</span>
+              </>
+            </a>
+          </li>
+        ))
+      }
+    </ul><div class="themes-empty" data-gallery-empty hidden>
+      <p>No theme is called “<span data-gallery-query></span>”</p><p>
+        Try a shorter name, or make the theme yourself and send it in.
+      </p><button class="btn" data-gallery-clear>Show all themes</button>
     </div>
   </main></SiteLayout
 >
 <style>
-  .filter-label {
-    display: block;
-    margin-top: var(--space-8);
-    margin-bottom: var(--space-2);
-    font-size: var(--text-sm);
+  header {
+    max-width: 42rem;
   }
-  [data-gallery-count] {
-    margin-top: var(--space-3);
+  h1 {
+    margin: 0;
+    font-size: var(--text-3xl);
+    line-height: 1.2;
+    font-weight: 600;
+  }
+  header p {
+    margin: var(--space-3) 0 0;
+    font-size: var(--text-body);
+    line-height: 1.625;
+    color: var(--color-text-secondary);
+    text-wrap: pretty;
+  }
+  strong {
+    font-weight: 500;
+    color: var(--color-text);
+  }
+  .theme-filter {
+    margin-top: var(--space-8);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-4);
+  }
+  .theme-search {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex: 1 1 16rem;
+    height: var(--space-10);
+    padding-inline: var(--space-3);
+    background: var(--color-bg-deep);
+    border: 1px solid var(--color-border-strong);
+    color: var(--color-text-muted);
+  }
+  input {
+    width: 100%;
+    min-width: 0;
+    border: 0;
+    background: none;
+    outline: none;
+    color: var(--color-text);
+    font-size: var(--text-base);
+  }
+  input::-webkit-search-cancel-button {
+    display: none;
+  }
+  .theme-search:focus-within {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+  }
+  .theme-search button {
+    display: grid;
+    place-items: center;
+    border: 0;
+    background: none;
+    padding: 0;
+    color: var(--color-text-muted);
+  }
+  .theme-filter p {
+    margin: 0;
+    font-size: var(--text-caption);
+    color: var(--color-text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .themes-grid {
+    display: grid;
+    gap: var(--space-7) var(--space-4);
+    padding: 0;
+    margin: var(--space-6) 0 0;
+    list-style: none;
+  }
+  a {
+    display: block;
+    text-decoration: none;
+  }
+  img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    background: var(--color-bg-deep);
+    outline: 1px solid var(--t-img-outline);
+    outline-offset: -1px;
+  }
+  a > span {
+    display: block;
+    margin-top: var(--space-2_5);
+    font-size: var(--text-caption);
+    line-height: 1.5;
+    color: var(--color-text-secondary);
+    transition: color 150ms ease-out;
+  }
+  a:hover > span {
+    color: var(--color-text);
+  }
+  .themes-empty {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: var(--space-6);
+    min-height: 18rem;
+    background: var(--color-surface);
+    box-shadow: var(--shadow-card);
+    padding: var(--space-8);
+    text-align: center;
+  }
+  .themes-empty p {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    font-weight: 500;
+  }
+  .themes-empty p + p {
+    margin-top: var(--space-1_5);
+    max-width: 24rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: 400;
+    color: var(--color-text-secondary);
+  }
+  .themes-empty button {
+    margin-top: var(--space-5);
+  }
+  @media (min-width: 40rem) {
+    .theme-search {
+      max-width: 20rem;
+    }
+    .themes-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 64rem) {
+    .themes-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
   }
 </style>

@@ -1,0 +1,25 @@
+<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="6" cy="5" r="2.25" stroke="currentColor" stroke-width="1.5" />
+      <circle
+        cx="18"
+        cy="19"
+        r="2.25"
+        stroke="currentColor"
+        stroke-width="1.5"
+      />
+      <path
+        d="M9 12L12 9L15 12L12 15L9 12Z"
+        stroke="currentColor"
+        stroke-width="1.5"
+      />
+      <path
+        d="M8 5H16.75C18.683 5 20.25 6.567 20.25 8.5C20.25 10.433 18.683 12 16.75 12H15"
+        stroke="currentColor"
+        stroke-width="1.5"
+      />
+      <path
+        d="M9 12H7.25C5.317 12 3.75 13.567 3.75 15.5C3.75 17.433 5.317 19 7.25 19H16"
+        stroke="currentColor"
+        stroke-width="1.5"
+      />
+    </svg>

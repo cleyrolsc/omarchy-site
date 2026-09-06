@@ -3,11 +3,12 @@
   "title": "Hardware authentication",
   "description": "Fingerprint authentication A lot of laptops come with a fingerprint sensor to do authentication. You can use this with Omarchy by running Setup > Security &g",
   "order": 36,
-  "path": "/manual/hardware-authentication/"
+  "path": "/manual/hardware-authentication/",
+  "format": "html"
 }
 ---
 
-<h3 id="fingerprint-authentication">Fingerprint authentication <a class="manual__heading-link" href="#fingerprint-authentication" aria-label="Link to this section">#</a></h3>
+<h3 id="fingerprint-authentication"><a class="manual__heading-link" href="#fingerprint-authentication" aria-label="Link to this section">Fingerprint authentication<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>A lot of laptops come with a fingerprint sensor to do authentication. You can use this with Omarchy by running <em>Setup &gt; Security &gt; Fingerprint</em> in the Omarchy menu (<code>Super + Space</code>).</p>
 
@@ -17,7 +18,7 @@
 
 <p>You can remove the fingerprint authentication under <em>Remove &gt; Security &gt; Fingerprint</em> in the Omarchy menu.</p>
 
-<h3 id="fido2-authentication">Fido2 authentication <a class="manual__heading-link" href="#fido2-authentication" aria-label="Link to this section">#</a></h3>
+<h3 id="fido2-authentication"><a class="manual__heading-link" href="#fido2-authentication" aria-label="Link to this section">Fido2 authentication<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>If you’re using a Fido2 device, you can set it up for <code>sudo</code> authentication using <em>Setup &gt; Security &gt; Fido2</em> in the Omarchy menu (<code>Super + Space</code>). It covers <code>sudo</code> and system authorization prompts, though, not unlocking your computer.</p>
 

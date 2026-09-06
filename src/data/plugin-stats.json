@@ -1,0 +1,23 @@
+{
+  "checked": "2026-09-06",
+  "plugins": {
+    "akshar.radio-atlas": {
+      "hearts": 127
+    },
+    "slcode777.omagotchi": {
+      "hearts": 47
+    },
+    "io.github.thisisgm.omapods": {
+      "hearts": 166
+    },
+    "jankeesvw.omasweeper": {
+      "hearts": 9
+    },
+    "jankeesvw.time-machine": {
+      "hearts": 15
+    },
+    "raiden-meixelysia.omarchy-pets": {
+      "hearts": 1
+    }
+  }
+}

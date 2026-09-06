@@ -1,0 +1,314 @@
+---
+import SectionHeading from "./SectionHeading.astro";
+import SiteIcon from "./SiteIcon.astro";
+import type { Props as IconProps } from "./SiteIcon.astro";
+import data from "../data/showcases.json";
+import home from "../data/home.json";
+export interface Props {
+  kind: "hardware" | "agents" | "developers" | "gaming";
+}
+const { kind } = Astro.props;
+const titles = {
+  hardware: [
+    "It runs on almost anything",
+    "You don't need a new machine to try Omarchy. But if you get one, today's laptops are amazing.",
+  ],
+  agents: [
+    "The agentic OS for the age of agents",
+    "Your agent should feel at home on your computer. Omarchy gives it the tools and skills to help you understand, fix, and shape the whole system.",
+  ],
+  developers: [
+    "Developed by developers for developers",
+    "The tools you know, set up to work together. Bring your projects, choose your favorites, and get straight to building.",
+  ],
+  gaming: [
+    "All work and all play is all good",
+    "Omarchy comes ready for Steam, RetroArch, and a whole world of gaming. Graphics drivers and configuration, including NVIDIA on supported hardware, are sorted during installation.",
+  ],
+};
+const items: {
+  title: string;
+  description: string;
+  icon?: string;
+  href?: string;
+  link?: string;
+}[] =
+  kind === "hardware"
+    ? home.hardware
+    : kind === "agents"
+      ? data.features
+      : data.tools;
+const extras =
+  kind === "developers"
+    ? [
+        ["Herdr", "/manual/tuis/#herdr"],
+        ["Tmux", "/manual/terminal/#tmux"],
+        ["Docker", "/manual/development-tools/#docker"],
+        ["Lazygit", "/manual/tuis/#lazygit"],
+        ["the best shell tools", "/manual/shell-tools/"],
+      ]
+    : [
+        ["Battle.net", "battlenet"],
+        ["Lutris", "lutris-windows-games"],
+        ["Heroic", "heroic-launcher-epic-games"],
+        ["Moonlight", "moonlight-game-streaming-from-a-pc"],
+        ["GeForce NOW", "nvidia-geforce-now"],
+        ["Xbox Cloud Gaming", "xbox-cloud-gaming"],
+      ].map(([name, id]) => [name, `/manual/gaming/#${id}`]);
+---
+
+<div class:list={["feature-showcase", kind]}>
+  <SectionHeading
+    anchor={kind}
+    title={titles[kind][0]}
+    description={titles[kind][1]}
+  />
+  <div class="feature-columns">
+    {
+      kind === "gaming"
+        ? data.games.map((game) => (
+            <a class="game" href={`/manual/gaming/#${game.section}`}>
+              <>
+                <img
+                  src={`/manual/images/${game.image}`}
+                  alt={game.alt}
+                  width="1600"
+                  height="1200"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <h3>{game.name}</h3>
+                <p>{game.description}</p>
+              </>
+            </a>
+          ))
+        : items.map((item) => (
+            <div class="feature">
+              <>
+                <div class="feature-title">
+                  {item.icon && (
+                    <SiteIcon name={item.icon as IconProps["name"]} size={20} />
+                  )}
+                  <h3>{item.title}</h3>
+                </div>
+                <p>{item.description}</p>
+                {item.href && (
+                  <a class="feature-link" href={item.href}>
+                    <span>{item.link}</span>
+                    <SiteIcon name="ArrowRight" size={20} />
+                  </a>
+                )}
+              </>
+            </div>
+          ))
+    }
+  </div>
+  {
+    kind === "agents" && (
+      <>
+        <>
+          <ul class="agent-logos" aria-label="Supported agent harnesses">
+            {data.agents.map(([name, logo, href]) => (
+              <li>
+                <a href={href} aria-label={name} data-tooltip={name}>
+                  {data.monochrome.includes(logo) ? (
+                    <span
+                      aria-hidden="true"
+                      style={`mask:url(/images/agents/${logo}) center / contain no-repeat`}
+                    />
+                  ) : (
+                    <img
+                      src={`/images/agents/${logo}`}
+                      alt=""
+                      width="24"
+                      height="24"
+                    />
+                  )}
+                </a>
+              </li>
+            ))}
+          </ul>
+          <a class="feature-link closing-link" href="/manual/ai/">
+            <>
+              <span>Meet your new agent</span>
+              <SiteIcon name="ArrowRight" size={20} />
+            </>
+          </a>
+        </>
+      </>
+    )
+  }
+  {
+    (kind === "developers" || kind === "gaming") && (
+      <p class="also">
+        Also available:{" "}
+        {extras.map(([name, href], index) => (
+          <Fragment>
+            {index > 0 && (index === extras.length - 1 ? ", and " : ", ")}
+            <a href={href}>{name}</a>
+          </Fragment>
+        ))}
+        .
+      </p>
+    )
+  }
+  {
+    kind === "gaming" && (
+      <a class="feature-link closing-link" href="/manual/gaming/">
+        <>
+          <span>Get your game on</span>
+          <SiteIcon name="ArrowRight" size={20} />
+        </>
+      </a>
+    )
+  }
+</div>
+<style>
+  .feature-columns {
+    display: grid;
+    gap: var(--space-6);
+    margin-top: var(--space-6);
+  }
+  .feature {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    border-top: 1px solid var(--color-border-strong);
+    padding-top: var(--space-4);
+  }
+  .feature-title:has(h3:only-child) h3 {
+    width: 100%;
+  }
+  .feature-title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2_5);
+  }
+  .feature-title :global(svg) {
+    flex-shrink: 0;
+    color: var(--color-brand);
+  }
+  h3 {
+    margin: 0;
+    font-size: var(--text-lg);
+    font-weight: 500;
+    line-height: 1.555556;
+    letter-spacing: -0.025em;
+    color: var(--color-text);
+  }
+  p {
+    margin: var(--space-3) 0 0;
+    font-size: var(--text-body);
+    line-height: 1.625;
+    color: var(--color-text-secondary);
+    text-wrap: pretty;
+  }
+  .feature-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: var(--space-10);
+    margin-top: auto;
+    align-self: flex-start;
+    padding-top: var(--space-4);
+    font-size: var(--text-sm);
+    line-height: 1.428571;
+    font-weight: 500;
+    color: var(--color-text);
+    text-decoration: none;
+  }
+  .feature-link span {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  a:hover {
+    color: var(--color-brand);
+    text-decoration: none;
+  }
+  .feature-link :global(svg) {
+    flex-shrink: 0;
+  }
+  .closing-link {
+    margin-top: var(--space-6);
+    padding-top: 0;
+  }
+  .agent-logos {
+    margin: var(--space-6) 0 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+  .agent-logos a {
+    width: var(--space-10);
+    height: var(--space-10);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-secondary);
+  }
+  .agent-logos a:hover {
+    color: var(--color-brand);
+  }
+  .agent-logos span,
+  .agent-logos img {
+    display: block;
+    flex-shrink: 0;
+    width: var(--space-6);
+    height: var(--space-6);
+    object-fit: contain;
+  }
+  .agent-logos span {
+    background: currentColor;
+  }
+  .game {
+    display: block;
+    min-width: 0;
+    text-decoration: none;
+  }
+  .game img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+  }
+  .game h3 {
+    margin-top: var(--space-4);
+  }
+  .game:hover h3 {
+    color: var(--color-brand);
+  }
+  .game p {
+    margin-top: var(--space-2);
+  }
+  .also {
+    margin-top: var(--space-6);
+  }
+  .developers .also {
+    margin-top: var(--space-10);
+  }
+  .also a {
+    white-space: nowrap;
+    text-decoration: underline;
+    text-decoration-color: var(--color-border-strong);
+    text-underline-offset: 4px;
+  }
+  .also a:hover {
+    text-decoration-color: currentColor;
+  }
+  @media (min-width: 48rem) {
+    .feature-columns {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 64rem) {
+    .feature-columns {
+      margin-top: var(--space-10);
+      gap: var(--space-8);
+    }
+    .agent-logos {
+      margin-top: var(--space-8);
+    }
+  }
+</style>

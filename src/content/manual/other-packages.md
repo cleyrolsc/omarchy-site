@@ -3,7 +3,8 @@
   "title": "Other Packages",
   "description": "Arch has an amazing wealth of packages available for almost any type of software between the official repository and the Arch User Repository (AUR). It couldn’t",
   "order": 28,
-  "path": "/manual/other-packages/"
+  "path": "/manual/other-packages/",
+  "format": "html"
 }
 ---
 

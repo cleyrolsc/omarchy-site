@@ -2,10 +2,11 @@
  * Site themes: the stock Omarchy themes, applied the way Omarchy applies
  * them. There is no light/dark switch; there are themes, opened with T
  * (Omarchy's own chord still works, but Hyprland eats it before the browser
- * sees it), and every token in styles/brand.css resolves per theme.
+ * sees it), and every token in styles.css resolves per theme.
  */
 
 import { OMARCHY_MARK_PATH } from "./brand";
+import { runThemeViewTransition } from "./theme-transition";
 
 export type SiteTheme = {
   id: string;
@@ -55,15 +56,23 @@ export const HINT_KEY = "omarchy-theme-hint-seen";
  * localStorage before first paint, so there is never a flash of the wrong
  * theme. A first visit has nothing stored, and gets one of the themes at
  * random, kept from then on so every page of the visit wears the same one
- * and the picker can change it like any other choice. Only when storage
- * itself is unavailable does the page fall back to Tokyo Night.
+ * and the picker can change it like any other choice. The draw follows
+ * the system: a light theme for someone in light mode, a dark one for
+ * someone in dark mode, since a page in the wrong mode is the first thing
+ * a new visitor would notice. Any theme is still theirs to pick. Only when
+ * storage itself is unavailable does the page fall back to Tokyo Night.
  *
- * The tab icon is created here too. paintFavicon() replaces that same
- * tagged link after the theme has been resolved.
+ * The tab icon is created here too, outside React. paintFavicon() replaces
+ * that same tagged link; it must not touch a <link> React owns, or React
+ * later tries to removeChild a node whose parent is already gone.
  */
 export const themeInitScript = `(function(){try{var t=localStorage.getItem('${THEME_KEY}');var ok=${JSON.stringify(
   SITE_THEMES.map((t) => t.id),
-)};if(ok.indexOf(t)<0){t=ok[Math.floor(Math.random()*ok.length)];localStorage.setItem('${THEME_KEY}',t)}document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme='${DEFAULT_THEME}'}if(!document.querySelector('link[rel="icon"][data-theme-icon]')){var l=document.createElement('link');l.rel='icon';l.type='image/svg+xml';l.href='/brand/omarchy-logo.svg';l.setAttribute('data-theme-icon','');document.head.appendChild(l)}})()`;
+)};var light=${JSON.stringify(
+  SITE_THEMES.filter((t) => t.light).map((t) => t.id),
+)};var dark=${JSON.stringify(
+  SITE_THEMES.filter((t) => !t.light).map((t) => t.id),
+)};if(ok.indexOf(t)<0){var pool=window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?light:dark;t=pool[Math.floor(Math.random()*pool.length)];localStorage.setItem('${THEME_KEY}',t)}document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme='${DEFAULT_THEME}'}if(!document.querySelector('link[rel="icon"][data-theme-icon]')){var l=document.createElement('link');l.rel='icon';l.type='image/svg+xml';l.href='/brand/omarchy-logo.svg';l.setAttribute('data-theme-icon','');document.head.appendChild(l)}})()`;
 
 export function readTheme(): string {
   try {
@@ -81,7 +90,9 @@ export function readTheme(): string {
  * Tokyo Night green, which only that one theme could wear, so this replaces
  * the tagged link with the same path painted in the current color. Browsers
  * cache a favicon by its element, not its URL, so the link is replaced
- * outright rather than re-pointed. Only [data-theme-icon] is touched.
+ * outright rather than re-pointed. Only [data-theme-icon] is touched: a
+ * React-owned <link rel="icon"> pulled out of <head> crashes the next
+ * commit with removeChild on a null parent.
  */
 export function paintFavicon() {
   const brand = getComputedStyle(document.documentElement)
@@ -276,4 +287,24 @@ export function applyTheme(id: string) {
   requestAnimationFrame(() => {
     requestAnimationFrame(() => root.classList.remove("no-transitions"));
   });
+}
+
+/**
+ * Apply a theme through the split-wipe view transition used on omarchy-www.
+ * Reduced motion and browsers without View Transitions skip the animation.
+ */
+export function switchTheme(
+  id: string,
+  after?: () => void,
+  options: { frosted?: boolean } = {},
+) {
+  runThemeViewTransition(
+    () => {
+      applyTheme(id);
+      after?.();
+    },
+    undefined,
+    undefined,
+    options.frosted,
+  );
 }

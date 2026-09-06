@@ -38,4 +38,6 @@
 @import "./components.css"; /* @layer components */
 @import "./content.css";
 @import "./site.css";
+@import "./motion.css";
+@import "./theme-transition.css";
 @import "./utilities.css"; /* @layer utilities */

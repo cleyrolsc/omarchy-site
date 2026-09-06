@@ -35,46 +35,53 @@
     {
       "title": "The latest laptops",
       "description": "Ready for something new? Laptops like the latest Dell XPS make amazing Omarchy machines, with our core team helping the newest hardware work properly.",
+      "icon": "Display",
       "href": "/news/2026/09/the-omarchy-core-team/",
       "link": "Meet the team behind it"
     },
     {
       "title": "Vintage Macs",
       "description": "Give that old Intel Mac a second life. Omarchy brings a fresh desktop to the hardware you already love.",
+      "icon": "Apple",
       "href": "/manual/mac-support/",
       "link": "Mac support"
     },
     {
       "title": "Potato PCs",
       "description": "Even a 2011 ThinkPad X220 with 2GB of RAM can run Omarchy, with room to spare. Your old PC might have plenty left to give.",
+      "icon": "Display",
       "href": "/potato/",
       "link": "Watch the potato run"
     }
   ],
   "community": [
     {
+      "icon": "Discord",
       "title": "Discord",
       "body": "Daily chatter, support, and show-and-tell with thousands of Omarchs.",
       "href": "https://discord.gg/tXFUdasqhY",
       "cta": "Join the server"
     },
     {
+      "icon": "CalendarFilled",
       "title": "Meetups",
       "body": "Omarchy meetups are popping up around the world. Find one near you, or start one.",
-      "href": "/meetups/",
-      "cta": "Find a meetup"
+      "cta": "Find a meetup",
+      "href": "/meetups/"
     },
     {
+      "icon": "Github",
+      "title": "Contribute",
+      "body": "File issues, fix bugs, and submit features.",
+      "href": "https://github.com/omacom-io/omarchy",
+      "cta": "Contribute on GitHub"
+    },
+    {
+      "icon": "Bank",
       "title": "Donate",
       "body": "Help fund the people and projects making Omarchy better for everyone.",
       "href": "https://donate.omarchy.org",
       "cta": "Become a patron"
-    },
-    {
-      "title": "Merch",
-      "body": "Wear the word. Official Omarchy gear from the 37signals supply store.",
-      "href": "https://supply.37signals.com/collections/omarchy",
-      "cta": "Browse the store"
     }
   ],
   "quote": {

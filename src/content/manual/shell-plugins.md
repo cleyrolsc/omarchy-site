@@ -3,7 +3,8 @@
   "title": "Shell Plugins",
   "description": "The Omarchy desktop runs as a single long-lived Quickshell process called omarchy-shell , and almost everything you see on screen is a plugin inside it. The bar",
   "order": 31,
-  "path": "/manual/shell-plugins/"
+  "path": "/manual/shell-plugins/",
+  "format": "html"
 }
 ---
 
@@ -13,7 +14,7 @@
 
 <p>The first-party plugins ship with Omarchy and live in <code>$OMARCHY_PATH/shell/plugins/</code>. Anything you add yourself - your own experiments, or something you found on GitHub - lives in <code>~/.config/omarchy/plugins/</code>. Both are discovered the same way at startup; the only difference is where they sit on disk.</p>
 
-<h2 id="seeing-what-you-have">Seeing what you have <a class="manual__heading-link" href="#seeing-what-you-have" aria-label="Link to this section">#</a></h2>
+<h2 id="seeing-what-you-have"><a class="manual__heading-link" href="#seeing-what-you-have" aria-label="Link to this section">Seeing what you have<span class="manual__hash" aria-hidden="true">#</span></a></h2>
 
 <pre><code>omarchy plugin list
 </code></pre>
@@ -22,7 +23,7 @@
 
 <p>Plugin ids are namespaced. The built-ins all start with <code>omarchy.</code> - <code>omarchy.clock</code>, <code>omarchy.network</code>, <code>omarchy.notifications</code> - and that namespace is reserved, so a third-party plugin can never claim it.</p>
 
-<h2 id="turning-them-on-and-off">Turning them on and off <a class="manual__heading-link" href="#turning-them-on-and-off" aria-label="Link to this section">#</a></h2>
+<h2 id="turning-them-on-and-off"><a class="manual__heading-link" href="#turning-them-on-and-off" aria-label="Link to this section">Turning them on and off<span class="manual__hash" aria-hidden="true">#</span></a></h2>
 
 <pre><code>omarchy plugin enable omarchy.tailscale
 omarchy plugin disable omarchy.weather
@@ -34,7 +35,7 @@ omarchy plugin disable omarchy.weather
 
 <p>A full bar plugin has no off state at all. There’s always exactly one bar, so you replace it by enabling another one. Bar widget placement is covered in <a href="/manual/the-top-bar/">the top bar</a>.</p>
 
-<h2 id="adding-a-plugin-from-git">Adding a plugin from git <a class="manual__heading-link" href="#adding-a-plugin-from-git" aria-label="Link to this section">#</a></h2>
+<h2 id="adding-a-plugin-from-git"><a class="manual__heading-link" href="#adding-a-plugin-from-git" aria-label="Link to this section">Adding a plugin from git<span class="manual__hash" aria-hidden="true">#</span></a></h2>
 
 <p>A third-party plugin is just a git repo with a <code>manifest.json</code> at its root.</p>
 
@@ -58,7 +59,7 @@ omarchy plugin update
 
 <p>Removal disables the plugin first, then deletes it if it’s a git checkout (the repo is still upstream) or unlinks it if it’s a symlink. A hand-made plugin folder with no git repo gets moved to a timestamped backup inside the plugins directory instead of being deleted outright.</p>
 
-<h2 id="cloning-a-built-in-to-modify-it">Cloning a built-in to modify it <a class="manual__heading-link" href="#cloning-a-built-in-to-modify-it" aria-label="Link to this section">#</a></h2>
+<h2 id="cloning-a-built-in-to-modify-it"><a class="manual__heading-link" href="#cloning-a-built-in-to-modify-it" aria-label="Link to this section">Cloning a built-in to modify it<span class="manual__hash" aria-hidden="true">#</span></a></h2>
 
 <p>This is my favorite part. If you want to change how a built-in widget behaves, don’t edit the files under <code>$OMARCHY_PATH</code> - those belong to the package and the next update will overwrite them. Clone it instead:</p>
 
@@ -71,7 +72,7 @@ omarchy plugin update
 
 <p>Saving a file anywhere under <code>~/.config/omarchy/plugins/</code> reloads the plugin code automatically, so you can leave the editor open and watch your changes land.</p>
 
-<h2 id="writing-your-own">Writing your own <a class="manual__heading-link" href="#writing-your-own" aria-label="Link to this section">#</a></h2>
+<h2 id="writing-your-own"><a class="manual__heading-link" href="#writing-your-own" aria-label="Link to this section">Writing your own<span class="manual__hash" aria-hidden="true">#</span></a></h2>
 
 <p>A plugin is a directory with a <code>manifest.json</code> and some QML. The manifest declares <code>schemaVersion: 1</code>, an <code>id</code>, <code>name</code>, <code>version</code>, one or more <code>kinds</code>, and an <code>entryPoints</code> object pointing at the QML file for each kind:</p>
 
@@ -121,7 +122,7 @@ omarchy plugin update
 
 <p>For the full picture, the source is the documentation: <code>shell/README.md</code> in the Omarchy repo covers the manifest schema, the shell’s IPC contract, and the exact shape of <code>shell.json</code>, and <code>shell/plugins/README.md</code> lists every first-party plugin with its id, kinds, and entry points.</p>
 
-<h2 id="sharing-yours-with-the-world">Sharing yours with the world <a class="manual__heading-link" href="#sharing-yours-with-the-world" aria-label="Link to this section">#</a></h2>
+<h2 id="sharing-yours-with-the-world"><a class="manual__heading-link" href="#sharing-yours-with-the-world" aria-label="Link to this section">Sharing yours with the world<span class="manual__hash" aria-hidden="true">#</span></a></h2>
 
 <p>Once you’ve made something you like, put it in a public git repo. That’s the whole distribution mechanism - anyone can then run <code>omarchy plugin add</code> against your URL and have it running in seconds.</p>
 

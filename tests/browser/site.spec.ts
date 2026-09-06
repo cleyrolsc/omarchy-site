@@ -27,7 +27,9 @@ test("core pages and downloads work without JavaScript", async ({
   await expect(
     page.getByRole("link", { name: /Download Omarchy/ }),
   ).toHaveAttribute("href", /\.iso$/);
-  await expect(page.locator("[data-open-search]")).toBeHidden();
+  await expect(
+    page.locator(".desktop-actions [data-open-search]"),
+  ).toBeHidden();
   await page.goto("http://127.0.0.1:4322/screensaver/");
   await expect(page.locator("#screensaver-art")).toBeVisible();
   await context.close();
@@ -37,7 +39,9 @@ test("search works by keyboard and links to manual sections", async ({
   page,
 }) => {
   await page.goto("/");
-  await expect(page.locator("[data-open-search]")).toBeVisible();
+  await expect(
+    page.locator(".desktop-actions [data-open-search]"),
+  ).toBeVisible();
   await page.keyboard.press("/");
   await expect(
     page.getByRole("dialog", { name: "Search Omarchy" }),
@@ -48,6 +52,7 @@ test("search works by keyboard and links to manual sections", async ({
     /\/manual\/.*#ssh-access/,
   );
   await page.keyboard.press("ArrowDown");
+  await page.keyboard.press("ArrowUp");
   await page.keyboard.press("Enter");
   await expect(page).toHaveURL(/#ssh-access$/);
   await expect(page.locator("#ssh-access")).toBeInViewport();
@@ -59,12 +64,16 @@ test("themes persist through Astro navigation and dialogs restore focus", async 
 }) => {
   await page.goto("/");
   const trigger = page.getByRole("button", {
-    name: "Choose a theme",
+    name: "Change website theme",
     exact: true,
   });
   await trigger.click();
-  const dialog = page.getByRole("dialog", { name: "Choose a theme" });
-  await dialog.getByRole("button", { name: "Nord Dark" }).click();
+  const dialog = page.getByRole("dialog", { name: "Theme picker" });
+  for (let i = 0; i < 6; i++) await page.keyboard.press("ArrowLeft");
+  await dialog
+    .getByRole("button", { name: "Use Nord", exact: true })
+    .last()
+    .click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "nord");
   await page.keyboard.press("Escape");
   await expect(trigger).toBeFocused();
@@ -73,7 +82,7 @@ test("themes persist through Astro navigation and dialogs restore focus", async 
       true;
   });
   await page
-    .locator(".desktop-nav")
+    .locator(".site-header .desktop-nav")
     .getByRole("link", { name: "Manual", exact: true })
     .click();
   await expect(page).toHaveURL(/\/manual\/$/);
@@ -95,9 +104,9 @@ test("mobile menu, gallery filtering and layouts fit a phone", async ({
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
-  await page.getByLabel("Open navigation").click();
+  await page.getByLabel("Menu", { exact: true }).click();
   await page
-    .getByRole("navigation", { name: "Mobile navigation" })
+    .getByRole("navigation", { name: "Main pages" })
     .getByRole("link", { name: "Themes", exact: true })
     .click();
   await expect(page).toHaveURL(/\/themes\/$/);
@@ -106,7 +115,9 @@ test("mobile menu, gallery filtering and layouts fit a phone", async ({
   await page
     .locator("[data-gallery-search]")
     .fill("no-theme-matches-this-query");
-  await expect(page.locator("[data-gallery-count]")).toHaveText("0 themes");
+  await expect(page.locator("[data-gallery-count]")).toHaveText(
+    /0 \/ \d+ themes/,
+  );
   for (const route of [
     "/",
     "/manual/getting-started/",
@@ -123,28 +134,29 @@ test("mobile menu, gallery filtering and layouts fit a phone", async ({
   }
 });
 
-test("video players load only after interaction and are removed on close", async ({
+test("video rail plays inline and stops the previous slide", async ({
   page,
 }) => {
   const requests: string[] = [];
-  page.on("request", (request) => {
-    if (/youtube|youtu\.be/.test(request.url())) requests.push(request.url());
+  page.on("request", (r) => {
+    if (/youtube|youtu\.be/.test(r.url())) requests.push(r.url());
   });
-  await page.route("https://www.youtube-nocookie.com/**", (route) =>
-    route.fulfill({
+  await page.route("https://www.youtube-nocookie.com/**", (r) =>
+    r.fulfill({
       contentType: "text/html",
       body: "<title>Video player test</title>",
     }),
   );
   await page.goto("/");
   expect(requests).toEqual([]);
-  await page.locator("a[data-video]").first().click();
-  await expect(page.locator("#site-media iframe")).toHaveAttribute(
+  await page.locator("[data-carousel-video]").first().click();
+  await expect(page.locator("[data-carousel] iframe")).toHaveAttribute(
     "src",
     /youtube-nocookie\.com\/embed\//,
   );
-  await page.keyboard.press("Escape");
-  await expect(page.locator("#site-media iframe")).toHaveCount(0);
+  await page.locator("[data-carousel-next]:visible").click();
+  await expect(page.locator("[data-carousel] iframe")).toHaveCount(0);
+  await expect(page.locator('[data-slide="1"]')).toHaveClass(/is-current/);
 });
 
 test("gallery images open using the keyboard", async ({ page }) => {
@@ -167,17 +179,17 @@ test("music requires a gesture and survives internal navigation", async ({
   await page.goto("/");
   await expect(page.locator("[data-music-control]")).toBeVisible();
   expect(audioRequests).toEqual([]);
-  await page.locator("[data-music-toggle]").click();
+  await page.locator("[data-music-control] [data-music-toggle]").click();
   await expect(page.locator("[data-music-state]")).toHaveText("Sound on", {
     timeout: 15_000,
   });
   await page
-    .locator(".desktop-nav")
+    .locator(".site-header .desktop-nav")
     .getByRole("link", { name: "News", exact: true })
     .click();
   await expect(page).toHaveURL(/\/news\/$/);
   await expect(page.locator("[data-music-state]")).toHaveText("Sound on");
-  await page.locator("[data-music-toggle]").click();
+  await page.locator("[data-music-control] [data-music-toggle]").click();
   await expect(page.locator("[data-music-state]")).toHaveText("Sound off");
 });
 
@@ -217,7 +229,9 @@ test("canvas paints, effect controls remain available, and pages have no runtime
 for (const route of ["/", "/manual/getting-started/", "/teams/", "/themes/"])
   test(`accessibility ${route}`, async ({ page }) => {
     await page.goto(route);
-    await expect(page.locator("[data-open-search]")).toBeVisible();
+    await expect(
+      page.locator(".desktop-actions [data-open-search]"),
+    ).toBeVisible();
     const result = await new AxeBuilder({ page })
       .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
       .analyze();

@@ -1,7 +1,7 @@
 ---
-import { Search, Palette, Rss } from "@lucide/astro";
+import SiteIcon from "./SiteIcon.astro";
 import Brand from "./Brand.astro";
-import githubSvg from "../icons/github.svg?raw";
+import { TRACK } from "../lib/music";
 export interface Props {
   pathname?: string;
 }
@@ -14,12 +14,14 @@ const links = [
 ];
 ---
 
-<header class="site-header">
+<header
+  class="site-header pixel-container"
+  style={pathname === "/" ? "--nav-surface:0" : "--nav-surface:1"}
+>
   <div class="header-inner">
-    <a href="/" aria-label="Omarchy home" class="home-mark"
-      ><Brand variant="mark" /></a
-    >
-    <nav class="desktop-nav" aria-label="Main navigation">
+    <a href="/" aria-label="Omarchy home" class="home-mark mark-draw-trigger"
+      ><Brand variant="mark" drawn /></a
+    ><nav class="desktop-nav" aria-label="Main">
       {
         links.map(([label, href]) => (
           <a
@@ -30,44 +32,72 @@ const links = [
           </a>
         ))
       }
-    </nav>
-    <div class="header-actions">
-      <button
-        type="button"
-        class="icon-button"
-        data-open-search
-        hidden
-        aria-label="Search the site"
-        title="Search (/)"><Search size={19} /></button
-      >
-      <button
-        type="button"
-        class="icon-button"
-        data-open-theme
-        hidden
-        aria-label="Choose a theme"
-        title="Choose a theme (T)"><Palette size={19} /></button
-      >
-      <a
-        class="icon-button rss-link"
-        href="/news/rss.xml"
-        aria-label="Omarchy News RSS feed"><Rss size={19} /></a
-      >
-      <a
-        class="icon-button github-link"
-        href="https://github.com/omacom/omarchy"
-        aria-label="Omarchy on GitHub"><Fragment set:html={githubSvg} /></a
-      >
-      <a class="btn btn--primary install-link" href="/#install">Install</a>
-      <details class="mobile-menu">
-        <summary aria-label="Open navigation">Menu</summary><nav
-          aria-label="Mobile navigation"
+    </nav><div class="header-actions">
+      <div class="desktop-actions">
+        <button
+          class="icon-button"
+          data-open-search
+          hidden
+          aria-label="Search Omarchy"
+          title="Search Omarchy (⌘K / Ctrl+K)"
+          ><SiteIcon name="Search" size={20} /></button
+        ><button
+          class="icon-button"
+          data-open-theme
+          hidden
+          aria-label="Change website theme"
+          title="Change website theme (T)"
+          ><SiteIcon name="Palette" size={20} /></button
+        ><a
+          class="icon-button"
+          href="/news/rss.xml"
+          aria-label="Omarchy RSS feed"
+          title="Subscribe via RSS"><SiteIcon name="Rss" size={20} /></a
+        ><a
+          class="icon-button"
+          href="https://github.com/omacom/omarchy"
+          aria-label="Omarchy on GitHub"
+          title="View Omarchy on GitHub"><SiteIcon name="Github" size={20} /></a
+        ><a class="btn btn--primary install-link" href="/#install">Install</a>
+      </div><details class="mobile-menu">
+        <summary aria-label="Menu"
+          ><svg
+            viewBox="0 0 24 24"
+            width="22"
+            height="22"
+            fill="currentColor"
+            aria-hidden="true"
+            ><path class="menu-top" d="M3 5h18v2H3z"></path><path
+              class="menu-middle"
+              d="M3 11h18v2H3z"></path><path
+              class="menu-bottom"
+              d="M3 17h18v2H3z"></path></svg
+          ></summary
+        ><div class="menu-scrim" data-menu-scrim></div><nav
+          aria-label="Main pages"
         >
-          {links.map(([label, href]) => <a href={href}>{label}</a>)}<a
-            href="/teams/">Teams</a
-          ><a href="/foundation/">Foundation</a><a
-            href="https://github.com/omacom/omarchy">GitHub</a
-          ><a href="/#install">Install Omarchy</a>
+          {links.map(([label, href]) => <a href={href}>{label}</a>)}<button
+            class="menu-search"
+            data-open-search
+            ><SiteIcon name="Search" size={20} />Search Omarchy</button
+          ><button data-open-theme
+            ><SiteIcon name="Palette" size={20} />Change the theme</button
+          ><button class="menu-music" data-music-toggle aria-pressed="false"
+            ><SiteIcon name="VolumeOff" size={20} /><span
+              ><span data-music-state>Sound off</span><span class="menu-track"
+                ><img src={TRACK.art} alt="" width="18" height="18" />{
+                  TRACK.artist
+                } - {TRACK.title.replace(/ \(.*\)$/, "")}</span
+              ></span
+            ></button
+          ><div class="menu-actions">
+            <a class="btn btn--primary" href="/#install"
+              ><SiteIcon name="Download" size={20} />Install</a
+            ><a class="btn" href="/news/rss.xml"
+              ><SiteIcon name="Rss" size={20} />RSS</a
+            ><a class="btn" href="https://github.com/omacom/omarchy"
+              ><SiteIcon name="Github" size={20} />GitHub</a>
+          </div>
         </nav>
       </details>
     </div>
@@ -80,107 +110,233 @@ const links = [
     z-index: var(--z-nav);
     height: var(--nav-h);
     padding-top: env(safe-area-inset-top, 0px);
-    background: var(--color-bg);
-    border-bottom: 1px solid var(--color-border);
+    background: color-mix(
+      in srgb,
+      var(--nav-ground, var(--color-bg)) calc(var(--nav-surface, 1) * 90%),
+      transparent
+    );
+    backdrop-filter: blur(calc(var(--nav-surface, 1) * 12px));
   }
-  .site-header.over-hero {
-    background: transparent;
-    border-color: transparent;
+  .site-header:has(details[open]) {
+    background: color-mix(in srgb, var(--color-bg) 95%, transparent);
+    backdrop-filter: blur(16px);
   }
   .header-inner {
     height: var(--header-height);
     max-width: var(--container-max);
     margin: auto;
-    padding-inline: var(--space-6);
+    padding-inline: var(--space-4);
     display: flex;
     align-items: center;
-    gap: var(--space-6);
+    gap: var(--space-3);
   }
   .home-mark {
+    display: flex;
+    align-items: center;
     flex-shrink: 0;
   }
   .home-mark :global(svg) {
-    width: var(--space-6);
-    height: var(--space-6);
-  }
-  .install-link {
-    min-height: var(--space-8);
-    padding-block: var(--space-1);
-    font-family: var(--font-mono);
+    width: 22px;
+    height: 22px;
   }
   .desktop-nav {
-    display: flex;
+    display: none;
     align-items: center;
-    gap: var(--space-7);
   }
   .desktop-nav a {
+    padding: var(--space-1_5) var(--space-3);
     font-size: var(--text-sm);
+    line-height: 1.428571;
+    white-space: nowrap;
     text-decoration: none;
     color: var(--color-text-secondary);
+    transition: background-color 150ms ease-out;
   }
   .desktop-nav a:hover,
   .desktop-nav a[aria-current] {
-    color: var(--color-brand);
+    color: var(--color-text);
+    background: var(--color-surface-2);
   }
   .header-actions {
     margin-left: auto;
     display: flex;
     align-items: center;
-    gap: var(--space-2);
+    gap: var(--space-2_5);
+  }
+  .desktop-actions {
+    display: none;
+    align-items: center;
+    gap: var(--space-1);
   }
   .icon-button {
     display: grid;
     place-items: center;
-    width: var(--space-10);
-    height: var(--space-10);
-    padding: var(--space-2);
-    background: transparent;
+    width: var(--space-8);
+    height: var(--space-8);
+    padding: 0;
     border: 0;
+    background: transparent;
     color: var(--color-text-secondary);
+    transition:
+      background-color 150ms ease-out,
+      transform 150ms ease-out;
   }
   .icon-button:hover {
-    color: var(--color-brand);
-    background: var(--color-surface);
+    color: var(--color-text);
+    background: var(--color-surface-2);
   }
-  .mobile-menu {
-    display: none;
+  .icon-button:active {
+    transform: scale(0.96);
+  }
+  .install-link {
+    margin-left: var(--space-2);
+    min-height: 0;
+    height: var(--space-8);
+    padding: 0 var(--space-4);
   }
   .mobile-menu summary {
+    display: grid;
+    place-items: center;
+    width: var(--space-8);
+    height: var(--space-8);
     cursor: pointer;
-    padding: var(--space-2);
-    font-size: var(--text-sm);
+    list-style: none;
+    color: var(--color-text-secondary);
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  summary path {
+    transform-origin: center;
+    transition:
+      transform 200ms ease-out,
+      opacity 150ms ease-out;
+  }
+  [open] .menu-top {
+    transform: translateY(6px) rotate(45deg);
+    transform-origin: 12px 6px;
+  }
+  [open] .menu-middle {
+    opacity: 0;
+  }
+  [open] .menu-bottom {
+    transform: translateY(-6px) rotate(-45deg);
+    transform-origin: 12px 18px;
+  }
+  .menu-scrim {
+    position: absolute;
+    inset-inline: 0;
+    top: var(--nav-h);
+    height: 100svh;
+    background: color-mix(in srgb, var(--color-bg) 40%, transparent);
   }
   .mobile-menu nav {
     position: absolute;
+    inset-inline: 0;
     top: var(--nav-h);
-    left: 0;
-    right: 0;
-    padding: var(--space-5) var(--space-6);
-    background: var(--color-bg);
-    border-bottom: 1px solid var(--color-border);
-    display: grid;
-    gap: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-2) var(--space-4);
+    background: color-mix(in srgb, var(--color-bg) 95%, transparent);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--color-border-subtle);
   }
-  @media (max-width: 48rem) {
+  .mobile-menu nav > a,
+  .mobile-menu nav > button {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2_5);
+    padding: var(--space-3) 0;
+    font-size: var(--text-body);
+    line-height: 1.5;
+    text-decoration: none;
+    color: var(--color-text-secondary);
+    border: 0;
+    background: none;
+    text-align: left;
+  }
+  .mobile-menu nav > .menu-search {
+    margin-top: var(--space-2);
+    border-top: 1px solid var(--color-border-subtle);
+    padding-top: var(--space-4);
+  }
+  .menu-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2_5);
+    margin-top: var(--space-2);
+    border-top: 1px solid var(--color-border-subtle);
+    padding-top: var(--space-4);
+    padding-bottom: var(--space-2);
+  }
+  .menu-actions .btn {
+    flex: 1;
+  }
+  .menu-music {
+    height: 47px;
+  }
+  .menu-music > span {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    line-height: 1.25;
+  }
+  [data-music-state] {
+    display: block;
+    transition: transform 200ms ease-in-out;
+  }
+  .menu-track {
+    position: absolute;
+    inset-inline: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--space-1_5);
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateY(-8px);
+    filter: blur(2px);
+    transition:
+      transform 200ms ease-in-out,
+      opacity 200ms ease-in,
+      filter 200ms ease-in;
+  }
+  .menu-track img {
+    width: 18px;
+    height: 18px;
+  }
+  [aria-pressed="true"] [data-music-state] {
+    transform: translateY(-12px);
+  }
+  [aria-pressed="true"] .menu-track {
+    opacity: 1;
+    transform: translateY(-4px);
+    filter: none;
+  }
+  @media (min-width: 40rem) {
+    .header-inner {
+      padding-inline: var(--space-6);
+    }
     .desktop-nav,
-    .github-link,
-    .rss-link {
-      display: none;
+    .desktop-actions {
+      display: flex;
     }
     .mobile-menu {
-      display: block;
-    }
-    .header-inner {
-      gap: var(--space-3);
-      padding-inline: var(--space-4);
-    }
-    .header-actions {
-      gap: var(--space-1);
+      display: none;
     }
   }
-  @media (max-width: 25rem) {
+  @media (min-width: 64rem) {
+    .home-mark :global(svg) {
+      width: calc(var(--pxc) * 2);
+      height: calc(var(--pxc) * 2);
+    }
+    .icon-button {
+      width: calc(var(--pxr) * 3);
+      height: calc(var(--pxr) * 3);
+    }
     .install-link {
-      display: none;
+      height: calc(var(--pxr) * 3);
     }
   }
 </style>

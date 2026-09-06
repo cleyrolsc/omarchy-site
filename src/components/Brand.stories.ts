@@ -10,3 +10,5 @@ export default {
 };
 export const Default = { args: { variant: "wordmark" } };
 export const Mark = { args: { variant: "mark", label: "Omarchy" } };
+
+export const DrawnMark = { args: { variant: "mark", drawn: true } };

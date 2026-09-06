@@ -3,7 +3,7 @@ title: Omarchy meetups around the world
 date: 2026-08-24 13:07 +0200
 author: DHH
 author_url: https://dhh.dk
-description: Find an Omarchy meetup near you or start one yourself and add it to the global calendar.
+description: "Omarchy has grown into a global community, with ~35,000 members on the Discord, and now it’s time we started meeting face to face. So we’re launching Omarchy Meetups with a shared calendar for gatherings around the…"
 ---
 
 Omarchy has grown into a global community, with ~35,000 members on [the Discord](https://discord.com/invite/tXFUdasqhY), and now it's time we started meeting face to face. So we're launching [Omarchy Meetups](/meetups/) with a shared calendar for gatherings around the world.

@@ -3,7 +3,8 @@
   "title": "Terminal",
   "description": "Foot is the default terminal for Omarchy. It’s fast, lightweight, and compatible with even old computers. It does not, however, support native tabs or splits. I",
   "order": 14,
-  "path": "/manual/terminal/"
+  "path": "/manual/terminal/",
+  "format": "html"
 }
 ---
 
@@ -13,7 +14,7 @@
 
 <p>You start a new terminal using <code>Super + Return</code>. (This binding will automatically point to whichever Terminal you’ve installed via <em>Install &gt; Terminal</em>, and you can switch between installed terminals under <em>Setup &gt; Defaults &gt; Terminal</em>.)</p>
 
-<h2 id="tmux">Tmux <a class="manual__heading-link" href="#tmux" aria-label="Link to this section">#</a></h2>
+<h2 id="tmux"><a class="manual__heading-link" href="#tmux" aria-label="Link to this section">Tmux<span class="manual__hash" aria-hidden="true">#</span></a></h2>
 
 <p>Tmux provides a consistent, programmable interface for panes, windows (aka tabs), and resumable sessions regardless of your terminal. It even works on remote hosts, so when you’re SSH’ing into a server, you can use the same approach.</p>
 
@@ -21,7 +22,7 @@
 
 <p>Omarchy ships with an ergonomically-optimized Tmux configuration, which has a lot of keybindings to learn, so keep <a href="/manual/hotkeys/#tmux">the cheatsheet handy</a>.</p>
 
-<h2 id="tmux-layout-functions">Tmux layout functions <a class="manual__heading-link" href="#tmux-layout-functions" aria-label="Link to this section">#</a></h2>
+<h2 id="tmux-layout-functions"><a class="manual__heading-link" href="#tmux-layout-functions" aria-label="Link to this section">Tmux layout functions<span class="manual__hash" aria-hidden="true">#</span></a></h2>
 
 <p>Because Tmux is programmable, we can use functions to create layouts. Omarchy ships with four different functions for common developer layouts.</p>
 

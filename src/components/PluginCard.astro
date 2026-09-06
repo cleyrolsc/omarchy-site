@@ -1,4 +1,5 @@
 ---
+import SiteIcon from "./SiteIcon.astro";
 export interface Props {
   plugin: {
     id: string;
@@ -8,99 +9,181 @@ export interface Props {
     thumb: string | null;
     thumbW?: number | null;
     thumbH?: number | null;
-    installCommand: string;
+    installCommand?: string;
     verified?: boolean;
+    stars?: number;
+    category?: string;
+    builtIn?: boolean;
+    initials?: string;
+    stats?: { hearts: number };
   };
 }
 const { plugin } = Astro.props;
 ---
 
 <article class="plugin-card">
-  <a
-    class="plugin-link"
-    href={`https://plugins.omarchy.org/plugin.html?id=${encodeURIComponent(plugin.id)}`}
-  >
+  <div class="plugin-image">
     {
       plugin.thumb ? (
         <img
           src={plugin.thumb}
-          alt={`${plugin.name} preview`}
-          width={plugin.thumbW || 640}
-          height={plugin.thumbH || 360}
+          alt=""
+          width={plugin.thumbW || 720}
+          height={plugin.thumbH || 405}
           loading="lazy"
           decoding="async"
         />
       ) : (
-        <div class="plugin-placeholder" aria-hidden="true">
-          {plugin.name.slice(0, 2)}
-        </div>
+        <span>{plugin.initials || plugin.name.slice(0, 2).toUpperCase()}</span>
       )
     }
-    <div class="plugin-copy">
+  </div>
+  <div class="plugin-copy">
+    <div class="plugin-title">
       <h3>
-        {plugin.name}{plugin.verified && <span aria-label="Verified"> ✓</span>}
-      </h3><p>{plugin.description}</p><span class="muted"
-        >{plugin.author || "community"}</span>
-    </div>
-  </a>
-  <button
-    type="button"
-    data-copy={plugin.installCommand}
-    hidden
-    aria-label={`Copy install command for ${plugin.name}`}
-    >Copy install command</button
-  >
+        <a
+          href={`https://plugins.omarchy.org/plugin.html?id=${encodeURIComponent(plugin.id)}`}
+          >{plugin.name}</a>
+      </h3>{
+        plugin.verified && (
+          <SiteIcon
+            name="Verified"
+            size={16}
+            aria-label="Verified plugin"
+            role="img"
+          />
+        )
+      }<span class="plugin-stats"
+        >{
+          Boolean(plugin.stats?.hearts) && (
+            <span>
+              <SiteIcon name="Heart" size={12} />
+              {plugin.stats!.hearts.toLocaleString("en-US")}
+              <span class="sr-only">hearts</span>
+            </span>
+          )
+        }{
+          Boolean(plugin.stars) && (
+            <span>
+              <SiteIcon name="Star" size={12} />
+              {plugin.stars!.toLocaleString("en-US")}
+              <span class="sr-only">stars</span>
+            </span>
+          )
+        }</span>
+    </div><p class="plugin-description">{plugin.description}</p><p
+      class="plugin-meta"
+    >
+      {plugin.builtIn ? "Omarchy" : plugin.author || "unknown"} - {
+        plugin.category
+      }
+    </p>
+  </div>
 </article>
 <style>
   .plugin-card {
+    position: relative;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
     background: var(--color-surface);
     box-shadow: var(--shadow-card);
+    transition: box-shadow 150ms ease-out;
   }
-  .plugin-link {
-    display: block;
-    flex: 1;
-    text-decoration: none;
+  .plugin-card:hover {
+    box-shadow: var(--shadow-elevated);
   }
-  img,
-  .plugin-placeholder {
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
+  .plugin-image {
+    aspect-ratio: 16/9;
+    overflow: hidden;
     background: var(--color-bg-deep);
   }
-  .plugin-placeholder {
+  .plugin-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .plugin-image > span {
     display: grid;
     place-items: center;
-    font-size: var(--text-display);
+    height: 100%;
+    font-size: var(--text-3xl);
     color: var(--color-brand);
   }
   .plugin-copy {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--space-1_5);
     padding: var(--space-4);
   }
-  h3 {
-    margin: 0;
-    font-size: var(--text-sm);
+  .plugin-title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1_5);
   }
-  h3 span {
+  h3 {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    line-height: 1.428571;
+    letter-spacing: normal;
+  }
+  a {
+    text-decoration: none;
+  }
+  a::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+  a:focus-visible::before {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: -2px;
+  }
+  .plugin-title > :global(svg) {
     color: var(--color-brand);
+    flex-shrink: 0;
+  }
+  .plugin-stats {
+    display: flex;
+    flex-shrink: 0;
+    gap: var(--space-2_5);
+    margin-left: auto;
+    font-size: var(--text-xs);
+    line-height: 1.333333;
+    color: var(--color-text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .plugin-stats > span {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
   }
   p {
-    color: var(--color-text-secondary);
+    margin: 0;
+  }
+  .plugin-description {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
     font-size: var(--text-caption);
-    margin: var(--space-2) 0;
-  }
-  button {
-    border: 0;
-    border-top: 1px solid var(--color-border);
-    background: transparent;
+    line-height: 1.625;
     color: var(--color-text-secondary);
-    text-align: left;
-    padding: var(--space-3) var(--space-4);
-    font-size: var(--text-xs);
+    text-wrap: pretty;
   }
-  button:hover {
-    color: var(--color-brand);
+  .plugin-meta {
+    margin-top: auto;
+    padding-top: var(--space-1_5);
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+    line-height: 1.333333;
   }
 </style>

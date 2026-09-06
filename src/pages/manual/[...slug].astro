@@ -2,6 +2,7 @@
 import { render } from "astro:content";
 import SiteLayout from "../../layouts/SiteLayout.astro";
 import ManualNavigation from "../../components/ManualNavigation.astro";
+import SiteIcon from "../../components/SiteIcon.astro";
 import Brand from "../../components/Brand.astro";
 import { manualEntries } from "../../lib/content";
 export async function getStaticPaths() {
@@ -32,16 +33,25 @@ const { Content } = await render(chapter);
         path: c.data.path,
       }))}
       currentPath={chapter.data.path}
-    /><div class="manual-main">
+    /><div class="manual-main manual-chapter">
       <article>
-        {chapter.id === "index" && <Brand class="manual-wordmark" />}<h1>
+        {chapter.id === "index" && <Brand hero class="manual-wordmark" />}<h1>
           {chapter.data.title}
-        </h1><div class="prose manual-prose"><Content /></div>
+        </h1><div class="prose manual-prose">
+          {
+            chapter.data.format === "html" ? (
+              <Fragment set:html={chapter.body} />
+            ) : (
+              <Content />
+            )
+          }
+        </div>
       </article><nav class="chapter-pagination" aria-label="Chapter pagination">
         {
           prev ? (
             <a rel="prev" href={prev.data.path}>
-              ← {prev.data.title}
+              <SiteIcon name="ArrowLeft" size={20} />
+              {prev.data.title}
             </a>
           ) : (
             <span />
@@ -49,7 +59,8 @@ const { Content } = await render(chapter);
         }{
           next && (
             <a rel="next" href={next.data.path}>
-              {next.data.title} →
+              {next.data.title}
+              <SiteIcon name="ArrowRight" size={20} />
             </a>
           )
         }
@@ -60,39 +71,49 @@ const { Content } = await render(chapter);
 <style>
   .manual-layout {
     display: grid;
-    gap: var(--space-12);
+    gap: var(--space-8);
   }
   .manual-main {
     min-width: 0;
-    max-width: var(--measure);
-    margin-left: auto;
+
     width: 100%;
   }
   h1 {
-    margin: 0;
+    margin: 0 auto;
+    max-width: var(--measure);
+    font-size: var(--text-3xl);
+    line-height: 1.2;
+    font-weight: 600;
   }
   .manual-prose {
     margin-top: var(--space-6);
   }
   :global(.manual-wordmark) {
-    margin-bottom: var(--space-10);
+    margin: 0 auto var(--space-10);
+    max-width: var(--measure);
   }
   .chapter-pagination {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     gap: var(--space-3);
-    border-top: 1px solid var(--color-border);
+    border-top: 1px solid var(--color-border-subtle);
     margin-top: var(--space-14);
     padding-top: var(--space-6);
     font-size: var(--text-sm);
     color: var(--color-text-secondary);
   }
   .chapter-pagination a {
-    max-width: 48%;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
     text-decoration: none;
   }
   @media (min-width: 64rem) {
+    .manual-main {
+      max-width: var(--measure);
+      margin-left: auto;
+    }
     .manual-layout {
       grid-template-columns: 16rem minmax(0, 1fr);
       gap: var(--space-8);

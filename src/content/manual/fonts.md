@@ -3,7 +3,8 @@
   "title": "Fonts",
   "description": "Omarchy uses JetBrainsMono Nerd Font as both the terminal and system font by default. You can change this through the Style > Font menu in the Omarchy menu (",
   "order": 37,
-  "path": "/manual/fonts/"
+  "path": "/manual/fonts/",
+  "format": "html"
 }
 ---
 

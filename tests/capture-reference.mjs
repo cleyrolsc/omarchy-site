@@ -19,7 +19,7 @@ const docs = [];
 function capture(route, title, html, selector) {
   const $ = load(html);
   const fragments = $("p,pre,li,td,th,h2,h3,h4,figcaption")
-    .map((_, el) => normalize($(el).text()))
+    .map((_, el) => normalize($(el).text()).replace(/\s*#$/, ""))
     .get()
     .filter(Boolean);
   const ids = $("[id]")
@@ -51,7 +51,7 @@ for (const [slug, page] of Object.entries(json("pages"))) {
     ".standalone-content",
   );
 }
-const assets = JSON.parse(fs.readFileSync("tests/fixtures/static-assets.json"));
+const assets = {};
 function walk(dir) {
   return fs
     .readdirSync(dir, { withFileTypes: true })
@@ -61,13 +61,16 @@ function walk(dir) {
         : [path.join(dir, entry.name)],
     );
 }
-for (const file of walk(path.join(source, "public"))) {
-  const url = "/" + path.relative(path.join(source, "public"), file);
-  // These metadata files intentionally changed for the Astro build.
-  if (["/robots.txt", "/favicon.svg"].includes(url)) continue;
-  assets[url] = createHash("sha256")
-    .update(fs.readFileSync(file))
-    .digest("hex");
+for (const directory of ["public", "assets"]) {
+  for (const file of walk(path.join(source, directory))) {
+    const url =
+      (directory === "assets" ? "/assets/" : "/") +
+      path.relative(path.join(source, directory), file);
+    if (["/robots.txt", "/favicon.svg"].includes(url)) continue;
+    assets[url] = createHash("sha256")
+      .update(fs.readFileSync(file))
+      .digest("hex");
+  }
 }
 fs.writeFileSync(
   "tests/fixtures/static-assets.json",

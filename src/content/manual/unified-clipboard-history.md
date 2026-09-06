@@ -3,7 +3,8 @@
   "title": "Unified Clipboard & History",
   "description": "Usually on Linux, you need Ctrl + Shift + C/V to copy’n’paste in the terminal and Ctrl + C/V to do it everywhere else. That’s hard to get used to for anyone who",
   "order": 7,
-  "path": "/manual/unified-clipboard-history/"
+  "path": "/manual/unified-clipboard-history/",
+  "format": "html"
 }
 ---
 
@@ -40,7 +41,7 @@
 
 <p><em>Note that most agent harnesses will use <code>Ctrl + V</code> for pasting images, but <code>Super + V</code> for pasting text.</em></p>
 
-<h3 id="clipboard-history">Clipboard history <a class="manual__heading-link" href="#clipboard-history" aria-label="Link to this section">#</a></h3>
+<h3 id="clipboard-history"><a class="manual__heading-link" href="#clipboard-history" aria-label="Link to this section">Clipboard history<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>The clipboard history is provided by the Omarchy shell and works for both text and images. You trigger it by <code>Super + Ctrl + V</code>, select your entry with return, and then that’ll be placed on the clipboard ready to paste on <code>Super + V</code>.</p>
 

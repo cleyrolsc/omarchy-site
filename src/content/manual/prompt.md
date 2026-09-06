@@ -3,7 +3,8 @@
   "title": "Prompt",
   "description": "Omarchy ships with a minimal Starship prompt by default. That’s how I like to keep my prompt. I don’t need to know the user, because it’s always me, and I don’t",
   "order": 39,
-  "path": "/manual/prompt/"
+  "path": "/manual/prompt/",
+  "format": "html"
 }
 ---
 

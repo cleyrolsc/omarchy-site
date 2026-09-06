@@ -1,0 +1,64 @@
+---
+export interface Props {
+  class?: string;
+}
+---
+
+<div class:list={["card-rail", Astro.props.class]} data-card-rail tabindex="0">
+  <slot />
+</div>
+<div class="rail-track" aria-hidden="true"><div data-rail-thumb></div></div>
+<style>
+  .card-rail {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 100%;
+    margin: var(--space-6) calc(-1 * var(--space-4)) 0;
+    padding-inline: var(--space-4);
+    gap: var(--space-4);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .card-rail::-webkit-scrollbar {
+    display: none;
+  }
+  .card-rail :global(> *) {
+    scroll-snap-align: center;
+    min-width: 0;
+  }
+  .rail-track {
+    margin-top: var(--space-5);
+    height: var(--space-2);
+    background: color-mix(
+      in oklch,
+      var(--color-border-subtle) 50%,
+      transparent
+    );
+  }
+  .rail-track > div {
+    height: 100%;
+    width: 100%;
+    background: var(--color-brand);
+  }
+  @media (min-width: 40rem) {
+    .card-rail {
+      grid-auto-flow: row;
+      grid-auto-columns: auto;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      padding: 0;
+      margin-inline: 0;
+      overflow: visible;
+      scroll-snap-type: none;
+    }
+    .rail-track {
+      display: none;
+    }
+  }
+  @media (min-width: 64rem) {
+    .card-rail {
+      margin-top: var(--space-10);
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>

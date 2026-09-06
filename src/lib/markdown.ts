@@ -2,6 +2,8 @@ import { getCollection, getEntry } from "astro:content";
 import { cleanMarkdown, manualEntries, newsEntries, newsPath } from "./content";
 import { SITE_THEMES } from "./theme";
 import { site, absoluteUrl } from "../config/site";
+import showcases from "../data/showcases.json";
+import meetups from "../data/meetups.json";
 import home from "../data/home.json";
 import release from "../data/version.json";
 import catalogue from "../data/plugins.json";
@@ -70,15 +72,34 @@ export async function documents(): Promise<Document[]> {
         `### ${item.title}\n\n${item.description}\n\n${link(item.link, item.href)}`,
     ),
     "## A plugin for every dream, every desire",
-    `${catalogue.plugins.length.toLocaleString("en-US")} community plugins for the Quattro shell: bars, widgets, overlays, and services, each one a single command away.`,
+    "Thousands of community plugins are available for Omarchy. Don't find what you need? Just put your agent on the job, then share when done.",
     ...home.featuredPluginIds.map((id) => {
       const p = catalogue.plugins.find((p) => p.id === id)!;
       return `### ${link(p.name, "https://plugins.omarchy.org/plugin.html?id=" + encodeURIComponent(p.id))}\n\n${p.description}\n\n${p.installCommand}`;
     }),
+    "## The agentic OS for the age of agents",
+    "Your agent should feel at home on your computer. Omarchy gives it the tools and skills to help you understand, fix, and shape the whole system.",
+    ...showcases.features.map(
+      (item) => `### ${item.title}\n\n${item.description}`,
+    ),
+    showcases.agents.map(([name, , href]) => link(name, href)).join(" · "),
+    link("Meet your new agent", "/manual/ai/"),
     "## Pick a theme, change everything",
     "A theme restyles the whole system at once: terminal, bar, notifications, wallpaper. Pick one and this site wears it too. Or press T to flip through them.",
     SITE_THEMES.map((theme) => theme.name).join(" / "),
     link("More community themes", "/themes/"),
+    "## Developed by developers for developers",
+    "The tools you know, set up to work together. Bring your projects, choose your favorites, and get straight to building.",
+    ...showcases.tools.map(
+      (item) => `### ${item.title}\n\n${item.description}`,
+    ),
+    "## All work and all play is all good",
+    "Omarchy comes ready for Steam, RetroArch, and a whole world of gaming. Graphics drivers and configuration, including NVIDIA on supported hardware, are sorted during installation.",
+    ...showcases.games.map(
+      (game) =>
+        `### ${link(game.name, "/manual/gaming/#" + game.section)}\n\n${game.description}`,
+    ),
+    link("Get your game on", "/manual/gaming/"),
     "## What's been happening",
     ...news
       .slice(0, 6)
@@ -99,9 +120,22 @@ export async function documents(): Promise<Document[]> {
     "Omarchy Core sets the direction, the Security team keeps your system safe, Design shapes how it looks and feels, and the Rangers help others find their way.",
     people(teams),
     "## Backed by the oligarchy",
-    "The billionaires, mere millionaires, and corporations funding the development, maintenance, and spread of Omarchy.",
+    "The billionaires, mere millionaires, and corporations funding the lion's share of the development, maintenance, and spread of Omarchy.",
     people(patrons),
     link("Our shadowy agenda? Better Linux.", "https://oligarchy.fyi"),
+    "## Share the love of beautiful, fun & agentic Linux",
+    "Get together with others who love computers as much as you do. Share plugins, present work, and help newcomers into the community.",
+    ...meetups.events
+      .filter(
+        (event) => Date.parse(event.start) >= Date.parse(meetups.refreshed),
+      )
+      .slice(0, 15)
+      .map(
+        (event) =>
+          `- ${link(event.title, event.url)} · ${event.start}${event.city ? " · " + event.city : ""}`,
+      ),
+    link("More meetups", "https://luma.com/omarchy"),
+    "Don't see a meetup in your city? " + link("Start your own", "/meetups/"),
     "## Get involved with Omarchy",
     "Command your agent, and hang out with the people doing the same.",
     ...home.community.map(

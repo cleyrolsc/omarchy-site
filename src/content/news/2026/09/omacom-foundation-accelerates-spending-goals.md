@@ -3,7 +3,7 @@ title: Omacom Foundation accelerates spending goals
 date: 2026-09-03 07:05 -0400
 author: DHH
 author_url: https://dhh.dk
-description: Everything raised this year will be spent over the next three. That means yearly budgets in excess of $4 million for 2027, 2028, and 2029.
+description: "This is the big chance for Linux. The desktop is up for grabs in a way it hasn’t been in decades. The agents have made the operating system malleable. The hardware has never been better. And the competition has never…"
 ---
 
 This is the big chance for Linux. The desktop is up for grabs in a way it hasn't been in decades. The agents have made the operating system malleable. The hardware has never been better. And the competition has never been more eager to annoy its own users. We're not going to let this moment pass!

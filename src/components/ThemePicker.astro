@@ -1,0 +1,255 @@
+---
+import SiteIcon from "./SiteIcon.astro";
+import { SITE_THEMES, DEFAULT_THEME } from "../lib/theme";
+export interface Props {
+  preview?: boolean;
+}
+const { preview = false } = Astro.props;
+const index = SITE_THEMES.findIndex((theme) => theme.id === DEFAULT_THEME);
+---
+
+<dialog
+  id="site-themes"
+  class="theme-picker"
+  open={preview}
+  aria-label="Theme picker"
+  tabindex="-1"
+>
+  <div class="theme-dimmer" data-close-dialog aria-hidden="true"></div>
+  <div class="theme-deck">
+    {
+      SITE_THEMES.map((theme, i) => {
+        const raw = i - index;
+        const offset =
+          raw > SITE_THEMES.length / 2
+            ? raw - SITE_THEMES.length
+            : raw < -SITE_THEMES.length / 2
+              ? raw + SITE_THEMES.length
+              : raw;
+        const depth = Math.abs(offset);
+        const shift = offset === 0 ? 0 : Math.sign(offset) * (6 + depth * 12);
+        return (
+          <div
+            class="theme-card"
+            data-picker-card={i}
+            data-depth={depth}
+            hidden={depth > 2}
+            aria-hidden={offset !== 0}
+            style={`transform:translateX(${shift}%) scale(${depth === 0 ? 1 : 0.88});z-index:${10 - depth}`}
+          >
+            <button
+              type="button"
+              tabindex="-1"
+              data-picker-card-button={i}
+              aria-label={`${offset === 0 ? "Use" : "Show"} ${theme.name}`}
+            >
+              <div class="theme-frame">
+                <div class="theme-frame-inner">
+                  <img
+                    src={
+                      depth <= 2
+                        ? `/assets/images/theme-previews/${theme.id}.webp`
+                        : undefined
+                    }
+                    data-theme-src={`/assets/images/theme-previews/${theme.id}.webp`}
+                    alt={`${theme.name} theme preview`}
+                    width="1800"
+                    height="1012"
+                    draggable="false"
+                  />
+                </div>
+              </div>
+            </button>
+          </div>
+        );
+      })
+    }
+    <div class="theme-spacer" aria-hidden="true"></div>
+  </div>
+  <button
+    class="theme-name"
+    type="button"
+    tabindex="-1"
+    data-choose-theme
+    aria-label="Use Tokyo Night"
+    ><span data-picker-name data-theme="tokyo-night">Tokyo Night</span></button
+  >
+  <button
+    type="button"
+    class="theme-arrow previous"
+    data-theme-step="-1"
+    aria-label="Previous theme"
+    ><SiteIcon name="ChevronLeft" size={20} /></button
+  >
+  <button
+    type="button"
+    class="theme-arrow next"
+    data-theme-step="1"
+    aria-label="Next theme"><SiteIcon name="ChevronRight" size={20} /></button
+  >
+</dialog>
+<style>
+  .theme-picker {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background: transparent;
+    color: var(--color-text);
+    overflow: hidden;
+    outline: none;
+    touch-action: none;
+    view-transition-name: theme-picker;
+  }
+  .theme-picker[open] {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .theme-picker::backdrop {
+    background: transparent;
+  }
+  .theme-dimmer {
+    position: absolute;
+    inset: 0;
+    isolation: isolate;
+    background: color-mix(in srgb, var(--color-black) 55%, transparent);
+    backdrop-filter: blur(4px);
+  }
+  .theme-deck {
+    pointer-events: none;
+    position: relative;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+  .theme-card {
+    position: absolute;
+    width: min(68vw, 46rem);
+  }
+  .theme-card button {
+    pointer-events: auto;
+    display: block;
+    width: 100%;
+    border: 0;
+    padding: 0;
+    background: none;
+    --card-dim: 0.55;
+  }
+  .theme-card button:hover {
+    --card-dim: 0.78;
+  }
+  .theme-frame {
+    background: var(--color-theme-card-border);
+    clip-path: polygon(2.5% 0%, 100% 0%, 97.5% 100%, 0% 100%);
+  }
+  .theme-frame-inner {
+    --frame-width: 1px;
+    background: var(--color-black);
+    clip-path: polygon(
+      calc(2.5% + var(--frame-width)) var(--frame-width),
+      calc(100% - var(--frame-width)) var(--frame-width),
+      calc(97.5% - var(--frame-width)) calc(100% - var(--frame-width)),
+      var(--frame-width) calc(100% - var(--frame-width))
+    );
+  }
+  .theme-card[data-depth="0"] .theme-frame {
+    background: var(--color-brand);
+  }
+  .theme-card[data-depth="0"] .theme-frame-inner {
+    --frame-width: 3px;
+  }
+  .theme-card img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4/5;
+    object-fit: cover;
+    user-select: none;
+    filter: brightness(var(--card-dim));
+  }
+  .theme-card[data-depth="0"] img {
+    filter: none;
+  }
+  .theme-spacer {
+    visibility: hidden;
+    width: min(68vw, 46rem);
+    aspect-ratio: 4/5;
+  }
+  .theme-name {
+    position: relative;
+    margin-top: var(--space-1_5);
+    padding: var(--space-3_5) var(--space-4);
+    border: 0;
+    background: none;
+    text-align: center;
+    transition: filter 150ms ease-out;
+  }
+  .theme-name:hover {
+    filter: brightness(1.25);
+  }
+  .theme-name span {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: var(--text-2xl);
+    line-height: 1.333333;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    color: var(--t-text);
+    -webkit-text-stroke: 2px var(--t-bg);
+    paint-order: stroke fill;
+  }
+  .theme-name span[data-light] {
+    color: var(--t-bg);
+    -webkit-text-stroke: 2px var(--t-text);
+  }
+  .theme-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: var(--space-11);
+    height: var(--space-11);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--color-border-subtle);
+    background: var(--color-bg);
+    color: var(--color-text);
+    transition:
+      color 150ms ease-out,
+      background-color 150ms ease-out;
+  }
+  .theme-arrow:hover {
+    background: var(--color-surface-2);
+  }
+  .previous {
+    left: var(--space-3);
+  }
+  .next {
+    right: var(--space-3);
+  }
+  @media (min-width: 40rem) {
+    .theme-card,
+    .theme-spacer {
+      width: min(72vw, 46rem);
+    }
+    .previous {
+      left: var(--space-6);
+    }
+    .next {
+      right: var(--space-6);
+    }
+  }
+  @media (min-width: 40rem) {
+    .theme-card img,
+    .theme-spacer {
+      aspect-ratio: 1800/1012;
+    }
+  }
+</style>

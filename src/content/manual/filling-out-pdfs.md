@@ -3,7 +3,8 @@
   "title": "Filling out PDFs",
   "description": "Omarchy ships with a nice, basic PDF viewer called Document Viewer. This is the program that’ll open any PDFs you just double click on. But you can only use Doc",
   "order": 26,
-  "path": "/manual/filling-out-pdfs/"
+  "path": "/manual/filling-out-pdfs/",
+  "format": "html"
 }
 ---
 

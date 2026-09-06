@@ -3,11 +3,12 @@
   "title": "Text Extraction & Dictation",
   "description": "Text Extraction Hit Super + Ctrl + PrtScr to select a region on the screen for text extraction. The tesseract open source OCR model will then quickly convert th",
   "order": 10,
-  "path": "/manual/text-extraction-dictation/"
+  "path": "/manual/text-extraction-dictation/",
+  "format": "html"
 }
 ---
 
-<h3 id="text-extraction">Text Extraction <a class="manual__heading-link" href="#text-extraction" aria-label="Link to this section">#</a></h3>
+<h3 id="text-extraction"><a class="manual__heading-link" href="#text-extraction" aria-label="Link to this section">Text Extraction<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>Hit <code>Super + Ctrl + PrtScr</code> to select a region on the screen for text extraction. The tesseract open source OCR model will then quickly convert that selection into text and place it on the clipboard. Then you just hit <code>Super + V</code> to paste.</p>
 
@@ -15,7 +16,7 @@
 
 <p><img src="/manual/images/text-extraction.webp" alt="text-extraction" /></p>
 
-<h3 id="dictation">Dictation <a class="manual__heading-link" href="#dictation" aria-label="Link to this section">#</a></h3>
+<h3 id="dictation"><a class="manual__heading-link" href="#dictation" aria-label="Link to this section">Dictation<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>Omarchy offers AI dictation via <a href="https://voxtype.io/">Voxtype</a>. You install it via <em>Install &gt; AI &gt; Dictation</em> through the Omarchy menu. By default, it’ll load a base English model that takes up 150MB. But you can tweak which model you’d like to use by running <code>voxtype setup model</code> in the terminal. And you can tweak all the settings via <code>~/.config/voxtype/config.toml</code>.</p>
 

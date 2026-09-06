@@ -1,0 +1,26 @@
+<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M4.75 2.75H19.25V21.25H4.75V2.75Z"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="square"
+      />
+      <path
+        d="M8.75 6.75H15.25"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="square"
+      />
+      <path
+        d="M8.75 10.75H15.25"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="square"
+      />
+      <path
+        d="M8.75 14.75H11.25"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="square"
+      />
+    </svg>

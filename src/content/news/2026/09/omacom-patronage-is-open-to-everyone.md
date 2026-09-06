@@ -3,7 +3,7 @@ title: Omarchy Patronage is now open to everyone
 date: 2026-09-03 07:00 -0400
 author: DHH
 author_url: https://dhh.dk
-description: Patronage of the Omacom Foundation is now open to everyone in four tiers, each with its own badge, and there's more spending on the way.
+description: "The reception of the Omacom Foundation has been nothing short of amazing. Twelve Founding Patrons, four Distinguished Patrons, two Distinguished Corporate Patrons, and $13 million committed to the mission in under two…"
 ---
 
 The reception of the [Omacom Foundation](/foundation/) has been nothing short of amazing. Twelve Founding Patrons, four Distinguished Patrons, two Distinguished Corporate Patrons, and [$13 million committed to the mission](/news/2026/09/omacom-foundation-reaches-13-million) in under two weeks.

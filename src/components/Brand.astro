@@ -5,17 +5,37 @@ export interface Props {
   label?: string;
   class?: string;
   hero?: boolean;
+  drawn?: boolean;
 }
 const {
   variant = "wordmark",
   label = "Omarchy",
   class: className,
   hero = false,
+  drawn = false,
 } = Astro.props;
 ---
 
 {
-  variant === "mark" ? (
+  variant === "mark" && drawn ? (
+    <svg
+      class:list={["brand-mark", "mark-draw", className]}
+      viewBox="0 0 1200 1200"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="80"
+      role="img"
+      aria-label={label}
+    >
+      <>
+        <path pathLength="1" d="M640 1160H40V40H1160V1160H720" />
+        <path pathLength="1" d="M600 40V200" />
+        <path pathLength="1" d="M640 200H200V1000H1000V200H880" />
+        <path pathLength="1" d="M600 1160V1040" />
+        <path pathLength="1" d="M40 600H200" />
+      </>
+    </svg>
+  ) : variant === "mark" ? (
     <svg
       class:list={["brand-mark", className]}
       viewBox="0 0 1200 1200"
@@ -51,14 +71,17 @@ const {
     display: block;
     width: 100%;
     aspect-ratio: 4131 / 950;
+    background: currentColor;
+    mask: url("/brand/omarchy-wordmark.svg") center / 100% 100% no-repeat;
+  }
+  [data-hero-wordmark] {
     background: linear-gradient(
       to bottom,
-      var(--t-field-mid) 0 17%,
-      var(--t-field-lit) 17% 42%,
-      var(--t-field-hover) 42% 67%,
-      var(--t-field-crest) 67% 84%,
-      var(--t-field-lit) 84%
+      var(--t-field-crest) 0 26.316%,
+      var(--t-field-hover) 26.316% 36.842%,
+      var(--t-field-lit) 36.842% 57.895%,
+      var(--t-field-mid) 57.895% 73.684%,
+      var(--t-field-dim) 73.684% 100%
     );
-    mask: url("/brand/omarchy-wordmark.svg") center / contain no-repeat;
   }
 </style>

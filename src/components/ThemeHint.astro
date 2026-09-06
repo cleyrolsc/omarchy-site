@@ -1,70 +1,95 @@
 ---
-import { Paintbrush, X } from "@lucide/astro";
+import SiteIcon from "./SiteIcon.astro";
 export interface Props {
   visible?: boolean;
 }
 const { visible = false } = Astro.props;
 ---
 
-<aside
-  class="theme-hint"
-  data-theme-hint
-  hidden={!visible}
-  aria-label="Theme shortcut"
->
-  <Paintbrush size={19} />
-  <button type="button" data-open-theme
-    ><strong>Change the theme</strong><span
-      >Press T, or tap here.<br />Inside Omarchy it is<br />Super + Ctrl + Shift
-      + Space.</span
+<aside class="theme-hint" data-theme-hint hidden={!visible} role="status">
+  <button data-open-theme
+    ><SiteIcon name="Brush" size={20} /><span
+      ><strong>Change the theme</strong><span
+        >Press T, or tap here. Inside Omarchy it is Super + Ctrl + Shift +
+        Space.</span
+      ></span
     ></button
-  >
-  <button type="button" data-hint-dismiss aria-label="Dismiss theme hint"
-    ><X size={16} /></button
-  >
+  ><button data-hint-dismiss aria-label="Dismiss"
+    ><SiteIcon name="Cross" size={16} /></button>
 </aside>
 <style>
   .theme-hint {
     position: fixed;
-    z-index: var(--z-dropdown);
-    top: calc(var(--nav-h) + var(--space-3));
+    top: 104px;
     right: var(--space-4);
-    display: flex;
-    align-items: flex-start;
-    gap: var(--space-3);
-    width: min(18rem, calc(100vw - var(--space-8)));
-    padding: var(--space-5);
+    z-index: var(--z-dropdown);
+    width: 18rem;
+    max-width: calc(100vw - 2rem);
     background: var(--color-surface);
-    border: 1px solid var(--color-border);
     box-shadow: var(--shadow-card);
-  }
-  .theme-hint > svg {
-    flex-shrink: 0;
-    color: var(--color-brand);
+    animation: notice-in 200ms ease-out both;
   }
   button {
     padding: 0;
-    background: none;
     border: 0;
+    background: none;
     color: var(--color-text);
     text-align: left;
-    font-size: var(--text-caption);
   }
-  button[data-open-theme] {
-    flex: 1;
+  [data-open-theme] {
+    display: flex;
+    width: 100%;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    padding-right: var(--space-10);
+    transition: background-color 150ms ease-out;
+  }
+  [data-open-theme]:hover {
+    background: var(--color-surface-2);
+  }
+  [data-open-theme] :global(svg) {
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: var(--color-brand);
   }
   strong {
     display: block;
     font-family: var(--font-sans);
-    margin-bottom: var(--space-1);
+    font-size: var(--text-sm);
+    line-height: 1.428571;
+    font-weight: 500;
   }
-  span {
+  button > span > span {
     display: block;
+    margin-top: var(--space-1);
+    font-size: var(--text-caption);
+    line-height: 1.625;
     color: var(--color-text-secondary);
   }
-  button[data-hint-dismiss] {
+  [data-hint-dismiss] {
     position: absolute;
-    top: var(--space-3);
-    right: var(--space-3);
+    top: var(--space-2);
+    right: var(--space-2);
+    display: grid;
+    place-items: center;
+    width: var(--space-8);
+    height: var(--space-8);
+    color: var(--color-text-muted);
+  }
+  @media (min-width: 40rem) {
+    .theme-hint {
+      top: 68px;
+    }
+  }
+  @keyframes notice-in {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 </style>

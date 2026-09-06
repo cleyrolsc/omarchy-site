@@ -1,31 +1,56 @@
 ---
 import SiteLayout from "../layouts/SiteLayout.astro";
+import SiteIcon from "../components/SiteIcon.astro";
+import { NOT_FOUND_WIDTH, NOT_FOUND_HEIGHT } from "../data/not-found-bitmap";
 ---
 
 <SiteLayout title="Page not found - Omarchy" markdownPath={false} noindex
-  ><main id="main" class="not-found" data-hero-sentinel>
-    <canvas data-pixel-field="not-found" aria-hidden="true"></canvas><div>
-      <img
-        data-hero-wordmark
-        src="/brand/not-found-wordmark.svg"
-        alt=""
-        width="896"
-        height="160"
-      /><h1>Page not found</h1><p>
-        The address may have changed, or the page may never have existed.
-      </p><a class="btn btn--primary" href="/">Back to Omarchy</a>
-    </div>
+  ><main id="main">
+    <section class="not-found pixel-container" data-hero-sentinel>
+      <canvas data-pixel-field="not-found" aria-hidden="true"></canvas><div
+        class="not-found-body"
+      >
+        <div class="upper-space"></div><div class="not-found-axis">
+          <div style={`width:min(calc(var(--pxc) * ${NOT_FOUND_WIDTH}),100%)`}>
+            <div
+              class="not-found-word"
+              data-hero-wordmark
+              role="img"
+              aria-label="Not found"
+              style={`aspect-ratio:${NOT_FOUND_WIDTH * 51}/${NOT_FOUND_HEIGHT * 50}`}
+            >
+            </div>
+          </div>
+        </div><div class="lower-space"></div><div
+          class="not-found-copy"
+          data-hero-quiet
+        >
+          <h1>
+            <span class="sr-only">404: </span>There is nothing at this address.
+          </h1><p>
+            <span>The link may be old,</span><span
+              >or the page may have moved.</span>
+          </p><div class="not-found-actions">
+            <a class="btn btn--lg" href="/"
+              ><SiteIcon name="ArrowLeft" size={20} />Back to Omarchy</a>
+          </div>
+        </div>
+      </div>
+    </section>
   </main></SiteLayout
 >
 <style>
   .not-found {
     position: relative;
-    display: grid;
-    place-items: center;
-    min-height: 75svh;
+    margin-top: calc(-1 * var(--nav-h));
+    display: flex;
+    min-height: 100svh;
+    flex-direction: column;
+    overflow: hidden;
+    border-bottom: 1px solid var(--color-border-subtle);
+    padding-top: var(--nav-h);
+    user-select: none;
     background: var(--t-field-bg);
-    padding: var(--space-12) var(--space-6);
-    text-align: center;
   }
   canvas {
     position: absolute;
@@ -33,22 +58,83 @@ import SiteLayout from "../layouts/SiteLayout.astro";
     width: 100%;
     height: 100%;
   }
-  .not-found > div {
+  .not-found-body {
+    pointer-events: none;
     position: relative;
-    width: min(100%, 56rem);
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    padding-inline: var(--space-6);
   }
-  img {
+  .upper-space {
+    flex: 2.1;
+  }
+  .lower-space {
+    flex: 1;
+  }
+  .not-found-axis {
+    display: flex;
     width: 100%;
-    margin-bottom: var(--space-10);
+    align-items: center;
+    justify-content: center;
+    height: calc(var(--pxr) * 19);
+  }
+  .not-found-word {
+    width: 100%;
+    background: var(--t-field-lit);
+    mask: url("/brand/not-found-wordmark.svg") center/100% 100% no-repeat;
+  }
+  .not-found-word[data-painted] {
+    visibility: hidden;
+  }
+  .not-found-copy {
+    pointer-events: auto;
+    display: flex;
+    width: 100%;
+    max-width: 42rem;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: var(--space-24);
+    text-align: center;
   }
   h1 {
-    margin: var(--space-6) 0;
+    margin: 0;
+    font-size: var(--text-2xl);
+    line-height: 1.333333;
+    font-weight: 500;
   }
   p {
-    margin-bottom: var(--space-6);
+    margin: var(--space-4) 0 0;
+    font-size: var(--text-body);
+    line-height: 1.625;
     color: var(--color-text-secondary);
   }
-  [data-painted] {
-    visibility: hidden;
+  p > span {
+    display: block;
+    text-wrap: balance;
+  }
+  .not-found-actions {
+    margin-top: var(--space-9);
+    display: flex;
+    width: 100%;
+    max-width: 20rem;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  @media (min-width: 40rem) {
+    h1 {
+      font-size: var(--text-3xl);
+      line-height: 1.2;
+    }
+    .not-found-actions {
+      width: auto;
+      max-width: none;
+    }
+  }
+  @media (min-width: 64rem) {
+    .btn {
+      height: calc(var(--pxr) * 4);
+    }
   }
 </style>

@@ -21,6 +21,7 @@ const { page, to } = Astro.props;
 const rendered = page ? await render(page) : undefined;
 const Content = rendered?.Content;
 const narrow = [
+  "patrons/badges",
   "server",
   "meetups",
   "air",
@@ -45,9 +46,24 @@ const narrow = [
       >
         <main id="main" class:list={["page", { "page--reading": narrow }]}>
           <>
-            <h1>{page.data.title}</h1>
-            <div class="prose ported standalone-content">
-              <Content />
+            <h1 class:list={[{ centered: page.id === "patrons/badges" }]}>
+              {page.data.title}
+            </h1>
+            <div
+              class:list={[
+                "prose ported standalone-content",
+                {
+                  subtitle: ["patrons", "foundation", "potato"].includes(
+                    page.id,
+                  ),
+                },
+              ]}
+            >
+              {page.data.format === "html" ? (
+                <Fragment set:html={page.body} />
+              ) : (
+                <Content />
+              )}
             </div>
           </>
         </main>
@@ -56,6 +72,18 @@ const narrow = [
   )
 }
 <style>
+  h1 {
+    margin: 0;
+    font-size: var(--text-3xl);
+    line-height: 1.2;
+    font-weight: 600;
+  }
+  .centered {
+    text-align: center;
+  }
+  .standalone-content.subtitle {
+    margin-top: var(--space-2);
+  }
   .standalone-content {
     margin-top: var(--space-8);
   }

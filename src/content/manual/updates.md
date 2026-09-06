@@ -3,7 +3,8 @@
   "title": "Updates",
   "description": "Omarchy and your packages are kept up to date via Update > Omarchy in the Omarchy menu ( Super + Space ). Omarchy itself is installed as regular pacman packa",
   "order": 29,
-  "path": "/manual/updates/"
+  "path": "/manual/updates/",
+  "format": "html"
 }
 ---
 
@@ -15,7 +16,7 @@
 
 <p><img src="/manual/images/update-available.webp" alt="update-available" /></p>
 
-<h3 id="four-channels">Four channels <a class="manual__heading-link" href="#four-channels" aria-label="Link to this section">#</a></h3>
+<h3 id="four-channels"><a class="manual__heading-link" href="#four-channels" aria-label="Link to this section">Four channels<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>Omarchy is updated along four channels: stable, RC, edge, and dev. New installations start on the stable channel, which tracks the <a href="https://github.com/basecamp/omarchy/releases/">official releases</a>, as well as the <a href="https://github.com/omacom-io/omarchy-mirror">stable Omarchy Arch mirror</a> that’s running one month behind the latest, so we can catch any new incompatibilities that require config changes before they cause problems for people.</p>
 
@@ -27,15 +28,15 @@
 
 <p>You can switch between channels using <em>Update &gt; Channel</em> from the Omarchy menu (or <code>omarchy-channel-set</code> in the terminal).</p>
 
-<h3 id="firmware-updates">Firmware updates <a class="manual__heading-link" href="#firmware-updates" aria-label="Link to this section">#</a></h3>
+<h3 id="firmware-updates"><a class="manual__heading-link" href="#firmware-updates" aria-label="Link to this section">Firmware updates<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>Your packages aren’t the only thing that goes stale. Many laptops and peripherals ship BIOS, SSD, and dock firmware through the Linux Vendor Firmware Service, and <em>Update &gt; Firmware</em> in the Omarchy menu will fetch and install whatever your hardware has waiting. It installs <code>fwupd</code> the first time you run it. Plenty of firmware can only be written during a reboot, so don’t be surprised to be asked for one.</p>
 
-<h3 id="warning-about-direct-pacmanyay-updates">Warning about direct pacman/yay updates <a class="manual__heading-link" href="#warning-about-direct-pacmanyay-updates" aria-label="Link to this section">#</a></h3>
+<h3 id="warning-about-direct-pacmanyay-updates"><a class="manual__heading-link" href="#warning-about-direct-pacmanyay-updates" aria-label="Link to this section">Warning about direct pacman/yay updates<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>If you’re already familiar with Arch, you might be tempted to just run <code>pacman -Syu</code> or <code>yay -Syu</code> yourself, but if you do that, you’ll miss the snapshot, migrations, and configuration updates that Omarchy runs together with new packages. That’s why Omarchy will actually stop a direct system upgrade and point you to <code>omarchy update</code> instead. (If you really know what you’re doing, the guard will tell you how to bypass it for a single transaction.)</p>
 
-<h3 id="rolling-back-bad-updates">Rolling back bad updates <a class="manual__heading-link" href="#rolling-back-bad-updates" aria-label="Link to this section">#</a></h3>
+<h3 id="rolling-back-bad-updates"><a class="manual__heading-link" href="#rolling-back-bad-updates" aria-label="Link to this section">Rolling back bad updates<span class="manual__hash" aria-hidden="true">#</span></a></h3>
 
 <p>If you ever have a problem after doing an update, you can rollback your system to the snapshot taken before the update. Just restart and pick the snapshot in the boot loading menu from before you started the update.</p>
 

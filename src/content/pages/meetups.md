@@ -3,84 +3,85 @@
   "title": "Meetups around the world",
   "description": "Omarchy meetups around the world, and how to run your own: about Omarchy, Linux and adjacent hacker culture, open to everyone, and run by the community.",
   "path": "/meetups/",
-  "seoTitle": "Meetups - Omarchy"
+  "seoTitle": "Meetups - Omarchy",
+  "format": "html"
 }
 ---
 
 <div class="meetups">
 
-<div class="meetups__calendar">
-<iframe
-class="meetups__embed"
-src="https://luma.com/embed/calendar/cal-SDGGMsEps9ExsrT/events?lt=dark"
-width="600"
-height="450"
-frameborder="0"
-title="Upcoming Omarchy meetups on Luma"
-referrerpolicy="strict-origin-when-cross-origin"
-allowfullscreen
-></iframe>
+        <div class="meetups__calendar">
+          <iframe
+            class="meetups__embed"
+            src="https://luma.com/embed/calendar/cal-SDGGMsEps9ExsrT/events?lt=dark"
+            width="600"
+            height="450"
+            frameborder="0"
+            title="Upcoming Omarchy meetups on Luma"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen
+          ></iframe>
 
-<a class="button" href="https://luma.com/omarchy" aria-label="The Omarchy calendar on Luma">
-<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M10 2c.83 0 1.5.67 1.5 1.5V5h9V3.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5V5h2.5C28.43 5 30 6.57 30 8.5v18c0 1.93-1.57 3.5-3.5 3.5h-21C3.57 30 2 28.43 2 26.5v-18C2 6.57 3.57 5 5.5 5H8V3.5C8 2.67 8.67 2 9.5 2zM27 13H5v13.5c0 .28.22.5.5.5h21c.28 0 .5-.22.5-.5zm-16.5 4a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm5.5 0a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm5.5 0a2 2 0 1 1 0 4 2 2 0 0 1 0-4z" fill="currentColor"/></svg>
-<span>Open in Luma</span>
-</a>
-</div>
+          <a class="button" href="https://luma.com/omarchy" aria-label="The Omarchy calendar on Luma">
+            <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M10 2c.83 0 1.5.67 1.5 1.5V5h9V3.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5V5h2.5C28.43 5 30 6.57 30 8.5v18c0 1.93-1.57 3.5-3.5 3.5h-21C3.57 30 2 28.43 2 26.5v-18C2 6.57 3.57 5 5.5 5H8V3.5C8 2.67 8.67 2 9.5 2zM27 13H5v13.5c0 .28.22.5.5.5h21c.28 0 .5-.22.5-.5zm-16.5 4a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm5.5 0a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm5.5 0a2 2 0 1 1 0 4 2 2 0 0 1 0-4z" fill="currentColor"/></svg>
+            <span>Open in Luma</span>
+          </a>
+        </div>
 
-<section class="rules">
-<header class="rules__header">
-<h2 class="rules__title">Run Your Own Omarchy Meetup</h2>
-<p>Help make computers fun again for everyone</p>
-</header>
+        <section class="rules">
+          <header class="rules__header">
+            <h2 class="rules__title">Run Your Own Omarchy Meetup</h2>
+            <p>Help make computers fun again for everyone</p>
+          </header>
 
-<ol>
-<li class="rule">
-<p class="rule__name">About Omarchy</p>
-<p>The meetup should primarily be about Omarchy, Linux, open source, programming, customization, or adjacent hacker culture.</p>
-</li>
+          <ol>
+            <li class="rule">
+              <p class="rule__name">About Omarchy</p>
+              <p>The meetup should primarily be about Omarchy, Linux, open source, programming, customization, or adjacent hacker culture.</p>
+            </li>
 
-<li class="rule">
-<p class="rule__name">Open to everyone</p>
-<p>No invitation-only &ldquo;official Omarchy&rdquo; events. Capacity limits are obviously fine.</p>
-</li>
+            <li class="rule">
+              <p class="rule__name">Open to everyone</p>
+              <p>No invitation-only &ldquo;official Omarchy&rdquo; events. Capacity limits are obviously fine.</p>
+            </li>
 
-<li class="rule">
-<p class="rule__name">Community-run</p>
-<p>Organizers speak for themselves, not for Omarchy or the Omacom Foundation. &ldquo;Omarchy Meetup&rdquo; means community event, not official endorsement.</p>
-</li>
+            <li class="rule">
+              <p class="rule__name">Community-run</p>
+              <p>Organizers speak for themselves, not for Omarchy or the Omacom Foundation. &ldquo;Omarchy Meetup&rdquo; means community event, not official endorsement.</p>
+            </li>
 
-<li class="rule">
-<p class="rule__name">No territorial ownership</p>
-<p>Nobody owns a city. Anyone may organize an Omarchy meetup anywhere.</p>
-</li>
+            <li class="rule">
+              <p class="rule__name">No territorial ownership</p>
+              <p>Nobody owns a city. Anyone may organize an Omarchy meetup anywhere.</p>
+            </li>
 
-<li class="rule">
-<p class="rule__name">No profiteering</p>
-<p>Free is preferred. Charging to cover venue, food, or actual event costs is fine; don&rsquo;t turn the Omarchy name into an events business.</p>
-</li>
+            <li class="rule">
+              <p class="rule__name">No profiteering</p>
+              <p>Free is preferred. Charging to cover venue, food, or actual event costs is fine; don&rsquo;t turn the Omarchy name into an events business.</p>
+            </li>
 
-<li class="rule">
-<p class="rule__name">Sponsors are fine</p>
-<p>Local companies can provide space, pizza, drinks, and the rest, but sponsorship must be disclosed and the event can&rsquo;t become a sales pitch.</p>
-</li>
+            <li class="rule">
+              <p class="rule__name">Sponsors are fine</p>
+              <p>Local companies can provide space, pizza, drinks, and the rest, but sponsorship must be disclosed and the event can&rsquo;t become a sales pitch.</p>
+            </li>
 
-<li class="rule">
-<p class="rule__name">Behave like civilized adults (with child-like wonder)</p>
-<p>Don't be a jackass. The organizer has final say over removal from their event.</p>
-</li>
+            <li class="rule">
+              <p class="rule__name">Behave like civilized adults (with child-like wonder)</p>
+              <p>Don't be a jackass. The organizer has final say over removal from their event.</p>
+            </li>
 
-<li class="rule">
-<p class="rule__name">Use the name and logo responsibly</p>
-<p>&ldquo;Omarchy Copenhagen&rdquo; is fine. Don&rsquo;t imply that you&rsquo;re Omarchy itself, the Omacom Foundation, or an authorized representative.</p>
-</li>
+            <li class="rule">
+              <p class="rule__name">Use the name and logo responsibly</p>
+              <p>&ldquo;Omarchy Copenhagen&rdquo; is fine. Don&rsquo;t imply that you&rsquo;re Omarchy itself, the Omacom Foundation, or an authorized representative.</p>
+            </li>
 
-<li class="rule">
-<p class="rule__name"><a href="https://luma.com/omarchy">Submit it</a></p>
-<p>Put the event on Luma and submit it to the global Omarchy calendar so everyone can find it.</p>
-</li>
-</ol>
+            <li class="rule">
+              <p class="rule__name"><a href="https://luma.com/omarchy">Submit it</a></p>
+              <p>Put the event on Luma and submit it to the global Omarchy calendar so everyone can find it.</p>
+            </li>
+          </ol>
 
-<p class="rules__note">We need a movement to make The Prophecy come true!</p>
-</section>
+          <p class="rules__note">We need a movement to make The Prophecy come true!</p>
+        </section>
 
-</div>
+      </div>

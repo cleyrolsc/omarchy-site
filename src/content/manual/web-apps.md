@@ -3,7 +3,8 @@
   "title": "Web Apps",
   "description": "You can add your own web apps using Install > Web App in the Omarchy menu ( Super + Space ). It’ll ask you for the app name, app URL, and the icon URL, if it",
   "order": 24,
-  "path": "/manual/web-apps/"
+  "path": "/manual/web-apps/",
+  "format": "html"
 }
 ---
 
@@ -21,61 +22,61 @@
 
 <p>By default, Omarchy already ships with an assortment of default apps:</p>
 
-<h2 id="hey">HEY <a class="manual__heading-link" href="#hey" aria-label="Link to this section">#</a></h2>
+<h2 id="hey"><a class="manual__heading-link" href="#hey" aria-label="Link to this section">HEY<span class="manual__hash" aria-hidden="true">#</span></a></h2>
 
 <p><a href="https://www.hey.com/">HEY</a> is an email and calendar service that serves as a great alternative to people tired of Gmail, Outlook, or Apple Mail. It’s made by <a href="https://37signals.com/">37signals</a> where Omarchy originated.</p>
 
 <p>You can start HEY Email using <code>Super + Shift + E</code>, jump straight to composing a new email using <code>Super + Shift + Alt + E</code>, and start HEY Calendar using <code>Super + Shift + C</code>.</p>
 
-<h2 id="basecamp">Basecamp <a class="manual__heading-link" href="#basecamp" aria-label="Link to this section">#</a></h2>
+<h2 id="basecamp"><a class="manual__heading-link" href="#basecamp" aria-label="Link to this section">Basecamp<span class="manual__hash" aria-hidden="true">#</span></a></h2>
 
 <p><a href="https://basecamp.com/">Basecamp</a> is a project management service that helps small teams move faster and make more progress. Instead of patching together a mishmash of Trello, Slack, Asana, Notion, or whatever, you can have it all in one place with Basecamp. It’s made by <a href="https://37signals.com/">37signals</a> where Omarchy originated.</p>
 
 <p>You can start Basecamp using the application launcher (<code>Super + Space</code>)</p>
 
-<h2 id="chatgpt">ChatGPT <a class="manual__heading-link" href="#chatgpt" aria-label="Link to this section">#</a></h2>
+<h2 id="chatgpt"><a class="manual__heading-link" href="#chatgpt" aria-label="Link to this section">ChatGPT<span class="manual__hash" aria-hidden="true">#</span></a></h2>
 
 <p><a href="https://chatgpt.com">ChatGPT</a> is the most popular AI chat bot in the world.</p>
 
 <p>You can start ChatGPT using <code>Super + Shift + A</code>.</p>
 
-<h2 id="grok">Grok <a class="manual__heading-link" href="#grok" aria-label="Link to this section">#</a></h2>
+<h2 id="grok"><a class="manual__heading-link" href="#grok" aria-label="Link to this section">Grok<span class="manual__hash" aria-hidden="true">#</span></a></h2>
 
 <p><a href="https://grok.com">Grok</a> is xAI’s chat bot.</p>
 
 <p>You can start Grok using <code>Super + Shift + Alt + A</code>.</p>
 
-<h2 id="whatsapp">WhatsApp <a class="manual__heading-link" href="#whatsapp" aria-label="Link to this section">#</a></h2>
+<h2 id="whatsapp"><a class="manual__heading-link" href="#whatsapp" aria-label="Link to this section">WhatsApp<span class="manual__hash" aria-hidden="true">#</span></a></h2>
 
 <p><a href="https://www.whatsapp.com/">WhatsApp</a> is one of the most popular messaging services in the world, and the web version is a great option for Linux.</p>
 
 <p>You can start WhatsApp using <code>Super + Shift + Alt + G</code>.</p>
 
-<h2 id="google-apps">Google apps <a class="manual__heading-link" href="#google-apps" aria-label="Link to this section">#</a></h2>
+<h2 id="google-apps"><a class="manual__heading-link" href="#google-apps" aria-label="Link to this section">Google apps<span class="manual__hash" aria-hidden="true">#</span></a></h2>
 
 <p>Google Messages, Google Photos, Google Maps, and Google Contacts are all included as web apps too.</p>
 
 <p>You can start Google Messages using <code>Super + Shift + Ctrl + G</code>, Google Photos using <code>Super + Shift + P</code>, and Google Maps using <code>Super + Shift + S</code>. Google Contacts is available through the app launcher (<code>Super + Space</code>).</p>
 
-<h2 id="x">X <a class="manual__heading-link" href="#x" aria-label="Link to this section">#</a></h2>
+<h2 id="x"><a class="manual__heading-link" href="#x" aria-label="Link to this section">X<span class="manual__hash" aria-hidden="true">#</span></a></h2>
 
 <p>X is where news break.</p>
 
 <p>You can start X using <code>Super + Shift + X</code> and go straight to writing a new post with <code>Super + Shift + Alt + X</code>.</p>
 
-<h2 id="youtube">YouTube <a class="manual__heading-link" href="#youtube" aria-label="Link to this section">#</a></h2>
+<h2 id="youtube"><a class="manual__heading-link" href="#youtube" aria-label="Link to this section">YouTube<span class="manual__hash" aria-hidden="true">#</span></a></h2>
 
 <p><a href="https://youtube.com/">YouTube</a> is the most popular video platform in the world.</p>
 
 <p>You can start YouTube using <code>Super + Shift + Y</code>.</p>
 
-<h2 id="zoom">Zoom <a class="manual__heading-link" href="#zoom" aria-label="Link to this section">#</a></h2>
+<h2 id="zoom"><a class="manual__heading-link" href="#zoom" aria-label="Link to this section">Zoom<span class="manual__hash" aria-hidden="true">#</span></a></h2>
 
 <p><a href="https://zoom.us/">Zoom</a> is the most popular video chat system used in the US. Great connections across the world. And 40-minute meetings can be held without a paying account. Omarchy wraps Zoom’s web client, and zoom meeting links will open straight into it.</p>
 
 <p>You start Zoom using the application launcher (<code>Super + Space</code>).</p>
 
-<h2 id="discord">Discord <a class="manual__heading-link" href="#discord" aria-label="Link to this section">#</a></h2>
+<h2 id="discord"><a class="manual__heading-link" href="#discord" aria-label="Link to this section">Discord<span class="manual__hash" aria-hidden="true">#</span></a></h2>
 
 <p><a href="https://discord.com/">Discord</a> is where most gaming and open source communities hang out, including <a href="https://discord.gg/tXFUdasqhY">Omarchy’s own</a>.</p>
 

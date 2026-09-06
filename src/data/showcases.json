@@ -1,0 +1,134 @@
+{
+  "monochrome": [
+    "opencode.svg",
+    "github-copilot.svg",
+    "grok.svg",
+    "pi.svg",
+    "ori.svg",
+    "hermes.svg"
+  ],
+  "agents": [
+    [
+      "Antigravity",
+      "antigravity.svg",
+      "https://github.com/google-antigravity/antigravity-cli"
+    ],
+    [
+      "Claude Code",
+      "claude.svg",
+      "https://code.claude.com/"
+    ],
+    [
+      "Codex",
+      "codex.svg",
+      "https://github.com/openai/codex"
+    ],
+    [
+      "Copilot",
+      "github-copilot.svg",
+      "https://github.com/github/copilot-cli"
+    ],
+    [
+      "Crush",
+      "crush.png",
+      "https://github.com/charmbracelet/crush"
+    ],
+    [
+      "Grok",
+      "grok.svg",
+      "https://x.ai/"
+    ],
+    [
+      "Hermes",
+      "hermes.svg",
+      "https://hermes-agent.nousresearch.com/"
+    ],
+    [
+      "Meta Code",
+      "meta.svg",
+      "https://research.meta.ai/blog/introducing-muse-code-and-muse-spark-1-2"
+    ],
+    [
+      "Oh My Pi",
+      "oh-my-pi.svg",
+      "https://github.com/can1357/oh-my-pi"
+    ],
+    [
+      "OpenClaw",
+      "openclaw.svg",
+      "https://openclaw.ai/"
+    ],
+    [
+      "OpenCode",
+      "opencode.svg",
+      "https://opencode.ai/"
+    ],
+    [
+      "Ori",
+      "ori.svg",
+      "https://openrouter.ai/docs/guides/ori/harness"
+    ],
+    [
+      "Pi",
+      "pi.svg",
+      "https://github.com/badlogic/pi-mono"
+    ]
+  ],
+  "features": [
+    {
+      "title": "Choose your agent",
+      "description": "On first boot, Omarchy invites you to set up a default agent. Pick your favorite, sign in, and put it to work on your computer."
+    },
+    {
+      "title": "Make sense of a crash",
+      "description": "When an app crashes, click the notification to send your agent on the case. It can examine the crash dump, diagnose what went wrong, and help report the bug."
+    },
+    {
+      "title": "Make it your own",
+      "description": "Omarchy ships with skills to help your agent make apps, plugins, and themes. Describe what you want, try what it builds, and share it with everyone."
+    }
+  ],
+  "tools": [
+    {
+      "title": "Your editor, integrated",
+      "description": "Neovim is the default, with VSCode, Cursor, Zed, Sublime Text, Helix, Vim, and Emacs ready to install. Pick your favorite and make it the system-wide default.",
+      "href": "/manual/development-tools/#alternative-editors",
+      "link": "Choose your editor"
+    },
+    {
+      "title": "Your stack, ready to go",
+      "description": "Install Ruby on Rails, Laravel, Node.js, and a long list of other development environments from the Omarchy menu. Mise handles language versions, so each project can use what it needs.",
+      "href": "/manual/development-tools/#environment",
+      "link": "Set up your stack"
+    },
+    {
+      "title": "Four terminals, one choice",
+      "description": "Foot is the fast, lightweight default. Prefer Alacritty, Ghostty, or Kitty? All four are integrated, and switching your default keeps the same keyboard shortcuts working.",
+      "href": "/manual/terminal/",
+      "link": "Pick your terminal"
+    }
+  ],
+  "games": [
+    {
+      "name": "Steam",
+      "image": "gaming-steam.webp",
+      "alt": "Steam showing its game store on Omarchy",
+      "section": "steam",
+      "description": "Your PC gaming library, right at home on Linux. Steam and Proton bring a huge world of modern games to Omarchy."
+    },
+    {
+      "name": "RetroArch",
+      "image": "gaming-retroarch.webp",
+      "alt": "A classic arcade game running with RetroArch’s CRT shader",
+      "section": "retroarch",
+      "description": "Revisit the classics with a full set of emulator cores and the beautiful CRT Royale shader, already configured for that retro look."
+    },
+    {
+      "name": "Minecraft",
+      "image": "gaming-minecraft.webp",
+      "alt": "Minecraft running on Omarchy",
+      "section": "minecraft",
+      "description": "Build, explore, and make a world of your own. Install Minecraft straight from the Omarchy gaming menu and let your imagination run."
+    }
+  ]
+}

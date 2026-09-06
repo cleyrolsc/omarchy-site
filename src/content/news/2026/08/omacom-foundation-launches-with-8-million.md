@@ -3,6 +3,7 @@ title: Omacom Foundation launches with $14.95 million
 date: 2026-08-21 17:57 +0200
 author: DHH
 author_url: https://dhh.dk
+description: "It’s time to dream big. Omarchy Quattro has given people a chance to experience what the malleable computer of the future looks like, and they like it (a lot!). It now feels like a moral obligation to make this future…"
 ---
 
 It's time to dream big. Omarchy Quattro has given people a chance to experience what the malleable computer of the future looks like, and they like it (a lot!). It now feels like a moral obligation to make this future more broadly available and fundamentally change how people relate to their computers for the first time in what seems like forever.
