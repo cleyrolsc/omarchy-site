@@ -3,6 +3,9 @@
   "type": "module",
   "version": "0.0.1",
   "private": true,
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
     "dev": "concurrently -n astro,storybook -c blue,magenta \"astro dev\" \"storybook dev -p 6006 --host 127.0.0.1 --no-open\"",
     "dev:astro": "astro dev",
@@ -11,6 +14,9 @@
     "build": "astro build",
     "build:storybook": "astro build --config .storybook/astro.config.mjs && storybook build -o storybook-static",
     "preview": "astro preview",
+    "preview:cloudflare": "wrangler dev --local",
+    "check:cloudflare": "wrangler deploy --dry-run",
+    "deploy:preview": "wrangler versions upload",
     "astro": "astro",
     "storybook": "storybook dev -p 6006 --host 127.0.0.1",
     "check": "astro check",
@@ -43,7 +49,8 @@
     "sharp": "^0.35.4",
     "storybook": "^10.3.5",
     "storybook-astro": "^0.2.1",
-    "typescript": "^5.7.0"
+    "typescript": "^5.7.0",
+    "wrangler": "^4.129.0"
   },
   "overrides": {
     "yaml-language-server": {

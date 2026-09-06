@@ -6,7 +6,7 @@ The migration source is `barisgirismen/omarchy-site`, branch `redesign`, commit 
 
 ## Development
 
-Use Node 22.12+ and npm.
+Use Node 22.12+ and npm. `.node-version` selects Node 22 for Cloudflare and CI.
 
 ```sh
 npm ci
@@ -63,5 +63,22 @@ npm run preview
 Parity checks compare built pages and assets with a captured reference from the original redesign, then check local links, redirects, metadata, Markdown twins, feeds, and framework structure. Browser checks cover static content without JavaScript, keyboard navigation, search, themes, mobile layouts, media, music, accessibility, and Storybook rendering. Refresh the migration reference deliberately with `node tests/capture-reference.mjs /path/to/original-redesign`; do not regenerate it from the migrated site to hide a regression.
 
 Astro writes the complete deployable site to `dist/`. GitHub Pages deploys this folder on pushes to `master` or manual workflow dispatch. Storybook builds separately to `storybook-static/`; neither output is committed. No application server or database is required at runtime.
+
+Cloudflare Workers Builds is connected to `omacom/omarchy-site` and serves the `omarchy` Worker. `wrangler.jsonc` points to `dist/`, enables preview URLs, and runs `npm run build` before packaging so a basic Workers build generates the Astro site. It uses static assets only; no SSR adapter or Worker entry point is needed.
+
+In the Worker's **Settings → Builds**, use these settings for this Astro branch:
+
+| Setting | Value |
+| --- | --- |
+| Root directory | Repository root |
+| Production branch | `master` |
+| Build command | `npm run check` (Wrangler runs the Astro build) |
+| Deploy command | `npx wrangler deploy` |
+| Non-production branches | Enabled, all branches except `master` |
+| Non-production deploy command | `npx wrangler versions upload` |
+
+Remove any old `--assets .` argument from the deploy commands: it overrides the configured `dist/` directory. Keep the current production build settings until the Astro migration is merged; the existing `master` site does not have npm scripts. Non-production branch builds require dashboard configuration in addition to the checked-in Wrangler file. Version uploads create a preview without promoting it to production.
+
+`npm run check:cloudflare` builds and validates Wrangler packaging without uploading anything. `npm run preview:cloudflare` runs the built site locally with Cloudflare's asset routing. `npm run deploy:preview` uploads a preview when authenticated to the site's Cloudflare account. Pull requests run Astro checks, Cloudflare packaging validation, and content/asset parity independently of Cloudflare's Git integration.
 
 The Astro 6 starter dependency tree currently has five upstream npm audit advisories (including two high severity). The available Astro fix requires a framework major upgrade; this migration retains the requested framework major. Storybook development binds to localhost.

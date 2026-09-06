@@ -1,6 +1,7 @@
 node_modules/
 dist/
 .astro/
+.wrangler/
 storybook-static/
 .env
 .env.*
