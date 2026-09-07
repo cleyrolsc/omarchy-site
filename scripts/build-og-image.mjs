@@ -30,7 +30,7 @@ const COLS = Math.ceil(W / CW)
 const GRID_ROWS = Math.ceil(H / CH)
 
 const WM_COL = Math.round((COLS - 81) / 2)
-const WM_ROW = 19
+const WM_ROW = 10
 
 // Deterministic: the card should be the same picture every time it is built.
 const rand = (() => {
@@ -58,6 +58,8 @@ for (let row = 0; row < GRID_ROWS; row++) {
     const wr = row - WM_ROW
     const wc = col - WM_COL
     if (lit(wr, wc)) continue
+    if (row * CH > 365 && row * CH < 535 && col * CW > 90 && col * CW < 1110)
+      continue
 
     const near1 = within(wr, wc, 1)
     if (near1) continue
@@ -107,7 +109,57 @@ ${cells.join('')}
 ${wordmark.join('')}
 </svg>`
 
-await sharp(Buffer.from(svg)).png({ palette: true }).toFile(out)
+const fontfile = path.join(
+  root,
+  'node_modules/@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2',
+)
+const labels = [
+  {
+    text: 'Beautiful, fun &amp; agentic Linux by DHH',
+    size: 28,
+    weight: 'Medium',
+    color: '#c0caf5',
+    top: 390,
+  },
+  {
+    text: 'The malleable OS for the age of agents.',
+    size: 17,
+    weight: 'Regular',
+    color: '#a9b1d6',
+    top: 454,
+  },
+  {
+    text: 'Vibe your way through every alteration, tweak, or trouble.',
+    size: 17,
+    weight: 'Regular',
+    color: '#a9b1d6',
+    top: 482,
+  },
+]
+const overlays = await Promise.all(
+  labels.map(async (label) => {
+    const { data, info } = await sharp({
+      text: {
+        text: `<span foreground="${label.color}">${label.text}</span>`,
+        font: `JetBrains Mono ${label.weight} ${label.size}`,
+        fontfile,
+        rgba: true,
+        dpi: 72,
+      },
+    })
+      .png()
+      .toBuffer({ resolveWithObject: true })
+    return {
+      input: data,
+      left: Math.round((W - info.width) / 2),
+      top: label.top,
+    }
+  }),
+)
+await sharp(Buffer.from(svg))
+  .composite(overlays)
+  .png({ palette: true })
+  .toFile(out)
 
 const { size } = fs.statSync(out)
 console.log(
