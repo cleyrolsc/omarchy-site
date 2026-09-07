@@ -5,6 +5,7 @@ export interface Props {
   label?: string;
   class?: string;
   hero?: boolean;
+  gradient?: boolean;
   drawn?: boolean;
 }
 const {
@@ -12,6 +13,7 @@ const {
   label = "Omarchy",
   class: className,
   hero = false,
+  gradient = hero,
   drawn = false,
 } = Astro.props;
 ---
@@ -51,7 +53,11 @@ const {
     </svg>
   ) : (
     <span
-      class:list={["brand-wordmark", className]}
+      class:list={[
+        "brand-wordmark",
+        { "brand-wordmark--gradient": gradient },
+        className,
+      ]}
       role="img"
       aria-label={label}
       data-hero-wordmark={hero || undefined}
@@ -74,7 +80,7 @@ const {
     background: currentColor;
     mask: url("/brand/omarchy-wordmark.svg") center / 100% 100% no-repeat;
   }
-  [data-hero-wordmark] {
+  .brand-wordmark--gradient {
     background: linear-gradient(
       to bottom,
       var(--t-field-crest) 0 26.316%,

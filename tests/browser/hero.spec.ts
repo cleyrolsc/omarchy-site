@@ -118,6 +118,7 @@ test.describe("hero effect lifecycle", () => {
       .getByRole("link", { name: "News", exact: true })
       .click();
     await expect(page).toHaveURL(/\/news\/$/);
+    await expect(page.locator(".page-wordmark")).toBeVisible({ timeout: 1000 });
     await page
       .getByRole("banner")
       .getByRole("link", { name: "Omarchy home", exact: true })
@@ -129,6 +130,24 @@ test.describe("hero effect lifecycle", () => {
     await page.waitForTimeout(150);
     expect(await playedEffects(page)).toHaveLength(3);
   });
+
+  for (const path of ["/news/", "/manual/getting-started/", "/themes/"])
+    test(`shows the ${path} wordmark before browser modules or fallback timers run`, async ({
+      page,
+    }) => {
+      await page.clock.install({ time: new Date("2026-09-06T20:00:00Z") });
+      await page.clock.pauseAt(new Date("2026-09-06T20:00:01Z"));
+      await page.route("**/_astro/*.js", (route) => route.abort());
+      await page.goto(path);
+      await expect(page.locator(".page-wordmark")).toBeVisible({
+        timeout: 1000,
+      });
+      await expect(page.locator(".page-wordmark")).toHaveCSS(
+        "background-image",
+        /linear-gradient/,
+      );
+      expect(await playedEffects(page)).toEqual([]);
+    });
 
   test("keeps the static wordmark available when browser modules cannot load", async ({
     page,
