@@ -17,10 +17,14 @@ const links = [
 <header
   class="site-header pixel-container"
   style={pathname === "/" ? "--nav-surface:0" : "--nav-surface:1"}
+  data-nav-past-hero={pathname !== "/" && !pathname.startsWith("/404")
+    ? ""
+    : undefined}
 >
+  <div class="header-surface" aria-hidden="true"></div>
   <div class="header-inner">
     <a href="/" aria-label="Omarchy home" class="home-mark mark-draw-trigger"
-      ><Brand variant="mark" drawn /></a
+      ><Brand variant="mark" drawn /><Brand class="nav-wordmark" /></a
     ><nav class="desktop-nav" aria-label="Main">
       {
         links.map(([label, href]) => (
@@ -96,7 +100,8 @@ const links = [
             ><a class="btn" href="/news/rss.xml"
               ><SiteIcon name="Rss" size={20} />RSS</a
             ><a class="btn" href="https://github.com/omacom/omarchy"
-              ><SiteIcon name="Github" size={20} />GitHub</a>
+              ><SiteIcon name="Github" size={20} />GitHub</a
+            >
           </div>
         </nav>
       </details>
@@ -110,14 +115,24 @@ const links = [
     z-index: var(--z-nav);
     height: var(--nav-h);
     padding-top: env(safe-area-inset-top, 0px);
-    background: color-mix(
+  }
+  /* Keep the blur on a sibling of the menu: a parent backdrop root prevents
+     the menu scrim from blurring the page beneath it. */
+  .header-surface {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image: var(--nav-image, none);
+    background-color: color-mix(
       in srgb,
-      var(--nav-ground, var(--color-bg)) calc(var(--nav-surface, 1) * 90%),
+      var(--nav-ground, var(--color-bg))
+        calc(var(--nav-surface, 1) * var(--nav-fill, 1) * 90%),
       transparent
     );
     backdrop-filter: blur(calc(var(--nav-surface, 1) * 12px));
   }
-  .site-header:has(details[open]) {
+  .site-header:has(details[open]) .header-surface {
     background: color-mix(in srgb, var(--color-bg) 95%, transparent);
     backdrop-filter: blur(16px);
   }
@@ -131,6 +146,7 @@ const links = [
     gap: var(--space-3);
   }
   .home-mark {
+    position: relative;
     display: flex;
     align-items: center;
     flex-shrink: 0;
@@ -138,6 +154,17 @@ const links = [
   .home-mark :global(svg) {
     width: 22px;
     height: 22px;
+    transition: opacity 150ms ease-out;
+  }
+  .home-mark :global(.nav-wordmark) {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: var(--space-28);
+    transform: translateY(-50%);
+    color: var(--color-brand);
+    opacity: 0;
+    transition: opacity 150ms ease-out;
   }
   .desktop-nav {
     display: none;
@@ -202,12 +229,13 @@ const links = [
     cursor: pointer;
     list-style: none;
     color: var(--color-text-secondary);
-    transition: background-color 150ms ease-out, transform 150ms ease-out;
+    transition:
+      background-color 150ms ease-out,
+      transform 150ms ease-out;
   }
   summary::-webkit-details-marker {
     display: none;
   }
-  .site-header[data-mobile-chip] summary,
   .mobile-menu summary:hover {
     background: var(--color-surface-2);
   }
@@ -236,7 +264,8 @@ const links = [
     inset-inline: 0;
     top: var(--nav-h);
     height: 100svh;
-    background: color-mix(in srgb, var(--color-bg) 40%, transparent);
+    background: color-mix(in srgb, var(--color-black) 55%, transparent);
+    backdrop-filter: blur(4px);
   }
   .mobile-menu nav {
     position: absolute;
@@ -322,7 +351,21 @@ const links = [
     transform: translateY(-4px);
     filter: none;
   }
+  @media (max-width: 639.98px) {
+    .site-header[data-nav-past-hero]:not(:has(details[open])) .header-surface {
+      box-shadow: inset 0 -1px 0 var(--color-border-subtle);
+    }
+    [data-nav-past-hero] .home-mark :global(svg) {
+      opacity: 0;
+    }
+    [data-nav-past-hero] .home-mark :global(.nav-wordmark) {
+      opacity: 1;
+    }
+  }
   @media (min-width: 40rem) {
+    .home-mark :global(.nav-wordmark) {
+      display: none;
+    }
     .header-inner {
       padding-inline: var(--space-6);
     }

@@ -2,7 +2,7 @@
 version: 1
 status: active
 name: Omarchy
-source: barisgirismen/omarchy-site@bb6cdcf85e83a04e18cf3549c265eff330a3d6ac
+source: barisgirismen/omarchy-site@221b61bf912123f04dd8a53c3b5fc231d05393bf
 description: Preserve the Omarchy redesign while adopting the ThinkOodle Astro starter framework.
 colors:
   background: "#1a1b26"
@@ -33,3 +33,5 @@ Imported manual and standalone page bodies declare `format: html` so Astro prese
 The reviewed redesign baseline is tracked in `redesign-source.json`. Shared page wordmarks and small mono subtitles unify news, every manual chapter, teams, themes, patrons, and security. Meetups use the source's Equal Earth country outlines, region/country chips, linked pins, responsive hover/focus cards, and distinct archive. The homepage meetup rail shares the 420ms glide and draggable scrollbar with videos; arriving cards brighten as the glide starts. Preserve the Windows showcase and video start offsets.
 
 On phones, show meetup filters and cards without the map; from 640px up, show the interactive map. Keep country filters compact with extended touch targets. The theme-picker dimmer sits outside its named view-transition layer so it can blur the underlying page. Keep the real menu icon visible for its full 260ms closing fold before handing back to the hero ghost.
+
+The phone header swaps the mark for a 112px wordmark as the first section touches the bar. Its background follows both grounds across a moving section edge, with a subtle bottom hairline; the menu instead shares one uninterrupted surface and dims/blurs the page beneath it. Keep that backdrop outside the header surface's blur layer, and ignore touch-generated hover when deciding whether the hero ghost owns the labels. Give portrait clusters six pixels of clearance at either edge so lifted faces and their rings stay whole. Search announces the number of results and presents a search action on phone keyboards; news publishes its article date in the shared metadata layout.

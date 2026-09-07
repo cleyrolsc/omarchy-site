@@ -22,6 +22,7 @@ const published = post.data.date.toISOString();
   description={description}
   canonicalPath={newsPath(post)}
   type="article"
+  published={published}
   jsonLd={{
     "@context": "https://schema.org",
     "@type": "BlogPosting",

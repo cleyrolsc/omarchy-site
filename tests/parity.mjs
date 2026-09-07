@@ -117,6 +117,17 @@ for (const [file, $] of pages) {
     $('link[rel="canonical"]').attr("href") === `https://omarchy.org${route}`,
     `Canonical mismatch: ${route}`,
   );
+  if ($('meta[property="og:type"]').attr("content") === "article")
+    check(
+      $('meta[property="article:published_time"]').attr("content") ===
+        $("article time[datetime]").attr("datetime"),
+      `Missing or incorrect article publication time: ${route}`,
+    );
+  if (route === "/404/")
+    check(
+      $('meta[name="robots"]').attr("content") === "noindex",
+      "404 must remain noindex",
+    );
   for (const schema of $('script[type="application/ld+json"]').toArray()) {
     try {
       JSON.parse($(schema).text());

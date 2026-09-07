@@ -20,11 +20,14 @@ const { preview } = Astro.props;
       aria-label="Search Omarchy"
       autocomplete="off"
       spellcheck="false"
+      enterkeyhint="search"
     /><button data-close-dialog aria-label="Close search"
-      ><SiteIcon name="Cross" size={16} /></button>
+      ><SiteIcon name="Cross" size={16} /></button
+    >
   </div>
+  <div class="sr-only" aria-live="polite" data-search-announcement></div>
   <div class="search-scroll scroll-accent">
-    <p class="search-status" role="status" data-search-status>
+    <p class="search-status" data-search-status>
       The manual, the news, every plugin and every theme.
     </p><ul
       class="search-results"

@@ -10,6 +10,7 @@ export interface Props {
   markdownPath?: string | false;
   image?: string;
   type?: "website" | "article";
+  published?: string;
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
   noindex?: boolean;
   transitions?: boolean;
@@ -22,6 +23,7 @@ const {
   markdownPath = markdownAlternatePath(canonicalPath),
   image = site.defaultOgImage,
   type = "website",
+  published,
   jsonLd = [],
   noindex = false,
   transitions = true,
@@ -69,6 +71,11 @@ const json = (value: unknown) => JSON.stringify(value).replace(/</g, "\u003c");
       href="/news/rss.xml"
     />
     <meta property="og:type" content={type} />
+    {
+      type === "article" && published && (
+        <meta property="article:published_time" content={published} />
+      )
+    }
     <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
@@ -114,15 +121,19 @@ const json = (value: unknown) => JSON.stringify(value).replace(/</g, "\u003c");
 </html>
 <style>
   .skip-link {
-    position: fixed;
-    inset: var(--space-3) auto auto var(--space-3);
-    z-index: var(--z-tooltip);
-    padding: var(--space-3);
-    background: var(--color-accent);
-    color: var(--color-text-inverse);
-    transform: translateY(-200%);
+    position: absolute;
+    top: 0;
+    left: var(--space-4);
+    z-index: var(--z-modal);
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    text-decoration: underline;
+    background: var(--color-bg);
+    color: var(--color-text);
+    transform: translateY(-120%);
   }
   .skip-link:focus {
-    transform: none;
+    transform: translateY(var(--space-4));
   }
 </style>

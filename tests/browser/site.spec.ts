@@ -47,9 +47,17 @@ test("search works by keyboard and links to manual sections", async ({
     page.getByRole("dialog", { name: "Search Omarchy" }),
   ).toBeVisible();
   await page.locator("#site-search-input").fill("SSH access");
+  await expect(page.locator("#site-search-input")).toHaveAttribute(
+    "enterkeyhint",
+    "search",
+  );
   await expect(page.locator("[data-search-results] a").first()).toHaveAttribute(
     "href",
     /\/manual\/.*#ssh-access/,
+  );
+  const count = await page.locator("[data-search-results] a").count();
+  await expect(page.locator("[data-search-announcement]")).toHaveText(
+    `${count} ${count === 1 ? "result" : "results"}`,
   );
   await page.keyboard.press("ArrowDown");
   await page.keyboard.press("ArrowUp");
@@ -57,6 +65,14 @@ test("search works by keyboard and links to manual sections", async ({
   await expect(page).toHaveURL(/#ssh-access$/);
   await expect(page.locator("#ssh-access")).toBeInViewport();
   await expect(page.locator("#site-search")).not.toBeVisible();
+  await page.keyboard.press("/");
+  await expect(page.locator("[data-search-announcement]")).toBeEmpty();
+  await page.locator("#site-search-input").fill("zzzz-no-such-content-zzzz");
+  await expect(page.locator("[data-search-announcement]")).toHaveText(
+    "No matches",
+  );
+  await page.locator("#site-search-input").fill("");
+  await expect(page.locator("[data-search-announcement]")).toBeEmpty();
 });
 
 test("themes persist through Astro navigation and dialogs restore focus", async ({

@@ -13,6 +13,7 @@ import {
   PICKER_STATE_EVENT,
   paintFavicon,
   watchChrome,
+  groundOf,
 } from "../lib/theme";
 import { MUSIC_EVENT, music, loadMusic } from "../lib/music";
 import { watchOutbound } from "../lib/outbound";
@@ -51,6 +52,7 @@ export function initSite() {
   const input = q<HTMLInputElement>("#site-search-input");
   const results = q("[data-search-results]");
   const status = q("[data-search-status]");
+  const announcement = q("[data-search-announcement]");
   let searchVersion = 0;
   let selected = -1;
   all(
@@ -189,6 +191,7 @@ export function initSite() {
     const version = ++searchVersion;
     const query = input.value.trim().toLowerCase();
     selected = -1;
+    if (announcement) announcement.textContent = "";
     if (!query) {
       results.replaceChildren();
       status.hidden = false;
@@ -211,6 +214,10 @@ export function initSite() {
       const entries = await searchPromise;
       if (signal.aborted || version !== searchVersion) return;
       const matches = searchAll(entries, query);
+      if (announcement)
+        announcement.textContent = matches.length
+          ? `${matches.length} ${matches.length === 1 ? "result" : "results"}`
+          : "No matches";
       results.replaceChildren(
         ...matches.map((entry) => {
           const li = document.createElement("li"),
@@ -253,9 +260,11 @@ export function initSite() {
       selected = 0;
       updateSelection();
     } catch {
-      if (!signal.aborted)
+      if (!signal.aborted && version === searchVersion) {
         status.textContent =
           "Search is unavailable right now. Please try again.";
+        if (announcement) announcement.textContent = status.textContent;
+      }
     }
   }
   if (input) {
@@ -507,36 +516,57 @@ export function initSite() {
       ghostAfter = 0,
       foldTimer = 0;
     cleanups.push(() => clearTimeout(foldTimer));
+    const phone = matchMedia("(max-width: 639.98px)");
+    let hovering =
+      matchMedia("(hover: hover)").matches && header.matches(":hover");
+    type Ground = { top: number; bottom: number; color: string };
+    let grounds: Ground[] = [];
+    let height = 0;
+    let heroBottom = 0;
+    const at = (y: number) =>
+      grounds.findLast((g) => g.top <= y && g.bottom > y);
     const surface = () => {
       if (wasMenuOpen && !menu?.open) ghostAfter = performance.now() + 260;
       wasMenuOpen = Boolean(menu?.open);
       clearTimeout(foldTimer);
-      const hero = q<HTMLElement>("[data-hero-sentinel]");
-      const grounds = all<HTMLElement>(
-        "main>section,main [data-ground],.site-footer",
-      ).filter((el) => !el.hasAttribute("data-hero-sentinel"));
-      const at = (y: number) =>
-        [...grounds].reverse().find((el) => {
-          const r = el.getBoundingClientRect();
-          return r.top <= y && r.bottom > y;
-        });
-      const top = at(0),
-        ground = top && top === at(header.offsetHeight) ? top : null;
-      const value =
-        innerWidth < 640 && !menu?.open ? 0 : ground || !hero ? 1 : 0;
+      const y = scrollY;
+      const top = at(y),
+        bottom = at(y + height);
+      const ground = phone.matches
+        ? (top ?? bottom)
+        : top && top === bottom
+          ? top
+          : null;
+      let image = "";
+      // Keep the phone bar filled on both sides of a moving section edge.
+      if (phone.matches && !menu?.open && top !== bottom) {
+        const edge =
+          top && bottom
+            ? Math.min(top.bottom, bottom.top > y ? bottom.top : Infinity)
+            : top
+              ? top.bottom
+              : bottom!.top;
+        const split = Math.round(edge - y);
+        const wash = (g: Ground | undefined) =>
+          g ? `color-mix(in srgb, ${g.color} 90%, transparent)` : "transparent";
+        image = `linear-gradient(to bottom, ${wash(top)} ${split}px, ${wash(bottom)} ${split}px)`;
+      }
+      header.style.setProperty("--nav-image", image || "none");
+      header.style.setProperty("--nav-fill", image ? "0" : "1");
       header.toggleAttribute(
-        "data-mobile-chip",
-        innerWidth < 640 &&
-          !menu?.open &&
-          !(hero && hero.getBoundingClientRect().bottom > header.offsetHeight),
+        "data-nav-past-hero",
+        !heroHost || (phone.matches ? y + height : y) >= heroBottom,
       );
-      header.style.setProperty("--nav-surface", String(value));
+      header.style.setProperty(
+        "--nav-surface",
+        ground || !heroHost ? "1" : "0",
+      );
+      header.style.setProperty(
+        "--nav-ground",
+        ground?.color ?? "var(--color-bg)",
+      );
       let blend = Boolean(
-        ghost &&
-        hero &&
-        hero.getBoundingClientRect().bottom > header.offsetHeight &&
-        !header.matches(":hover") &&
-        !menu?.open,
+        ghost && heroBottom > y + height && !hovering && !menu?.open,
       );
       // Keep the real bars painted through their closing fold before restoring the ghost.
       if (blend && performance.now() < ghostAfter) {
@@ -545,20 +575,48 @@ export function initSite() {
       }
       if (ghost) ghost.style.opacity = blend ? "1" : "0";
       labels.forEach((el) => (el.style.color = blend ? "transparent" : ""));
-      if (ground) {
-        const color = getComputedStyle(ground).backgroundColor;
-        header.style.setProperty(
-          "--nav-ground",
-          color === "rgba(0, 0, 0, 0)" ? "var(--color-bg)" : color,
-        );
-      }
     };
-    on(header, "pointerenter", surface);
-    on(header, "pointerleave", surface);
+    const survey = () => {
+      height = header.getBoundingClientRect().height;
+      heroBottom = heroHost
+        ? heroHost.getBoundingClientRect().bottom + scrollY
+        : 0;
+      const sections = all<HTMLElement>("main>section,main [data-ground]");
+      const nodes = sections.length ? sections : all<HTMLElement>("main");
+      const footer = q<HTMLElement>(".site-footer");
+      if (footer) nodes.push(footer);
+      grounds = nodes
+        .filter((node) => !node.hasAttribute("data-hero-sentinel"))
+        .map((node) => {
+          const box = node.getBoundingClientRect();
+          return {
+            top: box.top + scrollY,
+            bottom: box.bottom + scrollY,
+            color: groundOf(node) ?? "var(--color-bg)",
+          };
+        });
+      surface();
+    };
+    on(header, "pointerenter", (event) => {
+      if ((event as PointerEvent).pointerType !== "mouse") return;
+      hovering = true;
+      surface();
+    });
+    on(header, "pointerleave", (event) => {
+      if ((event as PointerEvent).pointerType !== "mouse") return;
+      hovering = false;
+      surface();
+    });
+    on(phone, "change", surface);
     on(window, "scroll", surface);
-    on(window, "resize", surface);
-    on(window, THEME_EVENT, surface);
-    surface();
+    on(window, "resize", survey);
+    on(window, THEME_EVENT, survey);
+    const sizes = new ResizeObserver(survey);
+    const main = q("main");
+    if (main) sizes.observe(main);
+    sizes.observe(header);
+    cleanups.push(() => sizes.disconnect());
+    survey();
     if (menu) {
       on(menu, "toggle", () => {
         surface();

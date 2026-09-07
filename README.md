@@ -2,7 +2,7 @@
 
 The Omarchy redesign, migrated to [ThinkOodle’s Astro starter framework](https://github.com/ThinkOodle/astro-starter-framework). Astro 6 builds a static site from native Astro components, typed content collections, and committed data snapshots. TypeScript handles the interactive controls and the original canvas/audio engines. Styling uses native CSS layers and semantic tokens. The site has no React runtime, TanStack router, or Tailwind dependency.
 
-The migration source is `barisgirismen/omarchy-site`, branch `redesign`, commit `bb6cdcf85e83a04e18cf3549c265eff330a3d6ac`. The original content, URLs, images, installers, fonts, themes, music, and WebAssembly effects are retained. Production identity is `https://omarchy.org`.
+The migration source is `barisgirismen/omarchy-site`, branch `redesign`, commit `221b61bf912123f04dd8a53c3b5fc231d05393bf`. The original content, URLs, images, installers, fonts, themes, music, and WebAssembly effects are retained. Production identity is `https://omarchy.org`.
 
 ## Development
 
@@ -73,7 +73,7 @@ The source commit is recorded in the fixtures. Never regenerate them from the mi
 
 ## Syncing the redesign
 
-[`redesign-source.json`](redesign-source.json) records the exact source commit reviewed and ported, plus the previous baseline. The current sync covers 22 commits from `8419a5a` through `bb6cdcf`: shared page headers, the Windows showcase and two videos, the meetup page/map/filters and homepage rail, separate security credits, the complete mobile menu closing fold, and restored theme-picker backdrop blur. Astro's default page fade remains disabled; the custom theme wipe and persistent music remain active.
+[`redesign-source.json`](redesign-source.json) records the exact source commit reviewed and ported, plus the previous baseline. The current sync covers 12 commits (including the portrait-fix merge) from `bb6cdcf` through `221b61b`: portrait edge clearance, the phone header's wordmark and continuous section backgrounds, its hairline and dimmed/blurred menu backdrop, touch-safe hero labels, article publication metadata, search keyboard hints and result announcements, and workflow hardening. Astro already supplies the production canonicals, noindex 404, safe hash navigation, escaped redirect output, skip link, and manual focus outlines; these behaviors remain validated. React hydration/devtools and the parked marketplace's search field have no active Astro equivalent to port. Astro's default page fade remains disabled; the custom theme wipe and persistent music remain active.
 
 For the next sync, fetch the source branch and compare against the recorded hash:
 
