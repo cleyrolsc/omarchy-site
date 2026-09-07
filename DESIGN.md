@@ -26,6 +26,8 @@ Use native Astro components and semantic, layered CSS. Keep the original content
 
 Core content, links, headings, download buttons and media posters must work without JavaScript. Browser modules enhance theme selection, search, navigation, media playback, gallery dialogs, and the existing canvas/audio engine. Respect reduced motion and require a gesture for audible music. Desktop videos load a player when selected; the mobile rail retains the source’s lazy native YouTube players. Keep controls keyboard accessible and label every dialog and form field.
 
+Inline links in the install section use the main text color and a subtle underline. Hover changes only the underline to the accent color; the link text keeps its color.
+
 BaseLayout owns canonical metadata, Open Graph, JSON-LD, fonts and Markdown alternates. Every important HTML page gets a clean Markdown twin. Curate llms.txt and llms-full.txt around the product, installation, manual, news and foundation. Every public Astro component has a Storybook story. Run Astro checks, production and Storybook builds, route/content/asset parity checks, and browser interaction checks before completion.
 
 Imported manual and standalone page bodies declare `format: html` so Astro preserves the source’s trusted semantic HTML, including indented elements. New Markdown content uses the default `format: markdown`. Preserve the source’s parallelogram theme deck, 200ms frosted theme wipe, 420ms video glide, circular portrait clusters, testimonial fold, and compact footer. Layout fixtures captured from the source cover desktop and mobile typography, geometry, and controls; interaction tests cover behavior with motion enabled.

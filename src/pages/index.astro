@@ -705,6 +705,13 @@ const patronGroups = patrons
     line-height: 1.625;
     text-wrap: pretty;
   }
+  #install .text-link {
+    color: var(--color-text);
+    transition: text-decoration-color var(--duration-fast) var(--ease-out);
+  }
+  #install .text-link:hover {
+    text-decoration-color: var(--color-accent);
+  }
   .patron-note {
     margin: var(--space-4) 0 0;
     font-size: var(--text-xs);
