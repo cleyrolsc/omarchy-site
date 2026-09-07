@@ -5,6 +5,11 @@ export const site = {
     "The malleable OS for the age of agents. Vibe your way through every alteration, tweak, or trouble.",
   defaultTitle: "Omarchy - Beautiful, fun & agentic Linux by DHH",
   defaultOgImage: "/brand/omarchy-og.png",
+  defaultOgImageMeta: {
+    width: "1200",
+    height: "630",
+    alt: "The Omarchy wordmark, lit out of a field of green pixels",
+  },
   locale: "en_US",
   social: {
     github: "https://github.com/omacom/omarchy",

@@ -166,7 +166,7 @@ export function initSite() {
             .animate([{ opacity: 0 }, { opacity: 1 }], {
               duration: matchMedia("(prefers-reduced-motion: reduce)").matches
                 ? 0
-                : 200,
+                : 300,
             })
             .finished.then(() => preview.remove());
         })
@@ -446,18 +446,8 @@ export function initSite() {
       }
     }
   });
-  // Match Omarchy's context-menu shortcut over the animated wordmark.
   const sentinel = q("[data-hero-sentinel]");
   if (sentinel) {
-    on(sentinel, "contextmenu", (event) => {
-      if (
-        !(event.target instanceof Element) ||
-        event.target.closest("a,button,input")
-      )
-        return;
-      event.preventDefault();
-      openDialog(themeDialog);
-    });
     const observer = new IntersectionObserver(
       ([entry]) =>
         q(".site-header")?.classList.toggle("over-hero", entry.isIntersecting),
@@ -720,15 +710,19 @@ export function initSite() {
             variant: variant === "field" ? "field" : "hero",
             glyph,
             onPainted: () => {
-              if (variant !== "field")
-                q("[data-hero-wordmark]")?.setAttribute("data-painted", "");
+              if (variant !== "field") {
+                canvas.parentElement
+                  ?.querySelector("[data-hero-wordmark]")
+                  ?.setAttribute("data-painted", "");
+                document.documentElement.classList.remove("etch-pending");
+              }
             },
             onGlyphPress:
               variant === "not-found"
                 ? () => {
                     void navigate("/");
                   }
-                : () => openDialog(themeDialog),
+                : undefined,
           });
           if (cleanup) cleanups.push(cleanup);
         };

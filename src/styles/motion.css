@@ -130,6 +130,10 @@
 
   /* -------------------------------------------------------------- hero intro */
 
+  .etch-pending [data-hero-wordmark] {
+    visibility: hidden;
+  }
+
   @keyframes hero-rise {
     from {
       opacity: 0;

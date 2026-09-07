@@ -35,36 +35,58 @@ const { visible = false } = Astro.props;
     left: var(--space-4);
     z-index: var(--z-dropdown);
     font-size: var(--text-xs);
+    line-height: 1.5;
     pointer-events: auto;
     max-width: calc(100vw - var(--space-8));
   }
   summary {
     cursor: pointer;
-    padding: var(--space-2) var(--space-3);
+    width: fit-content;
+    list-style: none;
+    padding: var(--space-1_5) var(--space-3);
     background: var(--color-surface);
-    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-card);
+    color: var(--color-text-secondary);
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  summary::after {
+    content: " ▸";
+  }
+  [open] summary::after {
+    content: " ▾";
+  }
+  summary:hover {
+    color: var(--color-text);
   }
   div {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1px;
+    margin-top: var(--space-1);
     max-height: 60dvh;
     overflow: auto;
     width: 22rem;
     max-width: 100%;
     padding: var(--space-1);
     background: var(--color-surface);
+    box-shadow: var(--shadow-card);
   }
   button {
     color: var(--color-text-secondary);
     text-align: left;
     background: transparent;
     border: 0;
-    padding: var(--space-2);
+    padding: var(--space-1) var(--space-2);
     font-size: inherit;
   }
-  button:hover,
   button[aria-pressed="true"] {
     background: var(--color-surface-2);
     color: var(--color-brand);
+  }
+  button:hover {
+    background: var(--color-surface-2);
+    color: var(--color-text);
   }
 </style>

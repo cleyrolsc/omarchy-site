@@ -344,7 +344,7 @@ type Props = {
   onPainted?: () => void;
   /**
    * 'hero' draws the wordmark into the field, publishes the lattice for the
-   * DOM to snap to, and treats a press on the logo as the theme picker.
+   * DOM to snap to, and replays the wordmark effect on a press.
    * 'field' is the same drifting texture, the same cursor response and the
    * same click stamps, with none of that: a ground, not a signature.
    */
@@ -352,8 +352,8 @@ type Props = {
   /** The word the field resolves into. Ignored by 'field'. */
   glyph?: FieldGlyph;
   /**
-   * What a press on the word does. The hero opens the theme picker; the 404
-   * goes home. The hover glow and the pointer cursor come with it either way.
+   * Overrides the default effect replay, for example to take the 404 home.
+   * The hover glow and the pointer cursor come with it either way.
    */
   onGlyphPress?: () => void;
 };

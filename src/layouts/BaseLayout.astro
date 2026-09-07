@@ -3,6 +3,7 @@ import "../styles/main.css";
 import { ClientRouter } from "astro:transitions";
 import { site, absoluteUrl, markdownAlternatePath } from "../config/site";
 import { themeInitScript } from "../lib/theme";
+import { etchInitScript } from "../lib/etch";
 export interface Props {
   title?: string;
   description?: string;
@@ -30,6 +31,8 @@ const {
   htmlClass,
 } = Astro.props;
 const pageTitle = title.includes("Omarchy") ? title : `${title} - Omarchy`;
+const imageMetadata =
+  image === site.defaultOgImage ? site.defaultOgImageMeta : undefined;
 const schemas = [
   {
     "@context": "https://schema.org",
@@ -77,19 +80,41 @@ const json = (value: unknown) => JSON.stringify(value).replace(/</g, "\u003c");
       )
     }
     <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content={site.locale} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={absoluteUrl(canonicalPath)} />
     <meta property="og:image" content={absoluteUrl(image)} />
+    {
+      imageMetadata && (
+        <>
+          <meta property="og:image:width" content={imageMetadata.width} />
+          <meta property="og:image:height" content={imageMetadata.height} />
+          <meta property="og:image:alt" content={imageMetadata.alt} />
+        </>
+      )
+    }
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={absoluteUrl(image)} />
+    {
+      imageMetadata && (
+        <meta name="twitter:image:alt" content={imageMetadata.alt} />
+      )
+    }
     <link
       rel="icon"
       type="image/svg+xml"
       href="/brand/omarchy-logo.svg"
       data-theme-icon
+    />
+    <link
+      rel="preload"
+      as="image"
+      type="image/svg+xml"
+      href="/brand/omarchy-wordmark.svg"
+      crossorigin="anonymous"
     />
     <link
       rel="preload"
@@ -106,6 +131,7 @@ const json = (value: unknown) => JSON.stringify(value).replace(/</g, "\u003c");
       crossorigin
     />
     <script is:inline data-astro-rerun set:html={themeInitScript} />
+    <script is:inline data-astro-rerun set:html={etchInitScript} />
     {
       schemas.map((schema) => (
         <script type="application/ld+json" is:inline set:html={json(schema)} />
