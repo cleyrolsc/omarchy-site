@@ -1,9 +1,14 @@
 import { t } from '@/i18n/site'
 import { useEffect, useRef, useState } from 'react'
 import { useLocation } from '@tanstack/react-router'
-import { VolumeIcon, VolumeOffIcon } from '@/components/icons'
-import { MUSIC_EVENT, TRACK, loadMusic, music } from '@/lib/music'
-import type { MusicState } from '@/lib/music'
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  VolumeIcon,
+  VolumeOffIcon,
+} from '@/components/icons'
+import { MUSIC_EVENT, MUSIC_TRACK_EVENT, loadMusic, music } from '@/lib/music'
+import type { MusicState, Track } from '@/lib/music'
 
 /** Bars in the little meter, and the pixel steps each can climb. */
 const METER_BARS = 4
@@ -25,21 +30,32 @@ function useMusicState(path = '/') {
   // Starts from what the sound is doing now, not from "muted": the
   // control can be mounted fresh while the sound is already on.
   const [state, setState] = useState<MusicState>(() => music.state)
+  const [track, setTrack] = useState<Track>(() => music.track)
   useEffect(() => {
     const onState = (event: Event) =>
       setState((event as CustomEvent<MusicState>).detail)
+    const onTrack = (event: Event) =>
+      setTrack((event as CustomEvent<Track>).detail)
     window.addEventListener(MUSIC_EVENT, onState)
+    window.addEventListener(MUSIC_TRACK_EVENT, onTrack)
     if (home) void loadMusic()
-    return () => window.removeEventListener(MUSIC_EVENT, onState)
+    return () => {
+      window.removeEventListener(MUSIC_EVENT, onState)
+      window.removeEventListener(MUSIC_TRACK_EVENT, onTrack)
+    }
   }, [home])
 
   return {
     state,
+    track,
     on: state === 'playing' || state === 'loading',
     shown: home || music.touched,
     untouched: !music.touched,
   }
 }
+
+/** A song's name, without the parenthetical the mixes carry. */
+const songTitle = (track: Track) => track.title.replace(/ \(.*\)$/, '')
 
 export function MusicMenuControl({
   open,
@@ -48,7 +64,7 @@ export function MusicMenuControl({
   open: boolean
   path: string
 }) {
-  const { state, on, shown } = useMusicState(path)
+  const { state, on, shown, track } = useMusicState(path)
   const bars = useRef<Array<HTMLSpanElement | null>>([])
   useEffect(() => {
     if (!open || !on) return
@@ -70,7 +86,7 @@ export function MusicMenuControl({
     return () => cancelAnimationFrame(frame)
   }, [open, on])
   if (!shown) return null
-  const title = TRACK.title.replace(/ \(.*\)$/, '')
+  const title = songTitle(track)
   return (
     <button
       type="button"
@@ -108,15 +124,17 @@ export function MusicMenuControl({
               : '-translate-y-2 opacity-0 blur-[2px] [transition:translate_150ms_ease-in,opacity_150ms_ease-out,filter_150ms_ease-out]')
           }
         >
-          <img
-            src={TRACK.art}
-            alt=""
-            width={18}
-            height={18}
-            className="size-[18px] shrink-0 object-cover"
-          />
+          {track.art ? (
+            <img
+              src={track.art}
+              alt=""
+              width={18}
+              height={18}
+              className="size-[18px] shrink-0 object-cover"
+            />
+          ) : null}
           <span className="min-w-0 truncate font-sans text-text">
-            {TRACK.artist} - {title}
+            {track.artist} - {title}
           </span>
         </span>
       </span>
@@ -146,7 +164,7 @@ export function MusicMenuControl({
 }
 
 export function MusicControl({ path = '/' }: { path?: string }) {
-  const { state, on, shown, untouched } = useMusicState(path)
+  const { state, on, shown, untouched, track } = useMusicState(path)
 
   // The progress line, the meter and the readout are driven straight from
   // the track each frame, outside React, so the card never re-renders for
@@ -194,7 +212,7 @@ export function MusicControl({ path = '/' }: { path?: string }) {
   }
 
   if (!shown) return null
-  const title = TRACK.title.replace(/ \(.*\)$/, '')
+  const title = songTitle(track)
 
   return (
     <div
@@ -208,8 +226,13 @@ export function MusicControl({ path = '/' }: { path?: string }) {
         aria-pressed={on}
         aria-label={on ? 'Turn the sound off' : 'Turn the sound on'}
         title={on ? 'Sound off' : 'Sound on'}
-        className="relative size-11 shrink-0 self-center border-r border-border-subtle bg-cover bg-center text-white touch-manipulation focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
-        style={{ backgroundImage: `url(${TRACK.art})` }}
+        className={
+          'relative size-11 shrink-0 self-center border-r border-border-subtle bg-cover bg-center text-white touch-manipulation focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring ' +
+          // The radio's songs travel without art; the tile carries the
+          // sound icon on its own ground instead of a cover.
+          (track.art ? '' : 'bg-brand/20')
+        }
+        style={track.art ? { backgroundImage: `url(${track.art})` } : undefined}
       >
         {untouched ? (
           <span
@@ -232,13 +255,13 @@ export function MusicControl({ path = '/' }: { path?: string }) {
           )}
         </span>
       </button>
-      <span className="flex flex-col justify-center pr-4 pl-3 leading-tight">
+      <span className="flex flex-col justify-center pr-2 pl-3 leading-tight">
         <span className="font-sans text-[12px] font-medium text-text">
           {state === 'failed' ? 'The sound could not start' : title}
         </span>
         <span className="relative mt-0.5 font-mono text-[12px] text-text-secondary">
           <span className="transition-opacity duration-150 ease-out group-has-[input:hover]/card:opacity-0 group-has-[input:focus-visible]/card:opacity-0 group-has-[input:active]/card:opacity-0">
-            {TRACK.artist}
+            {track.artist}
           </span>
           <span
             ref={readout}
@@ -247,9 +270,32 @@ export function MusicControl({ path = '/' }: { path?: string }) {
           />
         </span>
       </span>
+      {/* Back and on through the playlist. Out of sight until the card is
+          pointed at, so the corner rests the way it always did, and the
+          first press is what fetches the radio. */}
+      <span className="flex shrink-0 items-center self-center opacity-0 transition-opacity duration-150 ease-out group-hover/card:opacity-100 group-has-[:focus-visible]/card:opacity-100 pointer-coarse:opacity-100">
+        <button
+          type="button"
+          onClick={() => void music.skip(-1)}
+          aria-label={t('Previous track')}
+          title={t('Previous track')}
+          className="flex size-6 items-center justify-center text-text-secondary touch-manipulation hover:text-text focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
+        >
+          <ChevronLeftIcon className="size-4" />
+        </button>
+        <button
+          type="button"
+          onClick={() => void music.skip(1)}
+          aria-label={t('Next track')}
+          title={t('Next track')}
+          className="flex size-6 items-center justify-center text-text-secondary touch-manipulation hover:text-text focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
+        >
+          <ChevronRightIcon className="size-4" />
+        </button>
+      </span>
       <span
         aria-hidden="true"
-        className="mr-3 flex w-[18px] items-end gap-[2px] self-center"
+        className="mr-3 ml-1 flex w-[18px] items-end gap-[2px] self-center"
         style={{ height: METER_STEPS * 2 + 2 }}
       >
         {Array.from({ length: METER_BARS }, (_, i) => (

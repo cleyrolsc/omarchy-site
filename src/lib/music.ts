@@ -15,15 +15,72 @@
  * sound is there again the moment it is asked for. With the sound off the
  * field goes back to the timeline, at the track's position, so it looks
  * the way the page opened; the live reading is for when it can be heard.
+ *
+ * That is the track the page opens on. The rest of the music is the radio's
+ * - radio.omarchy.org, whose playlist is fetched the first time somebody
+ * asks for another track, and whose songs are read live like this one. Only
+ * the opener has a timeline, because only the opener has to move the field
+ * before anything has been pressed.
  */
+import { PLAYLIST_URL, playlistFrom } from './playlist'
+import type { Track } from './playlist'
 
 export const MUSIC_EVENT = 'omarchy-music'
+/** Fired on <window> with the new track whenever the deck moves. */
+export const MUSIC_TRACK_EVENT = 'omarchy-music-track'
 
-export const TRACK = {
+export type { Track } from './playlist'
+
+/**
+ * The track the page opens on. It is one of the radio's own, kept here so
+ * it arrives with the page instead of a round trip later, and it is the
+ * only one with a timeline: it is the one that has to move the field before
+ * anybody has pressed anything.
+ */
+export const TRACK: Track = {
   title: 'We Can Fix Everything (The Ultimate Machine)',
   artist: 'Kevin Koontz',
   src: '/music/kevin_koontz-we_can_fix_everything.mp3',
   art: '/music/kevin_koontz-we_can_fix_everything.webp',
+}
+
+/**
+ * The rest of the music: radio.omarchy.org's playlist, every song in it
+ * somebody's pull request. It is fetched the first time the listener asks
+ * for another track and not before - the page opens on the one track it
+ * ships with and pays nothing for the others until they are wanted.
+ *
+ * The songs come from the radio's own origin, which answers with
+ * access-control-allow-origin, so they reach the analyser exactly the way
+ * the local file does. That is what crossOrigin in wire() is for.
+ */
+
+/** What the deck plays through, and where in it we are. Just the opener
+ *  until the radio has answered. */
+let playlist: Track[] = [TRACK]
+let cursor = 0
+/** Which track the element is loaded with, so that wiring it up and then
+ *  moving to that same track does not fetch it twice. */
+let loaded: Track | null = null
+let playlistLoading: Promise<void> | null = null
+
+/** Fetch the radio's playlist once, and seat the opener in it. */
+export function loadPlaylist(): Promise<void> {
+  playlistLoading ??= fetch(PLAYLIST_URL)
+    .then((response) => {
+      if (!response.ok) throw new Error(`playlist: ${response.status}`)
+      return response.json()
+    })
+    .then((data) => {
+      const seated = playlistFrom(data, TRACK)
+      playlist = seated.tracks
+      cursor = seated.cursor
+    })
+    .catch(() => {
+      // The radio is not answering. The opener is the whole playlist, which
+      // is where the page started: nothing is broken, there is just no next.
+    })
+  return playlistLoading
 }
 
 /**
@@ -120,6 +177,16 @@ function announce() {
   window.dispatchEvent(new CustomEvent(MUSIC_EVENT, { detail: state }))
 }
 
+function announceTrack() {
+  window.dispatchEvent(
+    new CustomEvent(MUSIC_TRACK_EVENT, { detail: playlist[cursor] }),
+  )
+}
+
+/** Whether what is playing is the track the page shipped with, and so the
+ *  one the timeline describes. */
+const onOpener = () => playlist[cursor] === TRACK
+
 /** Fetch the timeline once and start the silent clock. */
 export function loadMusic(): Promise<void> {
   timelineLoading ??= import('@/data/track.json').then((mod) => {
@@ -153,9 +220,15 @@ function wire() {
   // origin (the radio, say) still reaches the analyser; without this it
   // would hear silence. Harmless for the site's own file.
   audio.crossOrigin = 'anonymous'
+  // Round again at the end, until the listener has asked for another
+  // track; from then on the deck moves on the way a deck does.
   audio.loop = true
   audio.preload = 'auto'
-  audio.src = TRACK.src
+  audio.src = playlist[cursor].src
+  loaded = playlist[cursor]
+  audio.addEventListener('ended', () => {
+    if (!audio!.loop) void music.skip(1)
+  })
   audio.addEventListener('playing', () => {
     running = true
     if (state === 'loading') {
@@ -283,6 +356,14 @@ export const music = {
   get touched() {
     return touched
   },
+  /** What is playing, or would be. */
+  get track(): Track {
+    return playlist[cursor]
+  },
+  /** How many tracks the deck knows of: one, until the radio has answered. */
+  get count() {
+    return playlist.length
+  },
 
   /**
    * Turn the sound on. The first time, that loads the track and starts it
@@ -333,30 +414,73 @@ export const music = {
     else void this.unmute()
   },
 
+  /**
+   * Move through the playlist. The first press fetches the radio, so that
+   * one can take a moment; after it the songs are a press apart. Sound
+   * comes on with the new track - asking for another track is asking to
+   * hear it - and the deck stops looping, because there is now somewhere
+   * for a finished track to go.
+   */
+  async skip(step: number) {
+    touched = true
+    await loadPlaylist()
+    if (playlist.length < 2) return
+    cursor = (cursor + step + playlist.length) % playlist.length
+    announceTrack()
+    try {
+      wire()
+      audio!.loop = false
+      state = 'loading'
+      announce()
+      if (context!.state !== 'running') await context!.resume()
+      setVolume(1)
+      // Setting the source is what rewinds it; the silent clock only ever
+      // described the opener, so it is only worth resetting there.
+      if (loaded !== playlist[cursor]) {
+        audio!.src = playlist[cursor].src
+        loaded = playlist[cursor]
+        if (onOpener()) clockZero = performance.now()
+      }
+      await audio!.play()
+    } catch {
+      if (state === 'loading') {
+        state = 'failed'
+        announce()
+      }
+    }
+  },
+
   /** How far through the track, 0..1. */
   get progress() {
-    if (!timeline) return 0
-    return this.time / timeline.duration
+    const length = this.duration
+    return length > 0 ? this.time / length : 0
   },
-  /** Seconds in, and seconds long. */
+  /** Seconds in, and seconds long. The timeline knows how long the opener
+   *  is before it has been fetched; for the radio's songs the file says. */
   get time() {
     return live() ? audio!.currentTime : clockPosition(performance.now())
   },
   get duration() {
-    return timeline?.duration ?? 0
+    if (onOpener()) return timeline?.duration ?? 0
+    const length = audio?.duration ?? 0
+    return Number.isFinite(length) ? length : 0
   },
   /**
    * Jump to a point in the track, in seconds. Stops a touch short of the
    * end: the track loops, and landing on the very end wraps to the start.
    */
   seek(seconds: number) {
-    if (!timeline) return
-    const at = Math.max(0, Math.min(timeline.duration - 0.5, seconds))
+    const length = this.duration
+    if (!length) return
+    const to = Math.max(0, Math.min(length - 0.5, seconds))
     // The track itself if it is running, sound on or off; the silent
-    // clock in any case, so the two agree if the sound stops.
-    if (live()) audio!.currentTime = at
-    clockZero = performance.now() - at * 1000
-    timelineAt = at
+    // clock too while the opener is playing, so the two agree if the
+    // sound stops. Away from the opener there is no clock to keep.
+    if (live()) audio!.currentTime = to
+    if (onOpener()) {
+      clockZero = performance.now() - to * 1000
+      timelineAt = to
+    }
   },
 
   /**
@@ -365,7 +489,9 @@ export const music = {
    * once per frame; the beat detector keeps state between calls.
    */
   sample(now: number): MusicSample {
-    if (!live() || !this.sounding) {
+    // The timeline describes the opener and nothing else, so it is only
+    // read while the opener is what is playing.
+    if (onOpener() && (!live() || !this.sounding)) {
       const position = live() ? audio!.currentTime : clockPosition(now)
       timelineBands(position, sample.bands)
       sample.beat = timelineAt < 0 ? 0 : timelineBeat(timelineAt, position)
@@ -374,6 +500,17 @@ export const music = {
       return sample
     }
     timelineAt = -1
+    if (!live()) {
+      // One of the radio's songs, not running yet: nothing to hear and no
+      // timeline to fall back on, so the field rests until it starts.
+      sample.bands.fill(0)
+      sample.beat = 0
+      lastSampleAt = -1
+      return sample
+    }
+    // With the sound off on a radio song the analyser is still read: it
+    // sits before the volume, so it hears the track whatever the volume
+    // is, and there is no timeline here to go back to.
 
     // Exact decibels per bin, so a loud bass never clips flat.
     analyser!.getFloatFrequencyData(freq)
@@ -439,7 +576,7 @@ export const music = {
    */
   meter(out: Float32Array) {
     const per = BANDS / out.length
-    if (!live() || !this.sounding) {
+    if (onOpener() && (!live() || !this.sounding)) {
       timelineBands(this.time, meterBands)
       for (let m = 0; m < out.length; m++) {
         let level = 0
@@ -447,6 +584,10 @@ export const music = {
           level = Math.max(level, meterBands[b])
         out[m] = level
       }
+      return
+    }
+    if (!live()) {
+      out.fill(0)
       return
     }
     analyser!.getFloatFrequencyData(freq)
