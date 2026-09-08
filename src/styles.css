@@ -2014,6 +2014,13 @@ h6 {
   visibility: hidden;
 }
 
+/* The music card, put away. musicCardInitScript marks the root before the
+   page paints, so a card that was dismissed is never briefly seen on the
+   way in; React reads the same answer and takes it out of the tree. */
+html[data-music-card-off] [data-music-card] {
+  display: none;
+}
+
 @keyframes music-ring {
   0%,
   100% {

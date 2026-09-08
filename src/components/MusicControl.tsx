@@ -1,8 +1,9 @@
 import { t } from '@/i18n/site'
 import { useEffect, useRef, useState } from 'react'
 import { useLocation } from '@tanstack/react-router'
-import { VolumeIcon, VolumeOffIcon } from '@/components/icons'
+import { CrossIcon, VolumeIcon, VolumeOffIcon } from '@/components/icons'
 import { MUSIC_EVENT, TRACK, loadMusic, music } from '@/lib/music'
+import { readMusicCard, setMusicCard } from '@/lib/music-card'
 import type { MusicState } from '@/lib/music'
 
 /** Bars in the little meter, and the pixel steps each can climb. */
@@ -148,6 +149,12 @@ export function MusicMenuControl({
 export function MusicControl({ path = '/' }: { path?: string }) {
   const { state, on, shown, untouched } = useMusicState(path)
 
+  // Whether the card is out at all. Server-rendered as out, so the markup
+  // does not depend on storage; musicCardInitScript has already hidden it
+  // in CSS by the time this reads the same answer and takes it down.
+  const [out, setOut] = useState(true)
+  useEffect(() => setOut(readMusicCard()), [])
+
   // The progress line, the meter and the readout are driven straight from
   // the track each frame, outside React, so the card never re-renders for
   // them. While a hand is on the range, the range leads and the track
@@ -158,7 +165,7 @@ export function MusicControl({ path = '/' }: { path?: string }) {
   const bars = useRef<Array<HTMLSpanElement | null>>([])
   const scrubbing = useRef(false)
   useEffect(() => {
-    if (!shown) return
+    if (!shown || !out) return
     const levels = new Float32Array(METER_BARS)
     const smoothed = new Float32Array(METER_BARS)
     let frame = 0
@@ -182,7 +189,7 @@ export function MusicControl({ path = '/' }: { path?: string }) {
     }
     frame = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(frame)
-  }, [shown])
+  }, [shown, out])
 
   /** The range moved, by hand or key: show it at once, and go there. */
   const onScrub = (value: number) => {
@@ -193,13 +200,14 @@ export function MusicControl({ path = '/' }: { path?: string }) {
     music.seek(at * music.duration)
   }
 
-  if (!shown) return null
+  if (!shown || !out) return null
   const title = TRACK.title.replace(/ \(.*\)$/, '')
 
   return (
     <div
       data-hero-quiet
       data-no-stamp
+      data-music-card
       className="group/card pointer-events-auto fixed bottom-5 left-5 z-(--z-dropdown) hidden h-[46px] items-stretch border border-border-subtle bg-bg/85 supports-backdrop-filter:backdrop-blur-sm sm:flex"
     >
       <button
@@ -249,7 +257,7 @@ export function MusicControl({ path = '/' }: { path?: string }) {
       </span>
       <span
         aria-hidden="true"
-        className="mr-3 flex w-[18px] items-end gap-[2px] self-center"
+        className="mr-2.5 flex w-[18px] items-end gap-[2px] self-center"
         style={{ height: METER_STEPS * 2 + 2 }}
       >
         {Array.from({ length: METER_BARS }, (_, i) => (
@@ -263,6 +271,22 @@ export function MusicControl({ path = '/' }: { path?: string }) {
           />
         ))}
       </span>
+      {/* Put the card away, for this browser and the next visit. Only the
+          card: the sound control in the site menu stays where it is, which
+          is where the sound comes back from. Out of sight until the card is
+          pointed at, so the corner stays as quiet as it was. */}
+      <button
+        type="button"
+        onClick={() => {
+          setMusicCard(false)
+          setOut(false)
+        }}
+        aria-label={t('Put the player away')}
+        title={t('Put the player away')}
+        className="mr-2 flex size-5 shrink-0 items-center justify-center self-center text-text-secondary opacity-0 transition-opacity duration-150 ease-out group-hover/card:opacity-100 group-has-[:focus-visible]/card:opacity-100 hover:text-text pointer-coarse:opacity-100 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
+      >
+        <CrossIcon className="size-3" />
+      </button>
       {/* Progress and seeking, along the foot of the card. The painted line
           is the span; the range on top of it is the control, with a hit
           area a good deal taller than the line it draws and no handle of

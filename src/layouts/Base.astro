@@ -9,6 +9,7 @@ import { ThemePicker } from '@/components/ThemePicker'
 import { SearchPalette } from '@/components/SearchPalette'
 import { PixelSnap } from '@/components/PixelSnap'
 import { MusicControl } from '@/components/MusicControl'
+import { musicCardInitScript } from '@/lib/music-card'
 import { themeInitScript } from '@/lib/theme'
 import { etchInitScript } from '@/lib/etch'
 import { OG_IMAGE, SITE_DESCRIPTION, SITE_URL } from '@/lib/seo'
@@ -72,6 +73,7 @@ const url = `${SITE_URL}${path}`
     <link rel="preload" href={monoWoff2} as="font" type="font/woff2" crossorigin="anonymous" />
     <script is:inline data-astro-rerun set:html={themeInitScript} />
     <script is:inline data-astro-rerun set:html={etchInitScript} />
+    <script is:inline data-astro-rerun set:html={musicCardInitScript} />
   </head>
   <body>
     <a
